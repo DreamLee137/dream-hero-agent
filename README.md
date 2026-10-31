@@ -5,7 +5,7 @@
 ## Cấu trúc
 ```
 CLAUDE.md            nội quy + đội hình
-products.example.md  mẫu danh bạ sản phẩm (products.md thật chỉ để trên máy, không đưa lên git)
+products.md          danh bạ sản phẩm (tên + repo)
 team/<agent>/SKILL.md   định nghĩa từng agent
 templates/product/   mẫu hồ sơ sản phẩm (copy vào docs/product/ của repo sản phẩm)
 inbox/               hộp thư tham khảo: skill, prompt, repo chờ Sidekick rà soát

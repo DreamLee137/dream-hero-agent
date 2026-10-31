@@ -7,3 +7,6 @@ _Không ghi key/token/mật khẩu._
 ## Store (link · bundle id)
 ## Dịch vụ bên thứ 3 (chỉ tên)
 ## Hợp đồng API
+## Bí mật (CHỈ ghi tên + nơi cất, KHÔNG ghi giá trị — xem SECRETS.md)
+| Tên | Dùng cho | Cất ở | Chủ sở hữu | Hết hạn | Agent dùng |
+|---|---|---|---|---|---|

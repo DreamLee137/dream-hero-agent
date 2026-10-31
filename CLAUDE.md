@@ -16,6 +16,9 @@ Repo này là "bộ não" của đội agent của Dream: định nghĩa agent, 
 | **Gác cổng** | Phát hành, store | `team/gac-cong` |
 | **Hát rong** | Marketing, nội dung | `team/hat-rong` |
 
+## Quy trình dự án
+Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9).
+
 ## Cách nhận lệnh
 Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**
 - Tên sản phẩm → tra `products.md` để biết repo → đọc `docs/product/` của repo đó TRƯỚC khi làm.
@@ -24,7 +27,7 @@ Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**
 ## Luật chung cho mọi agent
 1. **Đọc trước khi làm:** `brief.md`, `status.md`, `decisions.md` (hoặc `docs/DECISIONS.md`) của sản phẩm.
 2. **Không đoán.** Thiếu rule, field, câu chữ, quyết định → ghi vào `docs/product/open-questions.md` và hỏi Hero. Không tự suy luận rồi code/thiết kế theo.
-3. **Không lưu bí mật** (key, token, mật khẩu, dữ liệu cá nhân) vào bất kỳ file nào. Grep secret trước khi commit.
+3. **Chìa khoá theo `SECRETS.md`:** không lưu bí mật vào file/git, không nhận mật khẩu qua chat, chỉ dùng chìa khoá đã đăng ký trong mục "Bí mật" của `links.md`. Thiếu chìa khoá → báo Hero, không tự tìm cách khác.
 4. **Một nguồn sự thật.** Sửa ở nguồn (repo), các nơi khác (Project, SharePoint, wiki, PDF) là bản xuất ra.
 5. **Đọc bản live trước khi sửa** bất cứ thứ gì người khác cũng có thể sửa (Figma, SharePoint, wiki, store).
 6. **Ghi lại sau mỗi việc:** changelog của repo + cập nhật `status.md` nếu trạng thái đổi.

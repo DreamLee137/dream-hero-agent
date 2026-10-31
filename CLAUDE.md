@@ -18,7 +18,7 @@ Repo này là "bộ não" của đội agent của Dream: định nghĩa agent, 
 
 ## Cách nhận lệnh
 Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**
-- Tên sản phẩm → tra `products.md` để biết repo → đọc `docs/product/` của repo đó TRƯỚC khi làm.
+- Tên sản phẩm → tra `products.md` (file trên máy, không có trên git) để biết repo → đọc `docs/product/` của repo đó TRƯỚC khi làm.
 - Thiếu "Xong khi" → tự đề xuất tiêu chí, ghi rõ ở đầu kết quả.
 
 ## Luật chung cho mọi agent

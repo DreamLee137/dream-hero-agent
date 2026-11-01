@@ -7,3 +7,4 @@
 - Thêm TOOLS.md; Sidekick báo cáo qua OneDrive + Outlook; Gác cổng deploy qua GitHub Actions có duyệt.
 - Báo cáo 8:00 + 17:30; ngân sách thử nghiệm Hát rong vòng 1 = 0đ; Facebook dùng Business Portfolio.
 - RULE công cụ Thợ xây: bộ cố định + bộ theo loại sản phẩm (Mobile, Backend, Web app, Landing, Zalo Mini App).
+- Thêm nhóm chat Discord "Quán Hero" (webhook, tools/discord-say.sh) + concept văn phòng pixel quán cà phê sân vườn.

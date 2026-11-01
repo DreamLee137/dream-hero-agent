@@ -8,6 +8,8 @@ CLAUDE.md            nội quy + đội hình
 PLAYBOOK.md          quy trình dự án từ 0 đến hoàn thành
 SECRETS.md           quy tắc chìa khoá: cất ở đâu, đăng ký thế nào
 TOOLS.md             công cụ của từng agent + nguyên tắc tiết kiệm
+QUAN-HERO.md         nhóm chat Discord + concept văn phòng pixel quán cà phê
+tools/               script dùng chung (discord-say.sh)
 products.md          danh bạ sản phẩm (tên + repo)
 team/<agent>/SKILL.md   định nghĩa từng agent
 templates/product/   mẫu hồ sơ sản phẩm (copy vào docs/product/ của repo sản phẩm)

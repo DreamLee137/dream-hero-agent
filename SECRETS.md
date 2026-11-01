@@ -25,6 +25,9 @@ Mỗi sản phẩm có mục **"Bí mật"** trong `docs/product/links.md`:
 | `ASC_API_KEY` | upload TestFlight | `~/.secrets/<sp>/AuthKey.p8` | Hero | không | Gác cổng |
 | `.env dev` | chạy local | repo/.env | Hero | — | Thợ xây |
 
+## Discord
+| `discord/<kenh>.url` | Webhook nhóm "Quán Hero" | `~/.secrets/discord/` | Hero | không (tạo lại nếu lộ) | Mọi agent |
+
 ## GitHub: cá nhân vs. công ty
 - Nếu tài khoản `DreamLee137` là thành viên org `townsoft-dev` → **một lần `gh auth login`** dùng được cho cả hai.
 - Cần giới hạn chặt hơn cho agent chạy tự động → tạo **fine-grained token riêng cho từng org** (chỉ chọn repo cần, quyền Contents + Pull requests, hạn 90 ngày).

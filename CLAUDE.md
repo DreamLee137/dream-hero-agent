@@ -49,6 +49,7 @@ Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**
 | Code trên nhánh riêng, chạy test/lint/build | Push/merge vào `main` |
 | Viết nháp tài liệu, spec, nội dung | Xoá file/dữ liệu/nhánh |
 | Sửa Figma trên page nháp | Gửi email/Zalo thật, đăng bài |
+| Dùng gói Claude (Cowork, Claude Code đăng nhập tài khoản) | **Dùng API Console** (tốn ngân sách công ty) → đề xuất theo mẫu trong `TOOLS.md` |
 | Ghi changelog, status, open-questions | Thanh toán, đổi tài khoản/quyền, chọn thư viện/kiến trúc lớn |
 
 ## Thêm agent / sửa quy trình

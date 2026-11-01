@@ -1,11 +1,12 @@
-# ☕ Quán Hero: nhóm chat & văn phòng của đội
+# ☕🎶 Tiệm Heroes: nhóm chat & văn phòng của đội
 
-## 1. Nhóm chat Discord "Quán Hero"
+## 1. Nhóm chat Discord "Tiệm Heroes"
 
 ### Kênh
 | Kênh | Dùng cho | Ai nhắn |
 |---|---|---|
 | `#☕-quay-chung` | Tin đặc biệt của cả đội: cột mốc, phát hành xong, chào tuần mới, khen nhau | Mọi agent |
+| `#📋-bao-cao` | Báo cáo cuối ngày 17:30 (cùng nội dung email, bản rút gọn) + tổng kết tuần chiều thứ Sáu | Sidekick |
 | `#🔔-can-hero` | Cần Hero duyệt/quyết, có việc bị chặn | Mọi agent |
 | `#🚨-khan-cap` | Sự cố: production lỗi, build hỏng, nghi lộ chìa khoá | Mọi agent (kèm @Hero) |
 | `#🌿-<san-pham>` | Tin của riêng từng sản phẩm (vd. `#🌿-nhalo`) | Agent làm sản phẩm đó |
@@ -21,16 +22,25 @@ Mỗi tin ≤ 5 dòng: **[sản phẩm] chuyện gì · ảnh hưởng · cần 
 - **Giai đoạn 2 (sau này):** thêm **bot Discord** chạy trên Mac mini để agent đọc được tin Hero nhắn trong nhóm (giao việc từ điện thoại ngay trong Discord).
 - Webhook URL là bí mật → cất ở `~/.secrets/discord/<kenh>.url`, đăng ký trong `SECRETS.md`.
 
-### Hero cần làm (≈ 10 phút, làm được trên điện thoại)
-1. Tạo server Discord "Quán Hero" (riêng tư).
-2. Tạo các kênh ở bảng trên.
-3. Mỗi kênh: Cài đặt kênh → Tích hợp → Webhook → Tạo → Sao chép URL.
-4. Trên Mac mini: dán từng URL vào `~/.secrets/discord/quay-chung.url`, `can-hero.url`, `khan-cap.url`, `nhalo.url`.
-5. Bật thông báo điện thoại cho `#🔔-can-hero` và `#🚨-khan-cap`; tắt bớt các kênh còn lại.
+### Hero cần làm: tạo webhook (≈ 10 phút, nên làm trên máy tính)
+Webhook = một "khe thư" riêng của từng kênh. Ai có link thì bỏ thư vào kênh đó được (chỉ gửi, không đọc được) → coi như chìa khoá, không chia sẻ.
+1. Mở Discord trên máy tính, vào server **Tiệm Heroes**.
+2. Rê chuột vào kênh (vd. `#☕-quay-chung`) → bấm **⚙️ (Edit Channel / Chỉnh sửa kênh)**.
+3. Chọn **Integrations (Tích hợp)** → **Webhooks** → **New Webhook (Webhook mới)**.
+4. Đặt tên `Tiệm Heroes` (tên thật sẽ đổi theo từng agent khi gửi) → **Copy Webhook URL**.
+5. Mở Terminal trên Mac mini, lưu link (thay `<LINK>` bằng link vừa copy):
+   ```bash
+   mkdir -p ~/.secrets/discord && chmod 700 ~/.secrets ~/.secrets/discord
+   pbpaste > ~/.secrets/discord/quay-chung.url && chmod 600 ~/.secrets/discord/quay-chung.url
+   ```
+   (`pbpaste` dán thẳng nội dung vừa copy; nếu copy trên máy khác thì dùng `nano ~/.secrets/discord/quay-chung.url` rồi dán.)
+6. Lặp lại cho các kênh còn lại, tên file: `bao-cao.url`, `can-hero.url`, `khan-cap.url`, `nhalo.url`.
+7. Thử: `~/dream-hero-agent/tools/discord-say.sh sidekick quay-chung "Tiệm mở cửa rồi! ☕"`
+8. Trên điện thoại: bật thông báo cho `#🔔-can-hero`, `#🚨-khan-cap`, `#📋-bao-cao`; tắt bớt các kênh còn lại.
 
 ---
 
-## 2. Văn phòng pixel: concept "Quán cà phê sân vườn"
+## 2. Văn phòng pixel: concept "Tiệm cà phê sân vườn có nhạc"
 
 **Không khí:** chill, yên bình, lo-fi. Ánh nắng xuyên qua giàn cây, tiếng nước chảy từ hồ cá, mưa nhẹ buổi chiều. Ngày/đêm theo giờ thật Việt Nam. Động vật tự do đi lại.
 
@@ -46,6 +56,13 @@ Mỗi tin ≤ 5 dòng: **[sản phẩm] chuyện gì · ảnh hưởng · cần 
 | 🛡️ **Gác cổng** | Cổng vườn có chuông gió, cạnh chú chó | Kiểm tra từng "kiện hàng" trước khi mở cổng |
 | 🎤 **Hát rong** | Sân khấu nhỏ dưới gốc cây | Đàn hát, chụp ảnh, quay video |
 | 🦸 **Hero** | Ghế xích đu giữa vườn | Xuất hiện khi Hero online |
+
+### 🎶 Nhạc trong tiệm
+- Tiệm luôn bật nhạc nhẹ, có nút bật/tắt + chỉnh âm lượng (mặc định tắt tiếng khi mở trên điện thoại).
+- Đổi nhạc theo giờ thật: sáng **lo-fi + tiếng chim**, chiều **acoustic + tiếng mưa**, tối **jazz nhẹ**, khuya **piano + tiếng dế**.
+- Âm thanh sự kiện: phát hành thành công → tiếng chuông gió; cần Hero duyệt → chuông quầy "ting" nhẹ; sự cố → nhạc dừng, chim bay.
+- Hát rong trên sân khấu: khi Hát rong đang làm việc thì nhạc có thêm tiếng đàn guitar.
+- Chỉ dùng nhạc **được phép dùng** (thư viện miễn phí bản quyền có giấy phép rõ, hoặc nhạc Hero tự tạo/mua quyền). Không lấy nhạc từ YouTube/Spotify.
 
 ### Động vật (welcome!)
 - 🐈 Mèo cam ngủ trên quầy Sidekick, thỉnh thoảng đi dạo qua các bàn.

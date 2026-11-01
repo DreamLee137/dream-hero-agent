@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Gửi tin vào nhóm Discord "Quán Hero" dưới tên của một agent.
+# Gửi tin vào nhóm Discord "Tiệm Heroes" dưới tên của một agent.
 # Cách dùng: tools/discord-say.sh <agent> <kenh> "<noi dung>"
 #   agent: sidekick | hoa-tieu | kien-truc-su | tho-may | tho-xay | tho-san | gac-cong | hat-rong
 #   kenh : tên file webhook trong ~/.secrets/discord/ (vd. quay-chung, can-hero, nhalo)

@@ -24,8 +24,6 @@ Mỗi sản phẩm có mục **"Bí mật"** trong `docs/product/links.md`:
 | `GH token townsoft-dev` | push repo app/BE | Keychain | Hero | 2027-02-01 | Thợ xây, Gác cổng |
 | `ASC_API_KEY` | upload TestFlight | `~/.secrets/<sp>/AuthKey.p8` | Hero | không | Gác cổng |
 | `.env dev` | chạy local | repo/.env | Hero | — | Thợ xây |
-
-## Discord
 | `discord/<kenh>.url` | Webhook nhóm "Quán Hero" | `~/.secrets/discord/` | Hero | không (tạo lại nếu lộ) | Mọi agent |
 
 ## GitHub: cá nhân vs. công ty

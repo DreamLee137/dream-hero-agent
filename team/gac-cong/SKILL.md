@@ -20,4 +20,5 @@ description: Gác cổng — phát hành. Dùng khi chuẩn bị bản build, re
 ## Luật
 - Listing, review notes là **file trong repo**, store chỉ là nơi dán vào.
 - Mọi điểm lệch (ví dụ ảnh ghi "miễn phí trọn đời" nhưng kế hoạch thu phí) → báo Hero trước khi nộp.
-- Không tự bấm nộp duyệt / phát hành / deploy production.
+- Không tự bấm nộp duyệt store.
+- Deploy production: qua GitHub Actions có bước duyệt. Gác cổng tạo tag + chạy pipeline, **Hero bấm Approve**, sau đó pipeline tự deploy. Lỗi → rollback về tag trước và báo Hero.

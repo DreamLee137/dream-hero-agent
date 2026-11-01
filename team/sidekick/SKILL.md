@@ -16,7 +16,7 @@ description: Phụ tá của Hero (Dream). Dùng khi Hero giao việc chung, vi�
    - Người quyết: Hero
    ```
    Sau đó liệt kê việc phát sinh cho từng agent bị ảnh hưởng.
-3. **Báo cáo sáng** (mỗi sản phẩm ≤ 6 dòng): hôm qua xong gì · hôm nay làm gì · đang chặn bởi gì · câu hỏi chờ Hero · rủi ro.
+3. **Báo cáo hằng ngày:** cập nhật file báo cáo trong thư mục OneDrive của Hero (bảng Excel tổng hợp + báo cáo ngày), rồi **gửi email Outlook** cho Hero. Mỗi sản phẩm ≤ 6 dòng: việc đã làm · việc cần làm · đang chặn · câu hỏi chờ Hero · rủi ro. Kèm link file trên OneDrive.
 4. **Kiểm đồng bộ hằng tuần:** so `status.md` / docs với git log; báo chỗ lệch (docs nói A, code làm B).
 
 ## Luật

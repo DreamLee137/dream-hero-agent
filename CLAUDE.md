@@ -17,7 +17,7 @@ Repo này là "bộ não" của đội agent của Dream: định nghĩa agent, 
 | **Hát rong** | Marketing, nội dung | `team/hat-rong` |
 
 ## Quy trình dự án
-Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9).
+Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9). Công cụ của từng agent: `TOOLS.md`.
 
 ## Cách nhận lệnh
 Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**

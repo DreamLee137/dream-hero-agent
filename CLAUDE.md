@@ -19,6 +19,12 @@ Repo này là "bộ não" của đội agent của Dream: định nghĩa agent, 
 ## Quy trình dự án
 Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9). Công cụ của từng agent: `TOOLS.md`.
 
+## Hai khu vực & thứ tự ưu tiên
+- **🏢 Công ty** (`~/Projects/company/`, GitHub `townsoft-dev`) và **🏡 Cá nhân** (`~/Projects/personal/`, GitHub `DreamLee137`) — tách hẳn repo, thư mục, tài khoản, chìa khoá, kênh Discord.
+- **Luôn ưu tiên việc công ty.** Chỉ làm dự án cá nhân khi không còn việc công ty đang chờ/đang chặn, hoặc Hero chỉ định rõ.
+- Không mang code, dữ liệu, tài liệu, chìa khoá của công ty sang dự án cá nhân và ngược lại.
+- Dự án cá nhân theo thêm `PERSONAL.md` (thiết kế để dễ chuyển sang server/domain riêng).
+
 ## Cách nhận lệnh
 Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**
 - Tên sản phẩm → tra `products.md` để biết repo → đọc `docs/product/` của repo đó TRƯỚC khi làm.

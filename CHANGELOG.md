@@ -9,3 +9,4 @@
 - RULE công cụ Thợ xây: bộ cố định + bộ theo loại sản phẩm (Mobile, Backend, Web app, Landing, Zalo Mini App).
 - Thêm nhóm chat Discord "Tiệm Heroes" (webhook, tools/discord-say.sh) + concept văn phòng pixel quán cà phê sân vườn.
 - Đổi tên Quán Hero → Tiệm Heroes; tiệm có nhạc; báo cáo cuối ngày gửi cả Discord #📋-bao-cao; hướng dẫn tạo webhook.
+- Hai khu vực Công ty/Cá nhân + PERSONAL.md (demo miễn phí, sẵn sàng chuyển server); rà lô 11 bài Facebook vào inbox.

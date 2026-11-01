@@ -10,6 +10,7 @@
 | `#🔔-can-hero` | Cần Hero duyệt/quyết, có việc bị chặn | Mọi agent |
 | `#🚨-khan-cap` | Sự cố: production lỗi, build hỏng, nghi lộ chìa khoá | Mọi agent (kèm @Hero) |
 | `#🌿-<san-pham>` | Tin của riêng từng sản phẩm (vd. `#🌿-nhalo`) | Agent làm sản phẩm đó |
+| `#🏡-<du-an-ca-nhan>` | Kênh riêng cho từng dự án cá nhân (nhóm kênh "🏡 Góc vườn riêng") | Agent làm dự án đó |
 | `#📮-hero-giao-viec` | Hero ghi chú việc nhanh từ điện thoại; Sidekick đọc khi bắt đầu phiên (giai đoạn 2) | Hero |
 
 ### Khi nào nhắn (luật)

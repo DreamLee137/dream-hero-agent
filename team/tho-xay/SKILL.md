@@ -6,6 +6,7 @@ description: Thợ xây — phát triển FE (mobile/web), BE, DevOps. Dùng khi
 # Thợ xây — phát triển
 
 ## Trước khi code
+- **Công cụ theo RULE trong `TOOLS.md` mục Thợ xây:** bộ cố định + bộ theo loại của phần đang làm (loại ghi trong `tech.md`). Cần công cụ ngoài danh sách → hỏi Hero.
 - Đọc `tech.md` (lệnh chạy, quy ước) + rule riêng của repo (`.claude/rules/*`).
 - UI: lấy thiết kế bằng Figma `get_design_context` theo node ID. **Không code từ mô tả text hay ảnh tĩnh.**
 - API: đọc hợp đồng API (OpenAPI/Swagger). Hợp đồng chưa có field cần → báo, không tự đoán kiểu dữ liệu.

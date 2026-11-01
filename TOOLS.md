@@ -48,13 +48,34 @@ Công cụ mới → thêm vào đây + ghi `CHANGELOG.md`.
 | Google AI Pro (Gemini, Imagen) 🖐️ | Phương án tạo ảnh thứ hai để so sánh |
 | **Đề xuất thêm:** Google Fonts, Lucide/Material icons, Coolors 🆓 | Font, icon, bảng màu |
 
-## Thợ xây
+## Thợ xây — RULE: bộ cố định + bộ theo loại sản phẩm
+**Rule:** Thợ xây luôn dùng **Bộ cố định**, cộng thêm **đúng 1 bộ theo loại** cho mỗi phần của sản phẩm (một sản phẩm có thể gồm nhiều phần, vd. NhàLo = Mobile + Backend + Zalo Mini App).
+- Loại của từng phần ghi trong `docs/product/tech.md` ngay giai đoạn 0.
+- Dùng công cụ **ngoài** danh sách này → hỏi Hero trước, được duyệt thì thêm vào đây.
+- Stack mặc định là chuẩn công ty. Sản phẩm muốn khác → Hero chốt ở giai đoạn 2, ghi `docs/DECISIONS.md`.
+
+### Bộ cố định (mọi sản phẩm)
 | Công cụ | Dùng cho |
 |---|---|
-| Claude Code (Mac mini) | Code chính |
-| GitHub | Repo, PR, Actions (CI) |
-| 🔌 Figma `get_design_context` | Lấy thiết kế chính xác để code |
-| Android Studio, Xcode, Docker | Build, máy ảo, chạy BE local |
+| Claude Code trên Mac mini | Viết code, chạy lệnh |
+| Git + GitHub (`gh`) | Nhánh `feature/*`, Pull Request, Issues |
+| GitHub Actions | CI: lint + test + build mỗi PR; deploy có duyệt (xem Gác cổng) |
+| 🔌 Figma `get_design_context` | Lấy thiết kế theo node ID |
+| `openapi.yaml` (hợp đồng API) | Giao tiếp FE ↔ BE |
+| Docker | DB/Redis/dịch vụ chạy local |
+| `.env` + `SECRETS.md` | Cấu hình và chìa khoá |
+| `changelog/YYYY-MM-DD.md` | Nhật ký thay đổi |
+
+### Bộ theo loại sản phẩm
+| Loại | Stack mặc định | Build & chạy | Test (cùng Thợ săn) | Theo dõi lỗi sau phát hành | Phát hành |
+|---|---|---|---|---|---|
+| **Mobile app** | Flutter + Riverpod + go_router | Android Studio, Xcode, máy ảo + thiết bị thật | `flutter test`, Maestro | Firebase Crashlytics 🆓 *(đề xuất)* | Fastlane → TestFlight / Google Play |
+| **Backend / API** | Java 21 + Spring Boot + PostgreSQL + Redis + Flyway | Maven, Docker | JUnit + test với DB tạm trong CI | Log server + Sentry Free *(đề xuất)* | GitHub Actions → server (AWS) |
+| **Web app / trang quản trị** | React + Vite + Tailwind *(đề xuất)* | Node.js | Vitest, Playwright | Sentry Free *(đề xuất)* | GitHub Actions → hosting |
+| **Landing page / website tĩnh** | HTML/Tailwind hoặc Astro *(đề xuất)* | Node.js | Playwright (kiểm link, form, mobile) | Google Search Console 🆓 | GitHub Actions → hosting |
+| **Zalo Mini App** | React + Vite + Tailwind + zmp-ui | Zalo Mini App CLI/Studio | Playwright + máy thật trong Zalo | Log backend | Gửi Zalo duyệt 🖐️ |
+
+*(đề xuất)* = chưa dùng ở công ty; lần đầu áp dụng cần Hero duyệt, sau đó bỏ chữ "đề xuất".
 
 ## Thợ săn — chọn theo loại sản phẩm
 | Loại sản phẩm | Test tự động | Test tay |

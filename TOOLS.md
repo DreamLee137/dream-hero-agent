@@ -16,7 +16,7 @@ Công cụ mới → thêm vào đây + ghi `CHANGELOG.md`.
 | Công cụ | Dùng cho |
 |---|---|
 | 🔌 Microsoft 365: OneDrive/SharePoint | Thư mục báo cáo: bảng tổng hợp Excel + file báo cáo |
-| 🔌 Outlook | Email hằng ngày cho Hero: việc đã làm · việc cần làm · đang chặn · cần Hero quyết |
+| 🔌 Outlook | Email cho Hero **2 lần/ngày**: 8:00 (kế hoạch hôm nay, ngắn) · 17:30 (tổng kết: đã làm · cần làm · đang chặn · cần Hero quyết) |
 | Scheduled tasks (Cowork) | Lịch báo cáo ngày/tuần |
 | GitHub | Đọc git log, issue, PR để tổng hợp |
 
@@ -87,6 +87,8 @@ Cần phối hợp anh Tính để dựng pipeline lần đầu. Store: Fastlane
 - Lập **nhóm riêng của sản phẩm** (vd. "Cộng đồng chủ trọ"), Fanpage làm admin → Hát rong lên nội dung cho nhóm này.
 - Nhóm của người khác: Hát rong soạn bài hữu ích (không quảng cáo lộ liễu) + danh sách nhóm phù hợp, người thật đăng và trả lời bình luận.
 
+**Tài khoản Facebook:** đang dùng tài khoản số 1 của Hero làm admin. Muốn tách riêng → thêm người/tài khoản thứ 2 làm admin trong **Meta Business Portfolio** (không tạo tài khoản ảo, Meta có thể khoá).
+
 **Sản xuất**
 | Loại | Công cụ (thử nghiệm để chọn) |
 |---|---|
@@ -95,7 +97,7 @@ Cần phối hợp anh Tính để dựng pipeline lần đầu. Store: Fastlane
 | Giọng đọc | ElevenLabs 💳 · Gemini TTS (Google AI Pro) · **đề xuất thêm:** Vbee / FPT.AI (giọng Việt tự nhiên, hợp người lớn tuổi) |
 | Slide, tài liệu | 🔌 Gamma Free · Canva |
 
-**Thử nghiệm công cụ (vòng 1, 2 tuần)**
+**Thử nghiệm công cụ (vòng 1, 2 tuần) · Ngân sách: chỉ dùng đồ miễn phí + đã có** (Higgsfield Plus, Google AI Pro, bản Free/dùng thử của Canva, CapCut, Gamma, ElevenLabs, Vbee)
 - Cùng 1 kịch bản → làm bằng 2–3 công cụ/tổ hợp (vd. Higgsfield + ElevenLabs vs. Veo + Vbee).
 - Chấm điểm: chất lượng (Hero chấm 1–5) · thời gian làm · chi phí/video · kết quả thật (lượt xem, tỉ lệ xem hết, bình luận).
 - Ghi vào bảng Excel trên OneDrive → chọn tổ hợp thắng làm mặc định, lặp lại mỗi quý.

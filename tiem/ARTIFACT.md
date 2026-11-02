@@ -50,6 +50,6 @@ Giao việc là tab đầu. Riêng Phiên dịch mở tab Trò chuyện trước
 | Quầy | ID | Project claude.ai (Hero chuyển vào trong app) |
 |---|---|---|
 | Quầy chung | `trig_016UfMUjLAfMQKFKZYVP4EhQ` | [Dream] AI Agent & API Claude Console (tạo trong Project) |
-| Quầy Nội trợ | `trig_01JqM3T1ph1p2YrB7QyTxkGf` | [TSV] HRGA - Kế toán - Purchase etc (tạo trong Project) |
+| Quầy Nội trợ | `trig_01X2Q8xBFnEuDFBxQjmF31JY` | [TSV] HRGA - Kế toán - Purchase etc (tạo trong Project) |
 | Quầy Phiên dịch | `trig_01PHcvAZuptCgWM9GxQTXYKe` | Thông ngôn quán (tạo trong Project) |
 `meta/quay` = `{default, noi-tro, phien-dich}`. Báo cáo chiều 17:26 có bước "vét hàng chờ" (gọi lại tối đa 5 việc còn "cho").

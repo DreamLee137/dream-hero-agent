@@ -56,6 +56,7 @@ Webhook = một "khe thư" riêng của từng kênh. Ai có link thì bỏ thư
 | 🏹 **Thợ săn** | Bên hồ cá koi, cầm vợt | Vớt "bọ" (bug) lên khỏi hồ |
 | 🛡️ **Gác cổng** | Cổng vườn có chuông gió, cạnh chú chó | Kiểm tra từng "kiện hàng" trước khi mở cổng |
 | 🎤 **Hát rong** | Sân khấu nhỏ dưới gốc cây | Đàn hát, chụp ảnh, quay video |
+| 🧺 **Nội trợ** | Gian bếp nhỏ sau quầy, kệ hũ thuỷ tinh đựng hoá đơn | Xếp giấy tờ vào hũ dán nhãn, tưới chậu rau thơm |
 | 🦸 **Hero** | Ghế xích đu giữa vườn | Xuất hiện khi Hero online |
 
 ### 🎶 Nhạc trong tiệm

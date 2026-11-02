@@ -15,18 +15,20 @@ Repo này là "bộ não" của đội agent của Dream: định nghĩa agent, 
 | **Thợ săn** | Kiểm thử, QA | `team/tho-san` |
 | **Gác cổng** | Phát hành, store | `team/gac-cong` |
 | **Hát rong** | Marketing, nội dung | `team/hat-rong` |
+| **Nội trợ** | Hành chính, nhân sự, hoá đơn, tài liệu cho kế toán | `team/noi-tro` |
 
 ## Quy trình dự án
 Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9). Công cụ của từng agent: `TOOLS.md`.
 
 ## Hai khu vực & thứ tự ưu tiên
 - **🏢 Công ty** (`~/Projects/company/`, GitHub `townsoft-dev`) và **🏡 Cá nhân** (`~/Projects/personal/`, GitHub `DreamLee137`) — tách hẳn repo, thư mục, tài khoản, chìa khoá, kênh Discord.
-- **Luôn ưu tiên việc công ty.** Chỉ làm dự án cá nhân khi không còn việc công ty đang chờ/đang chặn, hoặc Hero chỉ định rõ.
+- **Thứ tự ưu tiên:** ① **Lina** (dự án outsourcing có khách hàng thật) → ② dự án công ty khác (NhàLo...) → ③ hành chính (Nội trợ) → ④ dự án cá nhân. Hero chỉ định khác thì theo Hero.
 - Không mang code, dữ liệu, tài liệu, chìa khoá của công ty sang dự án cá nhân và ngược lại.
 - Dự án cá nhân theo thêm `PERSONAL.md` (thiết kế để dễ chuyển sang server/domain riêng).
 
 ## Cách nhận lệnh
 Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**
+- **Nói chuyện trực tiếp với 1 agent:** mở một phiên riêng (task Cowork mới hoặc `claude` trên Mac mini) và bắt đầu bằng tên agent, vd. "Hát rong, ..." hoặc gõ `/hat-rong`. Agent đó giữ vai suốt phiên. Không gọi tên → Sidekick nhận và điều phối.
 - Tên sản phẩm → tra `products.md` để biết repo → đọc `docs/product/` của repo đó TRƯỚC khi làm.
 - Thiếu "Xong khi" → tự đề xuất tiêu chí, ghi rõ ở đầu kết quả.
 

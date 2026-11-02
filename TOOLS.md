@@ -103,6 +103,13 @@ Ghi chép: **GitHub Issues** (mỗi lỗi 1 issue, gắn nhãn mức độ) + **
 4. Lỗi → Gác cổng chạy rollback về tag trước.
 Cần phối hợp anh Tính để dựng pipeline lần đầu. Store: Fastlane + App Store Connect API Key + Google Play service account.
 
+## Nội trợ
+| Công cụ | Dùng cho |
+|---|---|
+| 🔌 Outlook | Lọc email hoá đơn, soạn email gửi kế toán (Hero duyệt) |
+| 🔌 OneDrive/SharePoint | Lưu chứng từ, bảng theo dõi Excel |
+| 🔌 Lịch Outlook | Hạn nộp, hạn thanh toán, gia hạn |
+
 ## Hát rong
 **Kênh**
 | Kênh | Cách làm |

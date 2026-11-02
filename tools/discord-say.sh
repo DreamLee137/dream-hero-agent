@@ -16,6 +16,7 @@ case "$agent" in
   tho-san)      name="🏹 Thợ săn" ;;
   gac-cong)     name="🛡️ Gác cổng" ;;
   hat-rong)     name="🎤 Hát rong" ;;
+  noi-tro)      name="🧺 Nội trợ" ;;
   *) echo "Agent không hợp lệ: $agent"; exit 1 ;;
 esac
 avatar_base="${HERO_AVATAR_BASE:-}"   # để trống cho tới khi có avatar pixel

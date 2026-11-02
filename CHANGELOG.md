@@ -12,3 +12,4 @@
 - Hai khu vực Công ty/Cá nhân + PERSONAL.md (demo miễn phí, sẵn sàng chuyển server); rà lô 11 bài Facebook vào inbox.
 - Luật API: mặc định không dùng API, đề xuất theo mẫu; rà ảnh Top 10 plugin.
 - Ghi repo BE + Mini App của NhàLo; cấm agent lệnh quản trị GitHub; Sidekick chuẩn bị gặp sếp; đường dẫn OneDrive báo cáo.
+- Thêm agent Nội trợ; dự án Lina ưu tiên số 1; Sidekick làm thư ký nhắc việc (lịch Outlook); cách nói chuyện trực tiếp với 1 agent.

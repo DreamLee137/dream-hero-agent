@@ -14,3 +14,4 @@
 - Ghi repo BE + Mini App của NhàLo; cấm agent lệnh quản trị GitHub; Sidekick chuẩn bị gặp sếp; đường dẫn OneDrive báo cáo.
 - Thêm agent Nội trợ; dự án Lina ưu tiên số 1; Sidekick làm thư ký nhắc việc (lịch Outlook); cách nói chuyện trực tiếp với 1 agent.
 - Lina: repo chỉ đọc.
+- Lina: Project Lina là nguồn chính, Sidekick đọc file status hằng ngày trên OneDrive.

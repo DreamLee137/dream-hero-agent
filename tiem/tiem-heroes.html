@@ -665,7 +665,7 @@ function renderProjPick(){
   $("#projPick").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{ const k=b.dataset.k; pickProj.has(k)?pickProj.delete(k):pickProj.add(k); b.setAttribute("aria-pressed", pickProj.has(k)); });
 }
 const JOB_ST = {gio:"🧺 Trong giỏ", cho:"⏳ Chờ Mac nhận", "dang-lam":"✨ Đang làm", "cho-hero":"❗ Cần cậu trả lời", "can-xem":"👀 Xong, cần cậu xem", xong:"✅ Xong", huy:"✖ Huỷ"};
-const QUAY_DEFAULT = "trig_01CSHtfg69qFxPXsaWor1M2g";   // Quầy chung (Tiệm Heroes)
+const QUAY_DEFAULT = "trig_016UfMUjLAfMQKFKZYVP4EhQ";   // Quầy chung (Tiệm Heroes), trong Project AI Agent
 let quayMap = {};                                     // meta/quay: {<agent or project>: trig_...}
 let mcp = null;
 function quayFor(j){ for(const k of [j.agent, ...(j.projects||[])]) if(quayMap[k]) return quayMap[k]; return quayMap.default || QUAY_DEFAULT; }

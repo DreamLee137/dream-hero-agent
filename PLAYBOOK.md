@@ -13,7 +13,8 @@ Quy tắc về chìa khoá/mật khẩu: xem `SECRETS.md`.
 - Tài liệu sẵn có (biên bản họp, yêu cầu khách...)
 
 **Sidekick làm**
-- Tạo repo (hoặc dùng repo có sẵn) → thêm `docs/product/` từ `templates/product/` + đoạn `CLAUDE-snippet.md` vào `CLAUDE.md`
+- **Repo mới / chưa có docs:** thêm `docs/product/` từ `templates/product/` + đoạn `CLAUDE-snippet.md` vào `CLAUDE.md`
+- **Repo đã có docs** (vd. NhàLo): KHÔNG tạo thư mục mới. Thêm `docs/README.md` làm mục lục (mỗi chủ đề 1 file nguồn), cập nhật file cũ tại chỗ, gộp file trùng, chỉ thêm `LINKS.md` + `OPEN-QUESTIONS.md` nếu chưa có, file lỗi thời → `docs/_archive/` (không xoá)
 - Thêm 1 dòng vào `products.md`
 - Clone về Mac mini: `~/Projects/<san-pham>/` (FE, BE cùng thư mục)
 - Điền `links.md`, mục "Bí mật" ghi các chìa khoá sẽ cần (chưa có giá trị)

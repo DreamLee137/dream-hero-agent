@@ -30,7 +30,7 @@ Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9). Công cụ của t
 ## Cách nhận lệnh
 Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**
 - **Nói chuyện trực tiếp với 1 agent:** mở một phiên riêng (task Cowork mới hoặc `claude` trên Mac mini) và bắt đầu bằng tên agent, vd. "Hát rong, ..." hoặc gõ `/hat-rong`. Agent đó giữ vai suốt phiên. Không gọi tên → Sidekick nhận và điều phối.
-- Tên sản phẩm → tra `products.md` để biết repo → đọc `docs/product/` của repo đó TRƯỚC khi làm.
+- Tên sản phẩm → tra `products.md` để biết repo → đọc `docs/README.md` (mục lục) hoặc `docs/product/` của repo đó TRƯỚC khi làm.
 - Thiếu "Xong khi" → tự đề xuất tiêu chí, ghi rõ ở đầu kết quả.
 
 ## Luật chung cho mọi agent

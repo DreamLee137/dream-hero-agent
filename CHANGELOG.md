@@ -20,3 +20,4 @@
 - 02/11: chuyển repo về Mac mini (Projects/), danh bạ đủ 13 repo + quyền từng dự án.
 - 02/11: tạo ~/.secrets, chỉnh quyền khoá, thư mục cá nhân OneDrive Heroes.
 - 02/11: Discord Tiệm Heroes chạy thật (bot + 12 kênh + webhook); Sổ cấp quyền truy cập do Nội trợ giữ.
+- Luật docs: repo đã có docs thì dùng mục lục docs/README.md, không tạo docs/product/.

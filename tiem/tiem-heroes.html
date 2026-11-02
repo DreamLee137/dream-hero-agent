@@ -1,0 +1,584 @@
+<title>Tiệm Heroes</title>
+<style>
+:root{
+  --bg:#f6efe4; --panel:#fffaf2; --ink:#3b2f2a; --muted:#8a776b; --line:#e7d9c7;
+  --accent:#d9774b; --accent-ink:#fff; --chip:#f1e4d2; --shadow:0 10px 30px rgba(80,50,30,.14);
+  --ok:#4f9a6b; --warn:#e0a32e; --bad:#c9573f; --off:#9a8f86;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1c1714; --panel:#26201c; --ink:#f3e8dc; --muted:#b3a294; --line:#3a312a;
+    --accent:#e48a5e; --accent-ink:#1c1714; --chip:#332a23; --shadow:0 10px 30px rgba(0,0,0,.4);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1c1714; --panel:#26201c; --ink:#f3e8dc; --muted:#b3a294; --line:#3a312a;
+  --accent:#e48a5e; --accent-ink:#1c1714; --chip:#332a23; --shadow:0 10px 30px rgba(0,0,0,.4);
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Nunito","Segoe UI",system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:1280px;margin:0 auto;padding:16px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+header h1{font-size:22px;margin:0;letter-spacing:.2px}
+header .sub{color:var(--muted);font-size:13px}
+.spacer{flex:1}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--chip);font-size:13px;border:1px solid var(--line)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--off)}
+.dot.on{background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 25%,transparent)}
+.iconbtn{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:13px}
+.iconbtn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+
+.stage{position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);background:#cfe6f3;aspect-ratio:16/9;user-select:none}
+.stage>.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:filter 1.2s}
+.stage svg.layer{position:absolute;inset:0;width:100%;height:100%}
+.tint{position:absolute;inset:0;pointer-events:none;transition:background 1.2s,opacity 1.2s}
+.demo{position:absolute;left:12px;top:12px;background:rgba(255,250,240,.9);color:#5a463b;padding:4px 10px;border-radius:999px;font-size:12px;display:none}
+
+/* characters */
+.char{cursor:pointer}
+.char .bob{transform-box:fill-box;transform-origin:50% 100%;animation:breathe 3.2s ease-in-out infinite}
+.char:hover .bob,.char.sel .bob{filter:drop-shadow(0 0 6px rgba(255,240,200,.95))}
+.char.working .bob{animation:work .55s ease-in-out infinite}
+.char.waiting .bob{animation:hop 1.1s ease-in-out infinite}
+.char.done .bob{animation:hop .7s ease-in-out 3, breathe 3.2s ease-in-out 2.1s infinite}
+.char.offline .bob{animation:none;opacity:.88}
+.char.idle:not(.hero-c) .walk{animation:wander 14s ease-in-out infinite}
+.char .eyes-closed{display:none}
+.char.offline .eyes-open{display:none}
+.char.offline .eyes-closed{display:inline}
+.bubble{transform-box:fill-box;transform-origin:50% 100%;animation:float 2.6s ease-in-out infinite}
+.tag{font:700 14px "Nunito",system-ui,sans-serif}
+@keyframes breathe{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.025)}}
+@keyframes work{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-12px)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes wander{0%,100%{transform:translateX(0)}25%{transform:translateX(12px)}50%{transform:translateX(0)}75%{transform:translateX(-12px)}}
+@keyframes zz{0%{opacity:0;transform:translate(0,0)}30%{opacity:1}100%{opacity:0;transform:translate(14px,-26px)}}
+.zz{animation:zz 2.4s linear infinite}
+.zz2{animation-delay:1.2s}
+@keyframes swing{0%,100%{transform:rotate(7deg)}50%{transform:rotate(-7deg)}}
+.swing{transform-box:view-box;animation:swing 3.6s ease-in-out infinite}
+@keyframes drop{to{transform:translateY(120px)}}
+@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes fly{0%{transform:translate(0,0)}25%{transform:translate(30px,-14px)}50%{transform:translate(55px,6px)}75%{transform:translate(20px,18px)}100%{transform:translate(0,0)}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}
+
+/* bottom area */
+.grid{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-top:16px}
+.grid>*{min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow)}
+.card h2{font-size:15px;margin:0 0 8px}
+.roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.ro{min-width:0;display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;border:1px solid var(--line);background:var(--bg);text-align:left}
+.ro:hover{border-color:var(--accent)}
+.ro .av{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:17px}
+.ro b{display:block;font-size:14px}
+.ro small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
+.feed{list-style:none;margin:0;padding:0;max-height:300px;overflow:auto}
+.feed li{padding:7px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.feed time{color:var(--muted);font-size:12px;margin-right:6px}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(30,20,10,.25);opacity:0;pointer-events:none;transition:.2s}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,100%);background:var(--panel);box-shadow:var(--shadow);transform:translateX(105%);transition:transform .25s ease;display:flex;flex-direction:column;z-index:5}
+.drawer.open{transform:none}
+.dh{display:flex;gap:12px;align-items:center;padding:16px;border-bottom:1px solid var(--line)}
+.dh .av{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:24px}
+.dh h3{margin:0;font-size:18px}
+.dh p{margin:0;color:var(--muted);font-size:13px}
+.status{padding:12px 16px;border-bottom:1px solid var(--line);font-size:14px}
+.status .row{display:flex;gap:8px;margin:2px 0}
+.status .k{color:var(--muted);width:78px;flex:none}
+.tabs{display:flex;gap:6px;padding:10px 16px 0}
+.tabs button{background:none;border:none;padding:6px 10px;border-bottom:2px solid transparent;color:var(--muted)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--accent);font-weight:700}
+.pane{flex:1;overflow:auto;padding:12px 16px;display:none}
+.pane.on{display:block}
+.msg{margin:8px 0;padding:9px 12px;border-radius:14px;max-width:88%;white-space:pre-wrap;font-size:14px}
+.msg.me{background:var(--accent);color:var(--accent-ink);margin-left:auto;border-bottom-right-radius:4px}
+.msg.ai{background:var(--chip);border-bottom-left-radius:4px}
+.msg.note{background:none;color:var(--muted);font-size:12px;text-align:center;max-width:100%}
+.composer{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line)}
+.composer textarea{flex:1;resize:none;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:10px;font:inherit}
+.send{background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;padding:0 16px;font-weight:700}
+.send:disabled{opacity:.5;cursor:default}
+.job{border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:8px 0;font-size:13px;background:var(--bg)}
+.job .st{font-size:12px;color:var(--muted)}
+.hint{color:var(--muted);font-size:12px;margin:4px 0 0}
+.close{margin-left:auto;background:none;border:none;font-size:22px;color:var(--muted)}
+
+@media (max-width: 860px){
+  .grid{grid-template-columns:1fr}
+  .scroller{overflow-x:auto;border-radius:18px;box-shadow:var(--shadow);-webkit-overflow-scrolling:touch}
+  .scroller .stage{width:820px;box-shadow:none;border-radius:0}
+  .roster{grid-template-columns:1fr 1fr}
+  .ro small{max-width:100%}
+  .ro>span:last-child{min-width:0}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>☕ Tiệm Heroes</h1>
+      <div class="sub">Quán cà phê vườn của đội Hero · <span id="clock">--:--</span> giờ Việt Nam</div>
+    </div>
+    <div class="spacer"></div>
+    <span class="pill" title="Mac mini báo danh lần cuối"><span class="dot" id="macDot"></span><span id="macText">Mac mini: chưa rõ</span></span>
+    <button class="iconbtn" id="musicBtn" aria-pressed="false">♪ Nhạc</button>
+    <button class="iconbtn" id="rainBtn" aria-pressed="false">☂ Mưa</button>
+    <button class="iconbtn" id="bgBtn" hidden>🖼 Đổi tranh nền</button>
+    <input type="file" id="bgFile" accept="image/*" hidden>
+  </header>
+
+  <div class="scroller" id="scroller"><div class="stage" id="stage">
+    <img class="bg" id="bgImg" alt="Quán cà phê vườn Tiệm Heroes">
+    <div class="tint" id="tint"></div>
+    <svg class="layer" id="fx" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+    <svg class="layer" id="chars" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"></svg>
+    <div class="demo" id="demo">Bản xem thử · chưa có dữ liệu thật</div>
+  </div></div>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Cả đội</h2>
+      <div class="roster" id="roster"></div>
+      <div class="legend">
+        <span>✨ đang làm</span><span>☕ rảnh</span><span>❗ cần Hero</span><span>☁️ bị chặn</span><span>🎉 xong</span><span>💤 nghỉ</span>
+      </div>
+    </section>
+    <section class="card">
+      <h2>Nhật ký quán</h2>
+      <ul class="feed" id="feed"><li class="hint">Chưa có hoạt động.</li></ul>
+    </section>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="dh">
+    <div class="av" id="dAv"></div>
+    <div><h3 id="dName"></h3><p id="dRole"></p></div>
+    <button class="close" id="dClose" aria-label="Đóng">×</button>
+  </div>
+  <div class="status" id="dStatus"></div>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="chat">Trò chuyện</button>
+    <button role="tab" aria-selected="false" data-tab="job">Giao việc</button>
+  </div>
+  <div class="pane on" id="pChat"></div>
+  <div class="pane" id="pJob"></div>
+  <div class="composer">
+    <textarea id="input" placeholder="Nhắn cho agent…"></textarea>
+    <button class="send" id="sendBtn">Gửi</button>
+  </div>
+</aside>
+
+<script>
+/* ===== DATA ===== */
+const AGENTS = [
+  {id:"hoa-tieu", name:"Hoa tiêu", role:"Nghiên cứu, ý tưởng, thị trường", emoji:"🧭", color:"#3f9c9a", hair:"#5b3a29", acc:"hat",
+   spot:{x:0,y:0}, persona:"Bạn là Hoa tiêu: nghiên cứu thị trường, đối thủ, khả thi bên thứ 3; luôn ghi nguồn và ngày."},
+  {id:"kien-truc-su", name:"Kiến trúc sư", role:"BA: PRD, rule, user story", emoji:"📐", color:"#7a62b8", hair:"#2d2433", acc:"glasses",
+   spot:{x:0,y:0}, persona:"Bạn là Kiến trúc sư: BA, viết PRD, rule, user story; không đoán, thiếu thông tin thì ghi câu hỏi mở."},
+  {id:"sidekick", name:"Sidekick", role:"Điều phối, báo cáo, thư ký", emoji:"🦸", color:"#d9534f", hair:"#3a2a22", acc:"cape",
+   spot:{x:0,y:0}, persona:"Bạn là Sidekick: phụ tá điều phối của Hero, chia việc cho đội, ghi quyết định, báo cáo, nhắc việc."},
+  {id:"noi-tro", name:"Nội trợ", role:"Hành chính, nhân sự, hoá đơn", emoji:"🧺", color:"#5fae8d", hair:"#6b4a35", acc:"apron",
+   spot:{x:0,y:0}, persona:"Bạn là Nội trợ: hành chính, nhân sự, hoá đơn, chứng từ kế toán, lịch lương và thanh toán."},
+  {id:"hat-rong", name:"Hát rong", role:"Marketing, nội dung", emoji:"🎸", color:"#e5b53a", hair:"#4a2f20", acc:"guitar",
+   spot:{x:0,y:0}, persona:"Bạn là Hát rong: marketing, nội dung mạng xã hội, kịch bản video; Hero duyệt trước khi đăng."},
+  {id:"tho-may", name:"Thợ may", role:"Thiết kế UI/UX", emoji:"🎨", color:"#e07aa0", hair:"#2f2a3a", acc:"beret",
+   spot:{x:0,y:0}, persona:"Bạn là Thợ may: thiết kế UI/UX trên Figma, ảnh store, minh hoạ."},
+  {id:"tho-xay", name:"Thợ xây", role:"Dev FE, BE, DevOps", emoji:"🛠️", color:"#e98a3c", hair:"#3b2a20", acc:"hardhat",
+   spot:{x:0,y:0}, persona:"Bạn là Thợ xây: dev Flutter, Spring Boot, React; làm trên nhánh riêng, có test."},
+  {id:"tho-san", name:"Thợ săn", role:"Kiểm thử, QA", emoji:"🔍", color:"#5c8f3e", hair:"#4b3424", acc:"magnifier",
+   spot:{x:0,y:0}, persona:"Bạn là Thợ săn: QA, viết test case, săn lỗi, ghi GitHub Issues."},
+  {id:"gac-cong", name:"Gác cổng", role:"Phát hành, store, deploy", emoji:"🛡️", color:"#3d5a8a", hair:"#2a2220", acc:"cap",
+   spot:{x:0,y:0}, persona:"Bạn là Gác cổng: phát hành, checklist trước store, deploy qua GitHub Actions khi Hero duyệt."},
+];
+const HERO = {id:"hero", name:"Hero", role:"Dream · PM, BA, phiên dịch", emoji:"🌸", color:"#b9a3e3", hair:"#2b1f1d", acc:"flower"};
+const STATES = {
+  working:{label:"Đang làm", icon:"✨"}, idle:{label:"Rảnh", icon:"☕"}, waiting:{label:"Cần Hero", icon:"❗"},
+  blocked:{label:"Bị chặn", icon:"☁️"}, done:{label:"Xong việc", icon:"🎉"}, offline:{label:"Nghỉ", icon:"💤"}
+};
+const PROJECTS = {lina:"⭐ Lina", nhalo:"🏠 NhàLo", balheh:"🍀 Balheh", chinchu:"🏘️ ChinChu", homepages:"🌿 Homepages", "nha-liu-lo":"🏡 Nhà Líu Lo", "huong-noi":"🏡 Công ty Hướng Nội", admin:"🧺 Hành chính", team:"🦸 Đội Hero"};
+const DEMO = {
+  "sidekick":{state:"working",task:"Tổng hợp báo cáo cuối ngày",project:"team"},
+  "hoa-tieu":{state:"idle",task:"",project:""},
+  "kien-truc-su":{state:"working",task:"Viết lại REQUIREMENTS theo bản Lite",project:"nhalo"},
+  "tho-may":{state:"idle",task:"",project:""},
+  "tho-xay":{state:"waiting",task:"Chờ Hero duyệt PR dọn code Supabase",project:"nhalo"},
+  "tho-san":{state:"done",task:"Test máy thật bản +30",project:"nhalo"},
+  "gac-cong":{state:"blocked",task:"Chờ App Store duyệt",project:"nhalo"},
+  "hat-rong":{state:"offline",task:"",project:""},
+  "noi-tro":{state:"offline",task:"",project:""},
+};
+
+/* Spots in a 1600x900 scene (feet position, scale). Tuned to the background painting. */
+const SPOTS = {
+  "hoa-tieu":{x:190,y:712,s:.9}, "kien-truc-su":{x:312,y:724,s:.9}, "sidekick":{x:440,y:714,s:.9},
+  "noi-tro":{x:728,y:708,s:.88}, "hat-rong":{x:1062,y:516,s:.68}, "hero":{x:1168,y:452,s:.56},
+  "tho-may":{x:1258,y:594,s:.72}, "tho-xay":{x:1338,y:648,s:.78}, "tho-san":{x:975,y:744,s:.9},
+  "gac-cong":{x:1460,y:708,s:.86}
+};
+const BG_DEFAULT = "cafe-bg.jpg";
+
+/* ===== STATE ===== */
+let status = {};          // id -> {state,task,project,updatedAt,note}
+let feed = [];
+let macSeen = 0;
+let live = false;
+let db = null, sample = null, user = null, assets = null;
+let meId = null;
+let current = null;       // open agent id
+let tab = "chat";
+const chats = {};         // id -> [{role,content}]
+let jobs = [];
+
+/* ===== HELPERS ===== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const vnNow = () => new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Ho_Chi_Minh"}));
+const fmtTime = t => t ? new Date(t).toLocaleString("vi-VN",{timeZone:"Asia/Ho_Chi_Minh",hour:"2-digit",minute:"2-digit",day:"2-digit",month:"2-digit"}) : "—";
+const ago = t => {
+  if(!t) return "chưa có";
+  const m = Math.round((Date.now()-t)/60000);
+  if(m<1) return "vừa xong"; if(m<60) return m+" phút trước";
+  const h = Math.round(m/60); if(h<24) return h+" giờ trước";
+  return Math.round(h/24)+" ngày trước";
+};
+const allPeople = () => [...AGENTS, HERO];
+const findAgent = id => allPeople().find(a=>a.id===id);
+function effState(id){
+  const s = status[id];
+  if(!s) return "offline";
+  if(s.state==="done" && s.updatedAt && Date.now()-s.updatedAt > 6*3600e3) return "idle";
+  return STATES[s.state] ? s.state : "idle";
+}
+
+/* ===== CHARACTER ART ===== */
+function accessory(a){
+  const c=a.color;
+  switch(a.acc){
+    case "hat": return `<path d="M-30,-112 Q0,-122 30,-112 L22,-116 Q18,-138 0,-139 Q-18,-138 -22,-116 Z" fill="#c9a46a"/><rect x="-21" y="-121" width="42" height="5" fill="#7a5a32"/><path d="M-16,-62 Q0,-54 16,-62 L14,-56 Q0,-48 -14,-56Z" fill="#2f7c7a"/>`;
+    case "glasses": return `<g fill="none" stroke="#2d2433" stroke-width="2.4"><circle cx="-9" cy="-98" r="7"/><circle cx="9" cy="-98" r="7"/><path d="M-2,-98 H2"/></g><rect x="14" y="-74" width="9" height="34" rx="4" transform="rotate(18 18 -57)" fill="#7fb4e6" stroke="#4d7fb0"/>`;
+    case "cape": return `<path d="M-20,-78 Q-34,-40 -30,-22 L30,-22 Q34,-40 20,-78Z" fill="#b5302c" opacity=".95"/><path d="M-12,-104 H12 Q14,-96 0,-95 Q-14,-96 -12,-104Z" fill="#2b2b3a" opacity=".85"/>`;
+    case "apron": return `<path d="M-13,-70 H13 L16,-30 H-16Z" fill="#fffaf0" stroke="#d8cbb6"/><path d="M-26,-112 Q0,-136 26,-112 Q20,-118 0,-120 Q-20,-118 -26,-112Z" fill="#7cc7a5"/>`;
+    case "guitar": return `<g transform="rotate(-28 6 -50)"><ellipse cx="6" cy="-40" rx="13" ry="11" fill="#b8742f"/><ellipse cx="6" cy="-55" rx="9" ry="8" fill="#b8742f"/><circle cx="6" cy="-44" r="3.5" fill="#3a2414"/><rect x="4" y="-92" width="4" height="36" fill="#6b4220"/></g><path d="M-26,-114 Q0,-130 26,-114 L20,-118 Q0,-126 -20,-118Z" fill="#f2cf63"/>`;
+    case "beret": return `<ellipse cx="-4" cy="-118" rx="25" ry="9" fill="#d65c8a"/><circle cx="-4" cy="-127" r="3" fill="#d65c8a"/><rect x="22" y="-72" width="3" height="26" fill="#6b4a35" transform="rotate(20 23 -59)"/><circle cx="30" cy="-74" r="3.5" fill="#4a90d9"/>`;
+    case "hardhat": return `<path d="M-26,-110 Q-24,-136 0,-137 Q24,-136 26,-110Z" fill="#f2a634"/><rect x="-29" y="-112" width="58" height="6" rx="3" fill="#e08a1e"/><path d="M22,-60 l10,-14 4,3 -10,14z" fill="#8b9aa8"/>`;
+    case "magnifier": return `<circle cx="28" cy="-70" r="9" fill="rgba(200,230,255,.5)" stroke="#6a4b2e" stroke-width="3"/><path d="M22,-62 L14,-50" stroke="#6a4b2e" stroke-width="4" stroke-linecap="round"/><path d="M-25,-112 Q0,-130 25,-112 L30,-108 H-12Z" fill="#4c7a33"/>`;
+    case "cap": return `<path d="M-24,-112 Q-22,-132 0,-133 Q22,-132 24,-112Z" fill="#2c4470"/><path d="M-24,-112 H30 Q28,-106 -24,-108Z" fill="#1d2f50"/><circle cx="0" cy="-122" r="3" fill="#f2cf63"/><circle cx="-8" cy="-60" r="3" fill="#f2cf63"/>`;
+    case "flower": return `<g transform="translate(16,-118)"><circle r="4" fill="#ff9ec4"/><circle cx="5" cy="2" r="4" fill="#ff9ec4"/><circle cx="-1" cy="6" r="4" fill="#ff9ec4"/><circle cx="2" cy="3" r="2.5" fill="#ffd36b"/></g>`;
+  }
+  return "";
+}
+function charSVG(a, st){
+  const sp = SPOTS[a.id]; const isHero = a.id==="hero";
+  const skin = "#f7d2b5";
+  const legs = isHero
+    ? `<rect x="-14" y="-32" width="10" height="20" rx="5" fill="#4a4e6e" transform="rotate(-70 -9 -32)"/><rect x="4" y="-32" width="10" height="20" rx="5" fill="#4a4e6e" transform="rotate(-70 9 -32)"/>`
+    : `<rect x="-13" y="-32" width="10" height="30" rx="5" fill="#4a4e6e"/><rect x="3" y="-32" width="10" height="30" rx="5" fill="#4a4e6e"/><ellipse cx="-8" cy="-2" rx="8" ry="4" fill="#3a2a22"/><ellipse cx="8" cy="-2" rx="8" ry="4" fill="#3a2a22"/>`;
+  const body = `
+    ${a.acc==="cape"?accessory(a):""}
+    ${legs}
+    <path d="M-20,-30 Q-22,-74 0,-76 Q22,-74 20,-30 Z" fill="${a.color}"/>
+    <path d="M-20,-66 Q-30,-52 -24,-38" stroke="${a.color}" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <path d="M20,-66 Q30,-52 24,-38" stroke="${a.color}" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <circle cx="-24" cy="-37" r="5" fill="${skin}"/><circle cx="24" cy="-37" r="5" fill="${skin}"/>
+    <circle cx="0" cy="-99" r="25" fill="${skin}"/>
+    <path d="M-25,-100 Q-26,-128 0,-127 Q26,-128 25,-100 Q18,-114 0,-113 Q-14,-114 -25,-100Z" fill="${a.hair}"/>
+    <g class="eyes-open" fill="#3a2a22"><ellipse cx="-9" cy="-97" rx="3" ry="4"/><ellipse cx="9" cy="-97" rx="3" ry="4"/><circle cx="-8" cy="-99" r="1" fill="#fff"/><circle cx="10" cy="-99" r="1" fill="#fff"/></g>
+    <g class="eyes-closed" stroke="#3a2a22" stroke-width="2" fill="none" stroke-linecap="round"><path d="M-13,-96 Q-9,-93 -5,-96"/><path d="M5,-96 Q9,-93 13,-96"/></g>
+    <ellipse cx="-15" cy="-89" rx="5" ry="3" fill="#f4a3a0" opacity=".6"/><ellipse cx="15" cy="-89" rx="5" ry="3" fill="#f4a3a0" opacity=".6"/>
+    <path d="M-5,-86 Q0,-82 5,-86" stroke="#8a4b3a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    ${a.acc!=="cape"?accessory(a):""}`;
+  const info = isHero ? null : STATES[st];
+  const k = sp.s;
+  let bubble = "";
+  if(info){
+    if(st==="offline"){
+      bubble = `<g transform="translate(0,${-125*k})"><text class="zz" x="14" y="0" font-size="20">z</text><text class="zz zz2" x="20" y="-8" font-size="15">z</text></g>`;
+    } else {
+      bubble = `<g transform="translate(0,${-132*k})"><g class="bubble"><path d="M-21,-44 h42 a10,10 0 0 1 10,10 v16 a10,10 0 0 1 -10,10 h-15 l-6,8 -6,-8 h-15 a10,10 0 0 1 -10,-10 v-16 a10,10 0 0 1 10,-10z" fill="#fffaf0" stroke="#e4d4bf"/><text x="0" y="-19" text-anchor="middle" font-size="20">${info.icon}</text></g></g>`;
+    }
+  }
+  const w = a.name.length*8.2+24;
+  const label = `<g class="lbl" transform="translate(0,16)"><rect x="${-w/2}" y="-11" width="${w}" height="22" rx="11" fill="rgba(255,250,240,.93)" stroke="${a.color}" stroke-width="2"/><text class="tag" x="0" y="4.5" text-anchor="middle" fill="#3b2f2a">${esc(a.name)}</text></g>`;
+  const art = `<g transform="scale(${k})"><g class="bob"><ellipse cx="0" cy="0" rx="24" ry="6" fill="rgba(40,25,10,.22)"/>${body}</g></g>`;
+  const cls = isHero ? "idle hero-c" : st;
+  const aria = isHero ? "Hero" : `${a.name}: ${STATES[st].label}`;
+  return `<g class="char ${cls}" data-id="${a.id}" tabindex="0" role="button" aria-label="${esc(aria)}" transform="translate(${sp.x},${sp.y})"><g class="walk">${art}${bubble}</g>${label}</g>`;
+}
+
+function renderScene(){
+  const svg = $("#chars");
+  let out = "";
+  const order = allPeople().slice().sort((p,q)=>SPOTS[p.id].y-SPOTS[q.id].y);
+  for(const a of order) out += charSVG(a, a.id==="hero" ? "idle" : effState(a.id));
+  svg.innerHTML = out;
+  svg.querySelectorAll(".char").forEach(el=>{
+    if(current===el.dataset.id) el.classList.add("sel");
+    el.addEventListener("click", ()=>openAgent(el.dataset.id));
+    el.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openAgent(el.dataset.id);} });
+  });
+}
+function renderRoster(){
+  $("#roster").innerHTML = AGENTS.map(a=>{
+    const st = effState(a.id), s = status[a.id]||{};
+    const line = s.task ? s.task : STATES[st].label;
+    return `<button class="ro" data-id="${a.id}"><span class="av" style="background:${a.color}22">${a.emoji}</span><span><b>${STATES[st].icon} ${esc(a.name)}</b><small title="${esc(line)}">${esc(line)}</small></span></button>`;
+  }).join("");
+  $("#roster").querySelectorAll(".ro").forEach(b=>b.onclick=()=>openAgent(b.dataset.id));
+}
+function renderFeed(){
+  const el = $("#feed");
+  if(!feed.length){ el.innerHTML = `<li class="hint">Chưa có hoạt động.</li>`; return; }
+  el.innerHTML = feed.slice().sort((a,b)=>b.t-a.t).slice(0,40).map(f=>{
+    const a = findAgent(f.agent);
+    return `<li><time>${fmtTime(f.t)}</time>${a?a.emoji+" <b>"+esc(a.name)+"</b> ":""}${esc(f.text)}</li>`;
+  }).join("");
+}
+function renderMac(){
+  const on = macSeen && Date.now()-macSeen < 20*60e3;
+  $("#macDot").classList.toggle("on", !!on);
+  $("#macText").textContent = on ? "Mac mini đang bật" : (macSeen ? "Mac mini nghỉ · "+ago(macSeen) : "Mac mini: chưa báo danh");
+}
+function renderAll(){ renderScene(); renderRoster(); renderFeed(); renderMac(); if(current) renderDrawerStatus(); }
+
+/* ===== DAY / NIGHT / WEATHER ===== */
+let raining = false;
+function skyTint(){
+  const n = vnNow(); const h = n.getHours()+n.getMinutes()/60;
+  $("#clock").textContent = n.toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"});
+  let tint="transparent", filt="none", night=false;
+  if(h>=18.5 || h<5){ night=true; tint="linear-gradient(rgba(20,25,70,.55),rgba(15,15,45,.45))"; filt="saturate(.75) brightness(.7)"; }
+  else if(h>=17){ tint="linear-gradient(rgba(255,140,80,.22),rgba(120,60,90,.18))"; filt="saturate(1.05)"; }
+  else if(h<7){ tint="linear-gradient(rgba(255,190,150,.2),rgba(150,170,220,.15))"; }
+  if(raining){ tint = "linear-gradient(rgba(70,90,120,.35),rgba(60,70,90,.25))"; filt = (night?"saturate(.6) brightness(.6)":"saturate(.7) brightness(.85)"); }
+  $("#tint").style.background = tint; $("#bgImg").style.filter = filt;
+  drawFx(night);
+}
+let lastFx = "";
+function drawFx(night){
+  const key = (night?"n":"d")+(raining?"r":"");
+  if(key===lastFx) return; lastFx = key;
+  let s = "";
+  if(night){
+    for(let i=0;i<40;i++){ const x=(i*397)%1600, y=(i*131)%260+10; s+=`<circle cx="${x}" cy="${y}" r="${1+(i%3)*.6}" fill="#fff" style="animation:twinkle ${2+(i%5)}s ${i%4}s infinite"/>`; }
+    for(let i=0;i<14;i++){ const x=800+(i*173)%760, y=520+(i*67)%280; s+=`<circle cx="${x}" cy="${y}" r="3" fill="#ffe98a" style="animation:twinkle ${1.5+(i%4)*.7}s ${i*.3}s infinite, fly ${8+(i%5)}s ease-in-out infinite;filter:drop-shadow(0 0 6px #ffe98a)"/>`; }
+    s += `<rect x="30" y="120" width="790" height="700" fill="url(#warm)" opacity=".4"/>`;
+  } else if(!raining){
+    for(let i=0;i<4;i++){ const x=900+i*170, y=480+(i%2)*60; s+=`<g style="animation:fly ${9+i*2}s ease-in-out ${i}s infinite"><path transform="translate(${x},${y})" d="M0,0 q-8,-10 -12,-2 q4,6 12,2 q8,-10 12,-2 q-4,6 -12,2" fill="${["#ffb6c9","#ffe07a","#b8d8ff","#c9f0b5"][i]}"/></g>`; }
+  }
+  if(raining){
+    for(let i=0;i<120;i++){ const x=(i*137)%1600, y=-(i*53)%900; s+=`<line x1="${x}" y1="${y}" x2="${x-6}" y2="${y+22}" stroke="rgba(220,235,255,.6)" stroke-width="2" style="animation:drop ${.6+(i%5)*.1}s linear ${-(i%10)*.1}s infinite"/>`; }
+  }
+  $("#fx").innerHTML = `<defs><radialGradient id="warm" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="#ffcf7a"/><stop offset="1" stop-color="#ffcf7a" stop-opacity="0"/></radialGradient></defs>`+s;
+}
+$("#rainBtn").onclick = e => { raining=!raining; e.currentTarget.setAttribute("aria-pressed",raining); lastFx=""; skyTint(); };
+
+/* ===== MUSIC (generated lo-fi) ===== */
+let ac=null, musicOn=false, musicTimer=null;
+function lofi(){
+  const h = vnNow().getHours();
+  const night = h>=19||h<6, morning = h>=6&&h<11;
+  const prog = night ? [[57,60,64,67],[53,57,60,64],[55,59,62,65],[52,55,59,62]]
+            : morning ? [[60,64,67,71],[57,60,64,67],[53,57,60,64],[55,59,62,67]]
+            : [[62,65,69,72],[55,59,62,65],[60,64,67,71],[57,60,64,67]];
+  const bpm = night?62:morning?78:72, beat=60/bpm;
+  const out = ac.createGain(); out.gain.value=.16;
+  const lp = ac.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value= night?1100:1700;
+  out.connect(lp).connect(ac.destination);
+  let t = ac.currentTime+.1, bar=0;
+  const f = m => 440*Math.pow(2,(m-69)/12);
+  function note(m, start, dur, vol, type="triangle"){
+    const o=ac.createOscillator(), g=ac.createGain(); o.type=type; o.frequency.value=f(m);
+    g.gain.setValueAtTime(0,start); g.gain.linearRampToValueAtTime(vol,start+.04); g.gain.exponentialRampToValueAtTime(.001,start+dur);
+    o.connect(g).connect(out); o.start(start); o.stop(start+dur+.05);
+  }
+  function noiseHit(start, vol){
+    const b=ac.createBuffer(1,ac.sampleRate*.05,ac.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
+    const s=ac.createBufferSource(), g=ac.createGain(); s.buffer=b; g.gain.value=vol; s.connect(g).connect(out); s.start(start);
+  }
+  function schedule(){
+    while(t < ac.currentTime+2){
+      const ch = prog[bar%4];
+      ch.forEach((m,i)=>note(m, t+i*.03, beat*4, .05));
+      note(ch[0]-12, t, beat*2, .09, "sine"); note(ch[0]-12, t+beat*2, beat*2, .07, "sine");
+      for(let b=0;b<8;b++){ if(Math.random()<.55) note(ch[(b*3+bar)%4]+12, t+b*beat/2, beat*.8, .025, "sine"); noiseHit(t+b*beat/2, b%2?.03:.05); }
+      t += beat*4; bar++;
+    }
+  }
+  schedule(); musicTimer = setInterval(schedule, 500);
+  return out;
+}
+let musicOut=null;
+$("#musicBtn").onclick = e => {
+  musicOn=!musicOn; e.currentTarget.setAttribute("aria-pressed",musicOn);
+  if(musicOn){ ac = ac || new (window.AudioContext||window.webkitAudioContext)(); ac.resume(); musicOut = lofi(); }
+  else { clearInterval(musicTimer); if(musicOut){ musicOut.gain.setTargetAtTime(0,ac.currentTime,.3); setTimeout(()=>musicOut&&musicOut.disconnect(),1500);} }
+};
+
+/* ===== DRAWER ===== */
+function openAgent(id){
+  current = id; const a = findAgent(id);
+  $("#dAv").textContent = a.emoji; $("#dAv").style.background = a.color+"33";
+  $("#dName").textContent = a.name; $("#dRole").textContent = a.role;
+  renderDrawerStatus();
+  const isHero = id==="hero";
+  document.querySelector('[data-tab="job"]').hidden = isHero;
+  setTab("chat");
+  $("#drawer").classList.add("open"); $("#drawer").setAttribute("aria-hidden","false"); $("#scrim").classList.add("open");
+  document.querySelectorAll(".char").forEach(el=>el.classList.toggle("sel", el.dataset.id===id));
+  setTimeout(()=>$("#input").focus(), 250);
+}
+function closeDrawer(){
+  current=null; $("#drawer").classList.remove("open"); $("#drawer").setAttribute("aria-hidden","true"); $("#scrim").classList.remove("open");
+  document.querySelectorAll(".char.sel").forEach(el=>el.classList.remove("sel"));
+}
+$("#dClose").onclick = closeDrawer; $("#scrim").onclick = closeDrawer;
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeDrawer(); });
+function renderDrawerStatus(){
+  const id=current; if(!id) return;
+  if(id==="hero"){
+    const counts = {}; AGENTS.forEach(a=>{ const s=effState(a.id); counts[s]=(counts[s]||0)+1; });
+    $("#dStatus").innerHTML = `<div class="row"><span class="k">Cả đội</span><span>${Object.entries(counts).map(([k,v])=>STATES[k].icon+" "+v+" "+STATES[k].label.toLowerCase()).join(" · ")}</span></div><p class="hint">Hỏi Sidekick nếu muốn tóm tắt tình hình.</p>`;
+    return;
+  }
+  const s = status[id]||{}, st = effState(id);
+  $("#dStatus").innerHTML = `
+    <div class="row"><span class="k">Trạng thái</span><span>${STATES[st].icon} ${STATES[st].label}</span></div>
+    <div class="row"><span class="k">Việc</span><span>${esc(s.task||"—")}</span></div>
+    <div class="row"><span class="k">Dự án</span><span>${esc(PROJECTS[s.project]||s.project||"—")}</span></div>
+    ${s.note?`<div class="row"><span class="k">Ghi chú</span><span>${esc(s.note)}</span></div>`:""}
+    <div class="row"><span class="k">Cập nhật</span><span>${ago(s.updatedAt)}</span></div>`;
+  if(tab==="job") renderJobs();
+}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+function setTab(t){
+  tab=t;
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected", b.dataset.tab===t));
+  $("#pChat").classList.toggle("on", t==="chat"); $("#pJob").classList.toggle("on", t==="job");
+  $("#input").placeholder = t==="chat" ? "Hỏi nhanh (không cần Mac)…" : "Mô tả việc cần làm trên Mac…";
+  $("#sendBtn").textContent = t==="chat" ? "Gửi" : "Giao";
+  if(t==="chat") renderChat(); else renderJobs();
+}
+
+/* ===== CHAT (sample) ===== */
+function teamSnapshot(){
+  return AGENTS.map(a=>{ const s=status[a.id]||{}; return `- ${a.name}: ${STATES[effState(a.id)].label}${s.task?" · "+s.task:""}${s.project?" ("+(PROJECTS[s.project]||s.project)+")":""}, cập nhật ${ago(s.updatedAt)}`; }).join("\n");
+}
+function rulesFor(id){
+  const a = findAgent(id);
+  const who = id==="hero" ? "Bạn là Sidekick, trả lời Hero về tình hình cả đội." : a.persona;
+  return `${who}
+Bạn đang nói chuyện với Hero (Dream, PM/BA/phiên dịch ở Townsoft Vina) trong trang "Tiệm Heroes".
+Xưng "tớ", gọi Hero là "cậu". Trả lời tiếng Việt, ngắn gọn, thân thiện, tối đa ~120 chữ, có thể gạch đầu dòng.
+Thứ tự ưu tiên: Lina > dự án công ty khác (NhàLo, Balheh...) > hành chính > dự án cá nhân.
+Bạn KHÔNG truy cập được máy Mac, repo, file hay email. Chỉ biết tình trạng đội dưới đây. Không bịa số liệu hay tiến độ.
+Nếu Hero nhờ việc cần làm thật trên máy (sửa code, đọc repo, viết file, gửi mail), hãy nói Hero chuyển sang tab "Giao việc" để việc vào hàng chờ cho Mac mini.
+Tình trạng đội lúc này (${vnNow().toLocaleString("vi-VN")}):
+${teamSnapshot()}`;
+}
+function renderChat(){
+  const id=current; const list = chats[id]||[];
+  const intro = `<div class="msg note">${sample? "Trò chuyện chạy bằng tài khoản Claude của cậu, Mac tắt vẫn được. Lần đầu sẽ hỏi cho phép." : "Trò chuyện chỉ chạy khi mở trang trong claude.ai hoặc app Claude."}</div>`;
+  $("#pChat").innerHTML = intro + list.map(m=>`<div class="msg ${m.role==="user"?"me":"ai"}">${esc(m.content)}</div>`).join("") + (busy?`<div class="msg ai" id="streaming">${esc(streamText||"Đang nghĩ…")}</div>`:"");
+  $("#pChat").scrollTop = 1e9;
+}
+let busy=false, streamText="", ctl=null;
+async function sendChat(text){
+  if(!sample){ renderChat(); return; }
+  const id=current; chats[id] = chats[id]||[];
+  chats[id].push({role:"user",content:text});
+  busy=true; streamText=""; $("#sendBtn").disabled=true; renderChat();
+  ctl = new AbortController();
+  try{
+    const turns = chats[id].slice(-12);
+    const {text:ans} = await sample([{role:"user",content:rulesFor(id)}, ...turns], {
+      cache:false, signal:ctl.signal,
+      onText:({text})=>{ streamText=text; const el=$("#streaming"); if(el&&current===id){ el.textContent=text; $("#pChat").scrollTop=1e9; } }
+    });
+    chats[id].push({role:"assistant",content:ans});
+  }catch(e){
+    const msg = {not_granted:"Cậu chưa cho phép trang dùng Claude.", rate_limited:"Đang hết lượt, thử lại sau nhé.", session_expired:"Cần đăng nhập lại claude.ai.", sampling_disabled:"Tài khoản này chưa bật tính năng hỏi Claude.", cancelled:""}[e?.code] ?? "Lỗi kết nối, thử lại nhé.";
+    if(e?.text) chats[id].push({role:"assistant",content:e.text});
+    if(msg) chats[id].push({role:"assistant",content:"⚠️ "+msg});
+    if(e?.code==="not_granted"||e?.code==="sampling_disabled") sample=null;
+  }finally{
+    busy=false; streamText=""; $("#sendBtn").disabled=false; if(current===id) renderChat();
+  }
+}
+
+/* ===== JOBS (db queue) ===== */
+const JOB_ST = {cho:"⏳ Chờ Mac nhận", "dang-lam":"✨ Đang làm", xong:"✅ Xong", huy:"✖ Huỷ"};
+function renderJobs(){
+  const id=current; const mine = jobs.filter(j=>j.agent===id).sort((a,b)=>b.createdAt-a.createdAt).slice(0,15);
+  $("#pJob").innerHTML = `<p class="hint">${db ? "Việc vào hàng chờ, lưu trên claude.ai. Mac mini bật thì phiên của đội nhận làm và báo lại ở đây; Mac tắt thì việc nằm chờ." : "Giao việc cần mở trang trong claude.ai (đã đăng nhập)."}</p>`
+   + (mine.length? mine.map(j=>`<div class="job"><div>${esc(j.text)}</div><div class="st">${JOB_ST[j.status]||esc(j.status)} · ${fmtTime(j.createdAt)}</div>${j.reply?`<div style="margin-top:4px">↳ ${esc(j.reply)}</div>`:""}</div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
+}
+async function sendJob(text){
+  if(!db){ renderJobs(); return; }
+  const id=current;
+  try{
+    await db.collection("inbox").add({agent:id, text, status:"cho", createdAt:Date.now(), by:meId||""});
+  }catch(e){
+    $("#pJob").insertAdjacentHTML("afterbegin", `<p class="hint">⚠️ Không lưu được (${esc(e?.code||"lỗi")}).</p>`);
+  }
+}
+$("#sendBtn").onclick = ()=>{
+  const v = $("#input").value.trim(); if(!v || busy || !current) return;
+  $("#input").value="";
+  if(tab==="chat") sendChat(v); else sendJob(v);
+};
+$("#input").addEventListener("keydown", e=>{ if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); $("#sendBtn").click(); } });
+
+/* ===== BACKGROUND IMAGE ===== */
+function setBg(url){ $("#bgImg").src = url || BG_DEFAULT; }
+$("#bgBtn").onclick = ()=>$("#bgFile").click();
+$("#bgFile").onchange = async e=>{
+  const f = e.target.files[0]; if(!f||!assets||!db) return;
+  try{
+    const r = await assets.upload(f);
+    await db.doc("meta/scene").set({bgId:r.id, bgUrl:r.url, updatedAt:Date.now()});
+  }catch(err){ alert("Không tải được ảnh: "+(err?.code||err?.message||"lỗi")); }
+};
+
+/* ===== BOOT ===== */
+status = DEMO; setBg(); skyTint(); renderAll();
+if(innerWidth<860){ const sc=$("#scroller"); requestAnimationFrame(()=>{ sc.scrollLeft=(sc.scrollWidth-sc.clientWidth)*.45; }); }
+$("#demo").style.display="block";
+setInterval(()=>{ skyTint(); renderMac(); }, 30000);
+setInterval(()=>{ if(current) renderDrawerStatus(); }, 60000);
+
+(async ()=>{
+  if(!window.claude?.use) return;
+  [db, sample, user, assets] = await Promise.all(["db","sample","user","assets"].map(n=>claude.use(n).catch(()=>null)));
+  if(user){ try{ meId = await user.id(); }catch{} }
+  if(assets && user && await Promise.resolve(user.canEdit?.()).catch(()=>false)) $("#bgBtn").hidden = false;
+  if(!db) return;
+  let gotAgents = false;
+  const timer = setTimeout(()=>{ if(!gotAgents) $("#demo").textContent="Chưa kết nối được dữ liệu · đang thử lại"; }, 10000);
+  db.collection("agents").onSnapshot(snap=>{
+    gotAgents = true;
+    if(!snap.metadata.fromCache) clearTimeout(timer);
+    const next = {}; snap.docs.forEach(d=>{ next[d.id] = d.data(); });
+    if(snap.size){ status = next; live = true; $("#demo").style.display="none"; }
+    renderAll();
+  }, ()=>{ clearTimeout(timer); });
+  db.doc("feed/log").onSnapshot(d=>{ feed = (d.exists && Array.isArray(d.data().items)) ? d.data().items : []; renderFeed(); }, ()=>{});
+  db.doc("meta/mac").onSnapshot(d=>{ macSeen = d.exists ? Number(d.data().lastSeen)||0 : 0; renderMac(); }, ()=>{});
+  db.doc("meta/scene").onSnapshot(d=>{ if(d.exists && d.data().bgUrl) setBg(d.data().bgUrl); }, ()=>{});
+  db.collection("inbox").orderBy("createdAt","desc").limit(100).onSnapshot(snap=>{
+    jobs = snap.docs.map(d=>({id:d.id, ...d.data()})); if(current && tab==="job") renderJobs();
+  }, ()=>{});
+})();
+</script>

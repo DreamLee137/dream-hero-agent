@@ -27,3 +27,4 @@
 - 02/11: Server Balheh: agent dung khoa dreambalheh, moi lan SSH Hero duyet, chi chay agent-ops.
 - 02/11: thu hoi dream-agent-deploy (xoa user server + khoa tren Mac).
 - 02/11: BACKLOG.md; Noi tro them cham cong/luong/lich thanh toan (cho ban giao).
+- 2026-11-02: Tiệm Heroes bản Artifact trên claude.ai (tranh nền Gemini, trạng thái realtime qua db, chat trong trang, hàng chờ giao việc) — xem tiem/ARTIFACT.md

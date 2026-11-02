@@ -30,6 +30,7 @@ Mỗi sản phẩm có mục **"Bí mật"** trong `docs/product/links.md`:
 - Nếu tài khoản `DreamLee137` là thành viên org `townsoft-dev` → **một lần `gh auth login`** dùng được cho cả hai.
 - Cần giới hạn chặt hơn cho agent chạy tự động → tạo **fine-grained token riêng cho từng org** (chỉ chọn repo cần, quyền Contents + Pull requests, hạn 90 ngày).
 - Không thêm quyền admin org cho token của agent.
+- ⚠️ `DreamLee137` có quyền **admin** org `townsoft-dev` → khi agent dùng phiên `gh` đã đăng nhập, agent cũng có quyền admin. Vì vậy **cấm agent** chạy các lệnh quản trị: xoá/đổi tên/chuyển repo, đổi visibility, sửa branch protection, quản lý thành viên/quyền, xoá release/tag, `gh api` với phương thức DELETE/PATCH/PUT vào cài đặt org/repo. Đặt các lệnh này vào danh sách `deny` của `.claude/settings.json`. Khi cần, Hero tự làm.
 
 ## 2FA
 - App xác thực 6 số (TOTP) dùng bình thường, không cần đổi.

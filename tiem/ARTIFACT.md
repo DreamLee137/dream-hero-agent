@@ -41,7 +41,7 @@ Giao việc là tab đầu. Riêng Phiên dịch mở tab Trò chuyện trước
 
 ## Gọi quầy ngay khi giao (không quét định kỳ)
 - Hero bấm "Giao" → trang ghi `inbox/<id>` rồi gọi `fire_trigger` (connector Claude Code Remote) tới quầy trong `meta/quay` (`{<agent hoặc dự án>: trig_…, default: trig_…}`), kèm `JOB_ID`.
-- Quầy chung: `trig_01CSHtfg69qFxPXsaWor1M2g` (cần Mac mini; chỉ chạy khi được gọi, không tốn gì khi không có việc).
+- Quầy chung: `trig_016UfMUjLAfMQKFKZYVP4EhQ` (cần Mac mini; chỉ chạy khi được gọi, không tốn gì khi không có việc).
 - Muốn lịch sử việc của Nội trợ nằm trong Project "[TSV] HRGA - Kế toán - Purchase etc": tạo quầy riêng cho Nội trợ, chuyển vào Project đó, rồi thêm `noi-tro: trig_…` vào `meta/quay`.
 - Việc gọi không được (Mac tắt…) vẫn ở trạng thái "cho"; trong tab Giao việc có nút "↻ Gọi quầy lại".
 - Trạng thái việc: cho · dang-lam · cho-hero · can-xem · xong · huy.
@@ -49,7 +49,7 @@ Giao việc là tab đầu. Riêng Phiên dịch mở tab Trò chuyện trước
 ## Các quầy (02/11/2026)
 | Quầy | ID | Project claude.ai (Hero chuyển vào trong app) |
 |---|---|---|
-| Quầy chung | `trig_01CSHtfg69qFxPXsaWor1M2g` | — |
+| Quầy chung | `trig_016UfMUjLAfMQKFKZYVP4EhQ` | [Dream] AI Agent & API Claude Console (tạo trong Project) |
 | Quầy Nội trợ | `trig_01JqM3T1ph1p2YrB7QyTxkGf` | [TSV] HRGA - Kế toán - Purchase etc (tạo trong Project) |
 | Quầy Phiên dịch | `trig_01PHcvAZuptCgWM9GxQTXYKe` | Thông ngôn quán (tạo trong Project) |
 `meta/quay` = `{default, noi-tro, phien-dich}`. Báo cáo chiều 17:26 có bước "vét hàng chờ" (gọi lại tối đa 5 việc còn "cho").

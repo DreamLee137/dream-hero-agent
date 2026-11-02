@@ -11,11 +11,11 @@ Trạng thái lưu trong **database của artifact** (trên claude.ai) → Mac t
 | `agents/<id>` | `{state, task, project, note?, updatedAt}` — state: working · idle · waiting · blocked · done · offline | Phiên agent (ArtifactData) |
 | `meta/mac` | `{lastSeen}` (ms) — Mac báo danh; > 20 phút = "Mac nghỉ" | Phiên chạy trên Mac |
 | `feed/log` | `{items:[{t, agent, text}]}` — giữ ≤ 50 dòng mới nhất | Phiên agent |
-| `inbox/<auto>` | `{agent, text, status: cho·dang-lam·xong·huy, createdAt, by, reply?}` | Hero tạo trên trang; Mac nhận làm và cập nhật |
+| `inbox/<auto>` | `{agent, text, projects:[...], status: cho·dang-lam·xong·huy, createdAt, by, reply?, doneAt?, by_agent?}` — `projects` là dự án Hero chọn: **chỉ đọc tài liệu của các dự án này** | Hero tạo trên trang; Mac nhận làm và cập nhật |
 | `data/users/<id>/chat-<agent>` | `{turns:[{role,content}], updatedAt}` — lịch sử chat riêng của từng người xem (60 tin gần nhất); Claude và người khác không đọc được | Trang |
 | `meta/scene` | `{bgUrl, bgId}` — tranh nền đổi từ nút "Đổi tranh nền" | Trang |
 
-id agent: `sidekick, hoa-tieu, kien-truc-su, tho-may, tho-xay, tho-san, gac-cong, hat-rong, noi-tro`. project: `lina, nhalo, balheh, chinchu, homepages, nha-liu-lo, huong-noi, admin, team`.
+id agent: `sidekick, hoa-tieu, kien-truc-su, tho-may, tho-xay, tho-san, gac-cong, hat-rong, noi-tro, phien-dich`. project: `lina, nhalo, balheh, chinchu, homepages, noi-tro, phien-dich, team, nha-liu-lo, huong-noi` (`admin` cũ = `noi-tro`).
 
 ## Luật cho agent (phiên Cowork có công cụ ArtifactData)
 1. Bắt đầu việc → `update agents/<id>` `{state:"working", task, project, updatedAt}` (đọc version trước, ghi kèm `if_version`).
@@ -32,3 +32,9 @@ Dùng khả năng "hỏi Claude" của artifact, chạy bằng tài khoản clau
 
 ## Di chuyển trong quán
 Mỗi agent có chỗ làm (`STATIONS`), chỗ nghỉ (`REST`) và các điểm dạo (`LEISURE`) trong code. Đang làm / cần Hero / bị chặn → về chỗ làm; rảnh → đi dạo trong vườn, ghé quầy; xong → đi dạo ăn mừng; nghỉ → về chỗ nghỉ ngủ. Ra vào quán đi qua cửa (`DOOR`).
+
+## Sổ giao việc (OneDrive)
+Mỗi việc xong/huỷ → thêm 1 dòng vào `0. Báo cáo Agent/Sổ giao việc.xlsx` (Mã việc · Ngày giao · Agent · Dự án · Nội dung · Trạng thái · Ngày xong · Kết quả · Bằng chứng/link · Phiên xử lý). Đóng file trên web trước khi agent ghi.
+
+## Tab mặc định
+Giao việc là tab đầu. Riêng Phiên dịch mở tab Trò chuyện trước (dịch nhanh); file lớn/văn bản dài → Giao việc.

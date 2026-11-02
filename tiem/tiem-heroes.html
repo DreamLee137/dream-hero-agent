@@ -126,6 +126,11 @@ header .sub{color:var(--muted);font-size:13px}
 .job{border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:8px 0;font-size:13px;background:var(--bg)}
 .job .st{font-size:12px;color:var(--muted)}
 .hint{color:var(--muted);font-size:12px;margin:4px 0 0}
+.projpick{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px 0;border-top:1px solid var(--line)}
+.projpick .lab{width:100%;font-size:12px;color:var(--muted)}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:4px 10px;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.job .pj{font-size:12px;color:var(--muted)}
 .close{margin-left:auto;background:none;border:none;font-size:22px;color:var(--muted)}
 
 @media (max-width: 860px){
@@ -185,11 +190,12 @@ header .sub{color:var(--muted);font-size:13px}
   </div>
   <div class="status" id="dStatus"></div>
   <div class="tabs" role="tablist">
-    <button role="tab" aria-selected="true" data-tab="chat">Trò chuyện</button>
-    <button role="tab" aria-selected="false" data-tab="job">Giao việc</button>
+    <button role="tab" aria-selected="true" data-tab="job">Giao việc</button>
+    <button role="tab" aria-selected="false" data-tab="chat">Trò chuyện</button>
   </div>
-  <div class="pane on" id="pChat"></div>
   <div class="pane" id="pJob"></div>
+  <div class="pane" id="pChat"></div>
+  <div class="projpick" id="projPick" hidden></div>
   <div class="composer">
     <textarea id="input" placeholder="Nhắn cho agent…"></textarea>
     <button class="send" id="sendBtn">Gửi</button>
@@ -209,7 +215,10 @@ const AGENTS = [
   {id:"kien-truc-su", name:"Kiến trúc sư", role:"BA: PRD, rule, user story", emoji:"📐",
    look:{hair:"bob", hairC:"#2a2230", shirt:"#7a62b8", pants:"#3a3550", shoe:"#2b2b33", glasses:true, prop:"blueprint"},
    persona:"Bạn là Kiến trúc sư: BA, viết PRD, rule, user story; không đoán, thiếu thông tin thì ghi câu hỏi mở."},
-  {id:"noi-tro", name:"Nội trợ", role:"Hành chính, nhân sự, hoá đơn", emoji:"🧺",
+  {id:"phien-dich", name:"Phiên dịch", role:"Dịch Việt ⇄ Hàn ⇄ Anh", emoji:"🗣️", defaultTab:"chat", home:"phien-dich",
+   look:{hair:"bob", hairC:"#5a3a2a", shirt:"#4f86c6", pants:"#2f3f5c", shoe:"#3a2a22", extra:"headband", prop:"book"},
+   persona:"Bạn là Phiên dịch của đội: dịch Việt ⇄ Hàn ⇄ Anh cho công việc phần mềm (dự án Lina là khách Hàn Quốc). Dịch sát nghĩa, tự nhiên, đúng kính ngữ tiếng Hàn trong công việc (합니다체/해요체 theo ngữ cảnh), giữ nguyên thuật ngữ kỹ thuật, tên riêng, mã, đường dẫn; nếu câu gốc mơ hồ thì dịch phương án hợp lý nhất và ghi chú ngắn. Khi Hero chỉ dán văn bản không kèm yêu cầu: tiếng Việt → dịch sang Hàn; tiếng Hàn/Anh → dịch sang Việt."},
+  {id:"noi-tro", name:"Nội trợ", home:"noi-tro", role:"Hành chính, nhân sự, hoá đơn", emoji:"🧺",
    look:{hair:"bun", hairC:"#6b4a35", shirt:"#6fbf9c", pants:"#6fbf9c", shoe:"#7a5a3a", extra:"apron", dress:true, prop:"basket"},
    persona:"Bạn là Nội trợ: hành chính, nhân sự, hoá đơn, chứng từ kế toán, lịch lương và thanh toán."},
   {id:"hat-rong", name:"Hát rong", role:"Marketing, nội dung", emoji:"🎸",
@@ -228,31 +237,34 @@ const AGENTS = [
    look:{hair:"short", hairC:"#2a2220", shirt:"#3d5a8a", pants:"#2c3e60", shoe:"#1f2430", hat:"cap", extra:"badge", prop:"lantern"},
    persona:"Bạn là Gác cổng: phát hành, checklist trước store, deploy qua GitHub Actions khi Hero duyệt."},
 ];
+AGENTS.forEach(a=>{ a.defaultTab = a.defaultTab || "job"; });
 const HERO = {id:"hero", name:"Hero", role:"Dream · PM, BA, phiên dịch", emoji:"🌸",
   look:{hair:"long", hairC:"#2b1f1d", shirt:"#b9a3e3", pants:"#4a4e6e", shoe:"#6a4a5a", extra:"flower", sit:true}};
 const STATES = {
   working:{label:"Đang làm", icon:"✨"}, idle:{label:"Rảnh", icon:"☕"}, waiting:{label:"Cần Hero", icon:"❗"},
   blocked:{label:"Bị chặn", icon:"☁️"}, done:{label:"Xong việc", icon:"🎉"}, offline:{label:"Nghỉ", icon:"💤"}
 };
-const PROJECTS = {lina:"⭐ Lina", nhalo:"🏠 NhàLo", balheh:"🍀 Balheh", chinchu:"🏘️ ChinChu", homepages:"🌿 Homepages", "nha-liu-lo":"🏡 Nhà Líu Lo", "huong-noi":"🏡 Công ty Hướng Nội", admin:"🧺 Hành chính", team:"🦸 Đội Hero"};
+const PROJECTS = {lina:"⭐ Lina", nhalo:"🏠 NhàLo", balheh:"🍀 Balheh", chinchu:"🏘️ ChinChu", homepages:"🌿 Homepages", "noi-tro":"🧺 Nội trợ", "phien-dich":"🗣️ Phiên dịch", team:"🦸 Đội Hero", "nha-liu-lo":"🏡 Nhà Líu Lo", "huong-noi":"🏡 Công ty Hướng Nội"};
+PROJECTS.admin = PROJECTS["noi-tro"];
+const PICKABLE = ["lina","nhalo","balheh","chinchu","homepages","noi-tro","phien-dich","team","nha-liu-lo","huong-noi"];
 const DEMO = {
   "sidekick":{state:"working",task:"Tổng hợp báo cáo cuối ngày",project:"team"},
   "hoa-tieu":{state:"idle"}, "kien-truc-su":{state:"working",task:"Viết lại REQUIREMENTS",project:"nhalo"},
   "tho-may":{state:"idle"}, "tho-xay":{state:"waiting",task:"Chờ Hero duyệt PR",project:"nhalo"},
   "tho-san":{state:"done",task:"Test máy thật",project:"nhalo"}, "gac-cong":{state:"blocked",task:"Chờ App Store duyệt",project:"nhalo"},
-  "hat-rong":{state:"offline"}, "noi-tro":{state:"offline"},
+  "hat-rong":{state:"offline"}, "noi-tro":{state:"offline"}, "phien-dich":{state:"idle"},
 };
 
 /* ===== MAP (1600x900, tuned to the painting) ===== */
 const STATIONS = {   // where each agent works
   "hoa-tieu":{x:392,y:486}, "kien-truc-su":{x:300,y:630}, "sidekick":{x:520,y:604}, "noi-tro":{x:150,y:600},
   "hat-rong":{x:700,y:420}, "tho-may":{x:922,y:446}, "tho-xay":{x:1176,y:428}, "tho-san":{x:1236,y:494},
-  "gac-cong":{x:1478,y:506}
+  "gac-cong":{x:1478,y:506}, "phien-dich":{x:428,y:578}
 };
 const REST = {       // where they nap when offline
   "hoa-tieu":{x:395,y:470}, "kien-truc-su":{x:240,y:665}, "sidekick":{x:455,y:660}, "noi-tro":{x:200,y:650},
   "hat-rong":{x:640,y:470}, "tho-may":{x:780,y:470}, "tho-xay":{x:1100,y:450}, "tho-san":{x:1360,y:500},
-  "gac-cong":{x:1530,y:540}
+  "gac-cong":{x:1530,y:540}, "phien-dich":{x:340,y:500}
 };
 const LEISURE = [ {x:620,y:500},{x:760,y:560},{x:880,y:520},{x:1010,y:560},{x:1080,y:660},{x:860,y:700},
   {x:980,y:790},{x:1250,y:620},{x:1180,y:740},{x:1400,y:580},{x:700,y:780},{x:1330,y:440},{x:1050,y:470},
@@ -322,6 +334,7 @@ function prop(L){
     case "palette": return `<g transform="translate(-21,-30)"><path d="M-8,0 q0,-9 9,-9 q9,0 9,7 q0,4 -4,3 q-4,-1 -4,3 q0,4 -4,4 q-6,0 -6,-8z" fill="#f3e2c4" stroke="${O}" stroke-width="1.6"/><circle cx="-3" cy="-4" r="1.8" fill="#e5484d"/><circle cx="2" cy="-6" r="1.8" fill="#3b82f6"/><circle cx="6" cy="-3" r="1.8" fill="#f2c94c"/></g><path d="M22,-34 l7,-14" stroke="#7a5a3a" stroke-width="2.4" stroke-linecap="round"/><path d="M29,-48 l2,-4" stroke="#e5484d" stroke-width="3" stroke-linecap="round"/>`;
     case "wrench": return `<g transform="translate(22,-30) rotate(30)"><rect x="-1.8" y="-2" width="3.6" height="14" rx="1.5" fill="#9aa7b4" stroke="${O}" stroke-width="1.4"/><path d="M-5,-4 a5,5 0 1 1 10,0 l-3,1 v-4 h-4 v4z" fill="#9aa7b4" stroke="${O}" stroke-width="1.4"/></g>`;
     case "net": return `<path d="M22,-30 L30,-62" stroke="#8a6a3a" stroke-width="2.6" stroke-linecap="round"/><ellipse cx="31" cy="-70" rx="8" ry="9" fill="rgba(255,255,255,.35)" stroke="${O}" stroke-width="1.6"/><path d="M25,-72 h12 M26,-66 h10 M31,-79 v18" stroke="${O}" stroke-width=".7" opacity=".6"/>`;
+    case "book": return `<g transform="translate(-21,-31)"><path d="M-8,-7 Q-4,-9 0,-7 Q4,-9 8,-7 V5 Q4,3 0,5 Q-4,3 -8,5Z" fill="#fff6e0" stroke="${O}" stroke-width="1.5"/><path d="M0,-7 V5" stroke="${O}" stroke-width="1"/><text x="-5.5" y="0" font-size="5" fill="#c0503a">가</text><text x="1.6" y="0" font-size="5" fill="#3b82f6">A</text></g><g transform="translate(16,-96)"><path d="M0,0 h14 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-8 l-4,4 v-4 h-2 a4,4 0 0 1 -4,-4 v-6 a4,4 0 0 1 4,-4z" fill="#fff" stroke="${O}" stroke-width="1.2"/><text x="7" y="10" font-size="7" text-anchor="middle">…</text></g>`;
     case "lantern": return `<g transform="translate(22,-26)"><path d="M0,-12 v4" stroke="${O}" stroke-width="1.4"/><rect x="-5" y="-8" width="10" height="12" rx="3" fill="#ffd66b" stroke="${O}" stroke-width="1.6"/><path d="M-5,-3 h10" stroke="${O}" stroke-width="1"/></g>`;
   }
   return "";
@@ -341,6 +354,7 @@ function figure(a){
   if(L.extra==="overalls") extra=`<path d="M-11,-38 H11 L13,-18 Q0,-15 -13,-18Z" fill="${L.pants}" stroke="${O}" stroke-width="1.6"/><path d="M-9,-38 L-8,-51 M9,-38 L8,-51" stroke="${L.pants}" stroke-width="3.2"/><rect x="-4" y="-35" width="8" height="6" rx="1.5" fill="#f2a35c" stroke="${O}" stroke-width="1.2"/>`;
   if(L.extra==="vest") extra=`<path d="M-13,-49 L-5,-49 L-3,-18 Q-9,-16 -14,-17Z M13,-49 L5,-49 L3,-18 Q9,-16 14,-17Z" fill="#8a6a3a" stroke="${O}" stroke-width="1.6"/>`;
   if(L.extra==="badge") extra=`<path d="M-6,-42 l3,-2 l3,2 l-1,4 h-4z" fill="#f2cf63" stroke="${O}" stroke-width="1.2"/><path d="M-1,-50 V-18" stroke="#1d2f50" stroke-width="1.4"/>`;
+  if(L.extra==="headband") extra="";
   if(L.extra==="flower") extra=`<path d="M-1,-50 V-20" stroke="${O}" stroke-width="1" opacity=".4"/>`;
   const cape = L.extra==="cape" ? `<path d="M-12,-50 Q-24,-26 -20,-10 Q0,-6 20,-10 Q24,-26 12,-50Z" fill="#b5302c" stroke="${O}" stroke-width="2" stroke-linejoin="round"/>` : "";
   const star = L.extra==="cape" ? `<path d="M0,-43 l2,4 4,.5 -3,3 1,4 -4,-2 -4,2 1,-4 -3,-3 4,-.5z" fill="#f6d34a" stroke="${O}" stroke-width="1"/>` : "";
@@ -355,8 +369,9 @@ function figure(a){
     <ellipse cx="-13" cy="-61.5" rx="4" ry="2.4" fill="#f59a96" opacity=".55"/><ellipse cx="13" cy="-61.5" rx="4" ry="2.4" fill="#f59a96" opacity=".55"/>
     <path d="M-3.5,-60 Q0,-57 3.5,-60" stroke="#8a3e30" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;
   const glasses = L.glasses ? `<g fill="rgba(255,255,255,.25)" stroke="${O}" stroke-width="1.6"><circle cx="-7.5" cy="-68" r="5.6"/><circle cx="7.5" cy="-68" r="5.6"/><path d="M-1.9,-68 H1.9"/></g>` : "";
+  const band = L.extra==="headband" ? `<path d="M-20,-80 Q0,-94 20,-80" stroke="#f2cf63" stroke-width="4" fill="none" stroke-linecap="round"/>` : "";
   const flower = L.extra==="flower" ? `<g transform="translate(14,-88)" stroke="${O}" stroke-width=".8"><circle r="3.2" fill="#ff9ec4"/><circle cx="4" cy="1.5" r="3.2" fill="#ff9ec4"/><circle cx="-.5" cy="4.5" r="3.2" fill="#ff9ec4"/><circle cx="1.6" cy="2" r="1.8" fill="#ffd36b"/></g>` : "";
-  return `${cape}${hairBack(L)}${legs}${torso}${extra}${star}${armL}${armR}${face}${glasses}${hairFront(L)}${hat(L)}${flower}${prop(L)}`;
+  return `${cape}${hairBack(L)}${legs}${torso}${extra}${star}${armL}${armR}${face}${glasses}${hairFront(L)}${band}${hat(L)}${flower}${prop(L)}`;
 }
 
 /* ===== SCENE: create once, then move ===== */
@@ -535,7 +550,8 @@ function openAgent(id){
   $("#dName").textContent = a.name; $("#dRole").textContent = a.role;
   renderDrawerStatus();
   document.querySelector('[data-tab="job"]').hidden = id==="hero";
-  setTab("chat"); loadChat(id);
+  pickProj = new Set([a.home || (status[id]?.project && PICKABLE.includes(status[id].project) ? status[id].project : null)].filter(Boolean));
+  setTab(id==="hero" ? "chat" : a.defaultTab); loadChat(id);
   $("#drawer").classList.add("open"); $("#drawer").setAttribute("aria-hidden","false"); $("#scrim").classList.add("open");
   document.querySelectorAll(".char").forEach(el=>el.classList.toggle("sel", el.dataset.id===id));
   setTimeout(()=>$("#input").focus(), 250);
@@ -569,6 +585,7 @@ function setTab(t){
   $("#pChat").classList.toggle("on", t==="chat"); $("#pJob").classList.toggle("on", t==="job");
   $("#input").placeholder = t==="chat" ? "Hỏi nhanh (không cần Mac)…" : "Mô tả việc cần làm trên Mac…";
   $("#sendBtn").textContent = t==="chat" ? "Gửi" : "Giao";
+  $("#projPick").hidden = t!=="job"; if(t==="job") renderProjPick();
   if(t==="chat") renderChat(); else { renderJobs(); markJobsSeen(); }
 }
 
@@ -585,10 +602,10 @@ function rulesFor(id){
   const who = id==="hero" ? "Bạn là Sidekick, trả lời Hero về tình hình cả đội." : a.persona;
   return `${who}
 Bạn đang nói chuyện với Hero (Dream, PM/BA/phiên dịch ở Townsoft Vina) trong trang "Tiệm Heroes".
-Xưng "tớ", gọi Hero là "cậu". Trả lời tiếng Việt, ngắn gọn, thân thiện, tối đa ~120 chữ, có thể gạch đầu dòng.
+Xưng "tớ", gọi Hero là "cậu". ${id==="phien-dich" ? "Khi dịch: chỉ đưa bản dịch (có thể kèm 1–2 ghi chú ngắn về từ ngữ/kính ngữ), độ dài theo văn bản gốc. Khi Hero hỏi chuyện khác: trả lời tiếng Việt ngắn gọn." : "Trả lời tiếng Việt, ngắn gọn, thân thiện, tối đa ~120 chữ, có thể gạch đầu dòng."}
 Thứ tự ưu tiên: Lina > dự án công ty khác (NhàLo, Balheh...) > hành chính > dự án cá nhân.
 Bạn KHÔNG truy cập được máy Mac, repo, file hay email. Chỉ biết tình trạng đội và hàng chờ dưới đây. Không bịa số liệu hay tiến độ.
-Nếu Hero nhờ việc cần làm thật (sửa code, đọc repo, viết file, gửi mail, vẽ thiết kế), hãy nói Hero chuyển sang tab "Giao việc" để việc vào hàng chờ cho Mac mini.
+Nếu Hero nhờ việc cần làm thật (sửa code, đọc repo, viết file, gửi mail, vẽ thiết kế, dịch file lớn), hãy nói Hero chuyển sang tab "Giao việc" để việc vào hàng chờ cho Mac mini.
 Tình trạng đội lúc này (${vnNow().toLocaleString("vi-VN")}):
 ${teamSnapshot()}
 Hàng chờ gần đây:
@@ -636,17 +653,24 @@ async function sendChat(text){
 }
 
 /* ===== JOBS (db queue) ===== */
+let pickProj = new Set();
+function renderProjPick(){
+  $("#projPick").innerHTML = `<span class="lab">Tập trung vào dự án (chọn nhiều được) — agent chỉ đọc tài liệu của dự án đã chọn:</span>` +
+    PICKABLE.map(k=>`<button class="chip" data-k="${k}" aria-pressed="${pickProj.has(k)}">${PROJECTS[k]}</button>`).join("");
+  $("#projPick").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{ const k=b.dataset.k; pickProj.has(k)?pickProj.delete(k):pickProj.add(k); b.setAttribute("aria-pressed", pickProj.has(k)); });
+}
 const JOB_ST = {cho:"⏳ Chờ Mac nhận", "dang-lam":"✨ Đang làm", xong:"✅ Xong", huy:"✖ Huỷ"};
 function linkify(t){ return esc(t).replace(/https?:\/\/[^\s<]+/g, u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`); }
 function renderJobs(){
   const id=current; const mine = jobs.filter(j=>j.agent===id).sort((a,b)=>b.createdAt-a.createdAt).slice(0,15);
   $("#pJob").innerHTML = `<p class="hint">${db ? "Việc vào hàng chờ trên claude.ai. Mac mini bật thì phiên của đội nhận làm; xong sẽ có kết quả ngay dưới việc đó (kèm link nếu có) và thông báo trên trang." : "Giao việc cần mở trang trong claude.ai (đã đăng nhập)."}</p>`
-   + (mine.length? mine.map(j=>`<div class="job"><div>${esc(j.text)}</div><div class="st">${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}${j.by_agent?" · "+esc(findAgent(j.by_agent)?.name||j.by_agent):""}</div>${j.reply?`<div style="margin-top:6px;white-space:pre-wrap">↳ ${linkify(j.reply)}</div>`:""}</div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
+   + (mine.length? mine.map(j=>`<div class="job"><div>${esc(j.text)}</div>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<div class="st">${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}${j.by_agent?" · "+esc(findAgent(j.by_agent)?.name||j.by_agent):""}</div>${j.reply?`<div style="margin-top:6px;white-space:pre-wrap">↳ ${linkify(j.reply)}</div>`:""}</div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
 }
 function markJobsSeen(){ jobsSeen = Date.now(); try{ localStorage.setItem("tiem-jobs-seen", String(jobsSeen)); }catch{} renderRoster(); }
 async function sendJob(text){
   if(!db){ renderJobs(); return; }
-  try{ await db.collection("inbox").add({agent:current, text, status:"cho", createdAt:Date.now(), by:meId||""}); toast("Đã giao cho "+findAgent(current).name+" · chờ Mac nhận"); }
+  if(!pickProj.size){ toast("Chọn ít nhất 1 dự án để agent biết đọc tài liệu nào"); $("#input").value=text; return; }
+  try{ await db.collection("inbox").add({agent:current, text, projects:[...pickProj], status:"cho", createdAt:Date.now(), by:meId||""}); toast("Đã giao cho "+findAgent(current).name+" · chờ Mac nhận"); }
   catch(e){ $("#pJob").insertAdjacentHTML("afterbegin", `<p class="hint">⚠️ Không lưu được (${esc(e?.code||"lỗi")}).</p>`); }
 }
 $("#sendBtn").onclick = ()=>{

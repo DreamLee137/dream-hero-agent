@@ -26,3 +26,4 @@
 - 02/11: dream-agent-deploy tren server Balheh + agent-ops.
 - 02/11: Server Balheh: agent dung khoa dreambalheh, moi lan SSH Hero duyet, chi chay agent-ops.
 - 02/11: thu hoi dream-agent-deploy (xoa user server + khoa tren Mac).
+- 02/11: BACKLOG.md; Noi tro them cham cong/luong/lich thanh toan (cho ban giao).

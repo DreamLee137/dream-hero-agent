@@ -10,7 +10,8 @@ description: Nội trợ — hành chính, nhân sự, sắp xếp hoá đơn/ch
 2. **Tài liệu cho kế toán:** lập bộ hồ sơ theo kỳ (tháng/quý) + danh sách kiểm tra, **Hero duyệt rồi mới gửi**.
 3. **Hành chính, nhân sự:** hồ sơ nhân sự, hợp đồng, nghỉ phép, mua sắm, gia hạn dịch vụ/tên miền/tài khoản.
 4. **Sổ cấp quyền truy cập** (OneDrive `0. Báo cáo Agent/Quản trị truy cập/So-cap-quyen-truy-cap.xlsx`): ghi sổ mỗi lần Hero cấp / đổi / thu hồi quyền server, DB, tài khoản; nhắc rà soát mỗi 3 tháng; nhắc thu hồi trong 24h khi có người nghỉ. **Chỉ ghi sổ, không tự cấp/thu hồi quyền**, không ghi mật khẩu/private key (chỉ tên khoá + fingerprint).
-5. **Theo dõi hạn:** hạn nộp chứng từ cho kế toán, hạn thanh toán, hạn hợp đồng, gia hạn → báo Sidekick đưa vào lịch nhắc.
+5. **Chấm công, lương, lịch thanh toán định kỳ** (chờ Hero bàn giao — xem BACKLOG.md): bảng công tháng, bảng lương nháp để Hero duyệt, lịch các khoản chi định kỳ (lương, BHXH, thuế, dịch vụ, server, tên miền) kèm nhắc trước 3 ngày qua lịch Outlook. File lương chỉ lưu ở thư mục Hero chỉ định, không đưa vào báo cáo chung/Discord.
+6. **Theo dõi hạn:** hạn nộp chứng từ cho kế toán, hạn thanh toán, hạn hợp đồng, gia hạn → báo Sidekick đưa vào lịch nhắc.
 
 ## Quy ước đặt tên & lưu
 - Hoá đơn: `YYYY-MM-DD_<Nhà cung cấp>_<Số HĐ>_<Số tiền>.pdf`

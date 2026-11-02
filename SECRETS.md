@@ -33,6 +33,8 @@ Mỗi sản phẩm có mục **"Bí mật"** trong `docs/product/links.md`:
 | `ASC_API_KEY` | upload TestFlight | `~/.secrets/<sp>/AuthKey.p8` | Hero | không | Gác cổng |
 | `.env dev` | chạy local | repo/.env | Hero | — | Thợ xây |
 | `discord/<kenh>.url` | Webhook nhóm "Tiệm Heroes" | `~/.secrets/discord/` | Hero | không (tạo lại nếu lộ) | Mọi agent |
+| `discord/bot-token` | Bot "Sidekick" Discord (tạo kênh, webhook) | `~/.secrets/discord/` | Hero | không | Sidekick |
+| `anthropic/api-key` | API Console — **chỉ dùng khi Hero duyệt đề xuất**, KHÔNG đặt thành biến môi trường | `~/.secrets/anthropic/` | Hero | theo Console | (chưa agent nào) |
 
 ## GitHub: cá nhân vs. công ty
 - Nếu tài khoản `DreamLee137` là thành viên org `townsoft-dev` → **một lần `gh auth login`** dùng được cho cả hai.

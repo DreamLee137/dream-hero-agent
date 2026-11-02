@@ -14,7 +14,7 @@ Công cụ mới → thêm vào đây + ghi `CHANGELOG.md`.
 
 ## 💳 API Console — chỉ dùng khi được Hero duyệt
 Mặc định **mọi việc chạy bằng gói Claude**, không dùng API. Claude Code luôn đăng nhập bằng tài khoản Claude, không bằng API key.
-Khi một việc thực sự cần API, agent gửi đề xuất cho Hero (qua `#🔔-can-hero`):
+Khi một việc thực sự cần API, agent gửi đề xuất cho Hero (qua `#📢-can-hero`):
 - Việc gì, vì sao gói Claude không làm được
 - Model dùng (ưu tiên Haiku/Sonnet) + Batch API / prompt caching nếu áp dụng
 - Ước tính chi phí/tháng + giới hạn chi tiêu đặt trong workspace

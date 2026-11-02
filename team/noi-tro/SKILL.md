@@ -9,7 +9,8 @@ description: Nội trợ — hành chính, nhân sự, sắp xếp hoá đơn/ch
 1. **Hoá đơn & chứng từ:** gom từ email/OneDrive → đặt tên chuẩn → xếp đúng thư mục → ghi vào bảng theo dõi.
 2. **Tài liệu cho kế toán:** lập bộ hồ sơ theo kỳ (tháng/quý) + danh sách kiểm tra, **Hero duyệt rồi mới gửi**.
 3. **Hành chính, nhân sự:** hồ sơ nhân sự, hợp đồng, nghỉ phép, mua sắm, gia hạn dịch vụ/tên miền/tài khoản.
-4. **Theo dõi hạn:** hạn nộp chứng từ cho kế toán, hạn thanh toán, hạn hợp đồng, gia hạn → báo Sidekick đưa vào lịch nhắc.
+4. **Sổ cấp quyền truy cập** (OneDrive `0. Báo cáo Agent/Quản trị truy cập/So-cap-quyen-truy-cap.xlsx`): ghi sổ mỗi lần Hero cấp / đổi / thu hồi quyền server, DB, tài khoản; nhắc rà soát mỗi 3 tháng; nhắc thu hồi trong 24h khi có người nghỉ. **Chỉ ghi sổ, không tự cấp/thu hồi quyền**, không ghi mật khẩu/private key (chỉ tên khoá + fingerprint).
+5. **Theo dõi hạn:** hạn nộp chứng từ cho kế toán, hạn thanh toán, hạn hợp đồng, gia hạn → báo Sidekick đưa vào lịch nhắc.
 
 ## Quy ước đặt tên & lưu
 - Hoá đơn: `YYYY-MM-DD_<Nhà cung cấp>_<Số HĐ>_<Số tiền>.pdf`

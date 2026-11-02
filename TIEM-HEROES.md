@@ -6,10 +6,10 @@
 | Kênh | Dùng cho | Ai nhắn |
 |---|---|---|
 | `#☕-quay-chung` | Tin đặc biệt của cả đội: cột mốc, phát hành xong, chào tuần mới, khen nhau | Mọi agent |
-| `#📋-bao-cao` | Báo cáo cuối ngày 17:30 (cùng nội dung email, bản rút gọn) + tổng kết tuần chiều thứ Sáu | Sidekick |
-| `#🔔-can-hero` | Cần Hero duyệt/quyết, có việc bị chặn | Mọi agent |
+| `#📑-bao-cao` | Báo cáo cuối ngày 17:30 (cùng nội dung email, bản rút gọn) + tổng kết tuần chiều thứ Sáu | Sidekick |
+| `#📢-can-hero` | Cần Hero duyệt/quyết, có việc bị chặn | Mọi agent |
 | `#🚨-khan-cap` | Sự cố: production lỗi, build hỏng, nghi lộ chìa khoá | Mọi agent (kèm @Hero) |
-| `#🌿-<san-pham>` | Tin của riêng từng sản phẩm (vd. `#🌿-nhalo`) | Agent làm sản phẩm đó |
+| `#🌿-<san-pham> (NhàLo: #🏠-nha-lo, Lina: #⭐-lina)` | Tin của riêng từng sản phẩm (vd. `#🏠-nha-lo`) | Agent làm sản phẩm đó |
 | `#🏡-<du-an-ca-nhan>` | Kênh riêng cho từng dự án cá nhân (nhóm kênh "🏡 Góc vườn riêng") | Agent làm dự án đó |
 | `#📮-hero-giao-viec` | Hero ghi chú việc nhanh từ điện thoại; Sidekick đọc khi bắt đầu phiên (giai đoạn 2) | Hero |
 
@@ -37,7 +37,7 @@ Webhook = một "khe thư" riêng của từng kênh. Ai có link thì bỏ thư
    (`pbpaste` dán thẳng nội dung vừa copy; nếu copy trên máy khác thì dùng `nano ~/.secrets/discord/quay-chung.url` rồi dán.)
 6. Lặp lại cho các kênh còn lại, tên file: `bao-cao.url`, `can-hero.url`, `khan-cap.url`, `nhalo.url`.
 7. Thử: `~/dream-hero-agent/tools/discord-say.sh sidekick quay-chung "Tiệm mở cửa rồi! ☕"`
-8. Trên điện thoại: bật thông báo cho `#🔔-can-hero`, `#🚨-khan-cap`, `#📋-bao-cao`; tắt bớt các kênh còn lại.
+8. Trên điện thoại: bật thông báo cho `#📢-can-hero`, `#🚨-khan-cap`, `#📑-bao-cao`; tắt bớt các kênh còn lại.
 
 ---
 

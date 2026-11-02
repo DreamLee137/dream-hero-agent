@@ -18,7 +18,8 @@
 
 ## Hiện trạng trên Mac mini (02/11/2026)
 - `~/.secrets/{discord,nhalo,personal,lightsail}` — đã tạo, quyền 700.
-- `~/SSH-Keys/` — khoá SSH server (Lightsail Balheh, Lina), giữ nguyên chỗ cũ vì cấu hình đang trỏ tới; đã chỉnh quyền về 600.
+- `~/SSH-Keys/` — khoá SSH server (Lightsail Balheh, Lina), giữ nguyên chỗ cũ vì cấu hình đang trỏ tới; đã chỉnh quyền về 600. `LightsailDefaultKey` là khoá cũ đã gỡ khỏi Lightsail → xoá file.
+- Ai có quyền gì trên server/DB/tài khoản: **Sổ cấp quyền** (OneDrive `0. Báo cáo Agent/Quản trị truy cập/`), Nội trợ giữ sổ.
 - `~/keystores/nhalo/` — keystore ký app Android (key.properties trỏ tới).
 - `~/.appstoreconnect/private_keys/` — khoá App Store Connect.
 - ⚠️ Việc Hero cần xử lý: chuyển nội dung 2 file `passphrase*.rtf` vào trình quản lý mật khẩu rồi xoá file; khoá riêng (private key) của người khác (dev/khách) nên để chính họ giữ — xác nhận rồi gỡ khỏi máy.

@@ -16,6 +16,7 @@ Repo này là "bộ não" của đội agent của Dream: định nghĩa agent, 
 | **Gác cổng** | Phát hành, store | `team/gac-cong` |
 | **Hát rong** | Marketing, nội dung | `team/hat-rong` |
 | **Nội trợ** | Hành chính, nhân sự, hoá đơn, tài liệu cho kế toán | `team/noi-tro` |
+| **Phiên dịch** | Dịch Việt ⇄ Hàn ⇄ Anh, soạn tin gửi khách Hàn, bảng thuật ngữ | `team/phien-dich` |
 
 ## Quy trình dự án
 Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9). Công cụ của từng agent: `TOOLS.md`.

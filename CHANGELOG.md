@@ -28,3 +28,4 @@
 - 02/11: thu hoi dream-agent-deploy (xoa user server + khoa tren Mac).
 - 02/11: BACKLOG.md; Noi tro them cham cong/luong/lich thanh toan (cho ban giao).
 - 2026-11-02: Tiệm Heroes bản Artifact trên claude.ai (tranh nền Gemini, trạng thái realtime qua db, chat trong trang, hàng chờ giao việc) — xem tiem/ARTIFACT.md
+- 2026-11-02: Thêm agent Phiên dịch (team/phien-dich). Tiệm Heroes: tab Giao việc lên đầu, chọn nhiều dự án khi giao việc; Sổ giao việc.xlsx trên OneDrive; báo cáo sáng chỉ nhắn Discord, không email.

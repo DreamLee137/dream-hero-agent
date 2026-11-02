@@ -1,4 +1,4 @@
-# Runbook: tạo user `dream-agent-deploy` trên Lightsail (Lina, Balheh)
+# Runbook: tạo user `dream-agent-deploy` trên Lightsail (CHỈ server Balheh — Hero chốt 02/11)
 
 Mục đích: agent deploy / khởi động lại app bằng tài khoản quyền hẹp, không dùng user của Hero hay `ubuntu`.
 **Hero chạy (hoặc cho phép Sidekick chạy từng bước). Xong thì ghi vào Sổ cấp quyền.**

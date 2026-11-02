@@ -43,6 +43,7 @@ Mỗi sản phẩm có mục **"Bí mật"** trong `docs/product/links.md`:
 - ⚠️ `DreamLee137` có quyền **admin** org `townsoft-dev` → khi agent dùng phiên `gh` đã đăng nhập, agent cũng có quyền admin. Vì vậy **cấm agent** chạy các lệnh quản trị: xoá/đổi tên/chuyển repo, đổi visibility, sửa branch protection, quản lý thành viên/quyền, xoá release/tag, `gh api` với phương thức DELETE/PATCH/PUT vào cài đặt org/repo. Đặt các lệnh này vào danh sách `deny` của `.claude/settings.json`. Khi cần, Hero tự làm.
 - ✅ 02/11: đã cài luật quyền chung cho Claude Code trên Mac mini (`~/.claude/settings.json`, bản gốc lưu `settings.json.bak-2026-11-02`). Nguồn: `templates/claude-settings.global.json` — sửa ở đây rồi cài lại.
 - `gh` đã đăng nhập (DreamLee137, token trong Keychain).
+- 🖥️ **Server agent được vào: CHỈ Balheh** (qua `dream-agent-deploy`, quyền hẹp). Server Lina: agent không được vào. Mọi dự án khác: chỉ khi Hero cấp quyền rõ ràng.
 
 ## 2FA
 - App xác thực 6 số (TOTP) dùng bình thường, không cần đổi.

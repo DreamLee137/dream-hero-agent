@@ -1,16 +1,22 @@
 # Danh bạ sản phẩm
 
-Chỉ ghi tên + nơi chứa hồ sơ. Nội dung chi tiết nằm trong `docs/product/` của repo sản phẩm.
-**Ưu tiên: 🏢 Công ty luôn trước 🏡 Cá nhân** (xem `PERSONAL.md`).
+Code: `/Users/townsoft/Projects/` · Tài liệu công ty: OneDrive `[0] TOWNSOFT'S FILES/0. Project/0. Báo cáo Agent/<dự án>/`
+**Ưu tiên:** ① Lina → ② dự án công ty khác → ③ Nội trợ → ④ cá nhân.
 
-## 🏢 Công ty (Townsoft Vina) — `/Users/townsoft/Projects/company/`
-| Sản phẩm | Repo chứa hồ sơ (`docs/product/`) | Repo liên quan | Trạng thái |
-|---|---|---|---|
-| NhàLo | `townsoft-dev/biztown-rent` (app Flutter + Zalo Mini App) | `townsoft-dev/biztown-rent_Backend` (BE api-rent). Mini App: `miniapp` đang dùng, `miniapp-v2` chờ Zalo duyệt — cả hai nằm trong repo app | Chuẩn bị phát hành bản Lite |
-| **Balheh** | `townsoft-dev/Balheh_PJT_FrontEnd`, `townsoft-dev/Balheh_PJT_BackEnd` | Sản phẩm công ty (đang thay Discord + Trello cho dự án Lina). **Hero: BA, PM, thiết kế, test, marketing — không code.** 🔒 Mặc định agent **chỉ đọc** repo (đọc code để chốt logic, viết spec, test) — sửa code là việc của dev | Đang phát triển |
-| **Lina** ⭐ ưu tiên số 1 | `townsoft-dev/Lina-Security-Manager` (chưa rõ đủ chưa — Hero xác nhận) | Outsourcing Hàn Quốc: 2 dev BE (Hàn), 1 dev FE (Việt). Hero điều phối: nhận yêu cầu, thiết kế, cầu nối, test | Bảo trì: sửa lỗi + cải tiến nhỏ. 🔒 **Repo CHỈ ĐỌC**: chỉ `git pull`/đọc, cấm sửa, commit, push, tạo nhánh. Nguồn kiến thức chính: **Claude Project Lina** (chat Discord + Trello tới một thời điểm; nay trao đổi qua **Balheh**). Quy trình nhắc việc Lina: **tạm hoãn**, Hero bàn riêng sau khi an cư |
+Ký hiệu quyền của agent: 🔒 chỉ đọc · 📝 chỉ sửa tài liệu (docs, *.md), không sửa src · ✏️ được sửa code theo quy trình nhánh
 
-## 🏡 Cá nhân (Dream) — `/Users/townsoft/Projects/personal/` · GitHub `DreamLee137`
-| Sản phẩm | Repo | Nơi chạy demo | Trạng thái |
-|---|---|---|---|
-| **Nhà Líu Lo** | `DreamLee137/biztown-nhaliulo` | (chưa có) | Hero làm tất cả: thương hiệu, mascot 3D, product brief, app |
+## 🏢 Công ty (Townsoft Vina) — `Projects/company/`
+| Dự án | Thư mục | Repo (`townsoft-dev/`) | Quyền | Vai trò Hero / ghi chú |
+|---|---|---|---|---|
+| **Lina** ⭐ | `lina/` | `Lina-Security-Backend` · `Lina-Security-Manager` (FE) | 🔒 | Outsourcing Hàn Quốc, bảo trì. Hero điều phối, thiết kế, cầu nối, test. Nguồn kiến thức: Claude Project Lina; trao đổi nay qua Balheh. Quy trình nhắc việc: bàn sau |
+| **Balheh** | `balheh/` | `Balheh_Storage` · `Balheh_PJT_Mobile` · `Balheh_PJT_BackEnd` · `Balheh_PJT_FrontEnd` | 📝 | Hero: BA, PM, thiết kế, test, marketing. Sửa tài liệu trong repo, không sửa src |
+| **NhàLo** | `nhalo/` | `biztown-rent` (app + Mini App) · `biztown-rent_Backend` | ✏️ | Cải tiến trên `feature/nhalo-lite` → test đủ → merge `main` (= bản store). Hồ sơ: `docs/product/` |
+| **ChinChu** | `chinchu/` | `biztown-Chinchu-FrontEnd` · `biztown-Chinchu-BackEnd` (đang trống) | ✏️ | Dự án sắp làm; repo mobile/storage tạo sau. Hero bàn sau |
+| **Homepage BizTown** (BizTown, NhàLo, Balheh) | `homepages/` | `biztown-web` | 📝 → ✏️ | Hero thiết kế, test; sắp tự sửa nội dung → agent hỗ trợ trên nhánh riêng + PR, Hero duyệt |
+| **Homepage công ty** | `homepages/` | `townsoft-homepage` | 📝 → ✏️ | Như trên, Hero sắp sửa giao diện |
+
+## 🏡 Cá nhân (Dream) — `Projects/personal/` · GitHub `DreamLee137`
+| Dự án | Thư mục | Repo | Quyền | Ghi chú |
+|---|---|---|---|---|
+| **Nhà Líu Lo** | `nha-liu-lo/` | `DreamLee137/biztown-nhaliulo` | ✏️ | Hero làm tất cả: thương hiệu, mascot 3D, app |
+| **Công ty Hướng Nội** | `cong-ty-huong-noi/` | (chưa cần repo) | — | Kênh video TikTok, Hero làm tất cả |

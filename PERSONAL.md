@@ -4,7 +4,7 @@ Dùng chung toàn bộ quy trình (`PLAYBOOK.md`), đội agent, rule như dự 
 
 ## 1. Ranh giới với công ty
 - **Ưu tiên việc công ty.** Dự án cá nhân chỉ chạy khi không có việc công ty đang chờ, hoặc Hero chỉ định.
-- Repo trên GitHub `DreamLee137`, thư mục `~/Projects/personal/`, chìa khoá ở `~/.secrets/personal/`, kênh Discord riêng.
+- Repo trên GitHub `DreamLee137`, code ở `~/Projects/personal/`, tài liệu ở OneDrive `[1] PERSONAL/Heroes/<dự án>/`, chìa khoá ở `~/.secrets/personal/`, kênh Discord riêng.
 - Không dùng code, dữ liệu, thiết kế, tài liệu, chìa khoá, tài khoản dịch vụ của công ty.
 - ⚠️ Hero tự kiểm tra chính sách công ty về việc dùng máy Mac mini, gói Claude và ngân sách API của công ty cho dự án cá nhân. **Không dùng ngân sách API 220 USD của công ty cho dự án cá nhân.**
 

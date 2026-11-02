@@ -25,7 +25,7 @@ Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9). Công cụ của t
 - **Thứ tự ưu tiên:** ① **Lina** (dự án outsourcing có khách hàng thật) → ② dự án công ty khác (NhàLo...) → ③ hành chính (Nội trợ) → ④ dự án cá nhân. Hero chỉ định khác thì theo Hero.
 - Không mang code, dữ liệu, tài liệu, chìa khoá của công ty sang dự án cá nhân và ngược lại.
 - Dự án cá nhân theo thêm `PERSONAL.md` (thiết kế để dễ chuyển sang server/domain riêng).
-- **Nơi lưu:** code → `~/Projects/` (`/Users/townsoft/Projects`, không đồng bộ OneDrive; vẫn commit/push GitHub bình thường). **Mọi thứ khác của công ty** (tài liệu, báo cáo, ảnh, video, file xuất) → OneDrive `[0] TOWNSOFT'S FILES/0. Project/0. Báo cáo Agent/<dự án>/`. Không để tài liệu công ty trong drive cá nhân. Chỉ dự án Hero gọi là cá nhân mới vào thư mục cá nhân + GitHub `DreamLee137`.
+- **Nơi lưu:** code → `~/Projects/` (`/Users/townsoft/Projects`, không đồng bộ OneDrive; vẫn commit/push GitHub bình thường). **Mọi thứ khác của công ty** (tài liệu, báo cáo, ảnh, video, file xuất) → OneDrive `[0] TOWNSOFT'S FILES/0. Project/0. Báo cáo Agent/<dự án>/`. Không để tài liệu công ty trong drive cá nhân. Chỉ dự án Hero gọi là cá nhân mới vào thư mục cá nhân OneDrive `[1] PERSONAL/Heroes/<dự án>/` + GitHub `DreamLee137`.
 
 ## Cách nhận lệnh
 Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**

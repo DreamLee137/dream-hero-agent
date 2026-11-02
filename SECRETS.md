@@ -16,6 +16,13 @@
 | File khoá (`.p8`, `.json` service account...) | `~/.secrets/<san-pham>/` (quyền 700, ngoài mọi repo) |
 | Mật khẩu người dùng cần nhớ | Trình quản lý mật khẩu của Hero (không phải file) |
 
+## Hiện trạng trên Mac mini (02/11/2026)
+- `~/.secrets/{discord,nhalo,personal,lightsail}` — đã tạo, quyền 700.
+- `~/SSH-Keys/` — khoá SSH server (Lightsail Balheh, Lina), giữ nguyên chỗ cũ vì cấu hình đang trỏ tới; đã chỉnh quyền về 600.
+- `~/keystores/nhalo/` — keystore ký app Android (key.properties trỏ tới).
+- `~/.appstoreconnect/private_keys/` — khoá App Store Connect.
+- ⚠️ Việc Hero cần xử lý: chuyển nội dung 2 file `passphrase*.rtf` vào trình quản lý mật khẩu rồi xoá file; khoá riêng (private key) của người khác (dev/khách) nên để chính họ giữ — xác nhận rồi gỡ khỏi máy.
+
 ## Sổ đăng ký chìa khoá (chỉ ghi TÊN, không ghi giá trị)
 Mỗi sản phẩm có mục **"Bí mật"** trong `docs/product/links.md`:
 

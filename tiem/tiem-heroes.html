@@ -659,18 +659,34 @@ function renderProjPick(){
     PICKABLE.map(k=>`<button class="chip" data-k="${k}" aria-pressed="${pickProj.has(k)}">${PROJECTS[k]}</button>`).join("");
   $("#projPick").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{ const k=b.dataset.k; pickProj.has(k)?pickProj.delete(k):pickProj.add(k); b.setAttribute("aria-pressed", pickProj.has(k)); });
 }
-const JOB_ST = {cho:"⏳ Chờ Mac nhận", "dang-lam":"✨ Đang làm", xong:"✅ Xong", huy:"✖ Huỷ"};
+const JOB_ST = {cho:"⏳ Chờ Mac nhận", "dang-lam":"✨ Đang làm", "cho-hero":"❗ Cần cậu trả lời", "can-xem":"👀 Xong, cần cậu xem", xong:"✅ Xong", huy:"✖ Huỷ"};
+const QUAY_DEFAULT = "trig_01CSHtfg69qFxPXsaWor1M2g";   // Quầy chung (Tiệm Heroes)
+let quayMap = {};                                     // meta/quay: {<agent or project>: trig_...}
+let mcp = null;
+function quayFor(j){ for(const k of [j.agent, ...(j.projects||[])]) if(quayMap[k]) return quayMap[k]; return quayMap.default || QUAY_DEFAULT; }
+async function fireJob(j){
+  if(!mcp){ toast("Trang chưa được phép gọi quầy · việc nằm chờ, báo cáo chiều sẽ vét"); return false; }
+  const text = `JOB_ID: ${j.id}\nAgent: ${j.agent}\nDự án: ${(j.projects||[]).join(", ")}\nNội dung việc:\n${j.text}`;
+  try{ await mcp.callTool("Claude Code Remote","fire_trigger",{trigger_id:quayFor(j), text}, {cache:false}); return true; }
+  catch(e){ toast("Chưa gọi được quầy ("+(e?.code||"lỗi")+") · việc vẫn nằm chờ"); return false; }
+}
 function linkify(t){ return esc(t).replace(/https?:\/\/[^\s<]+/g, u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`); }
 function renderJobs(){
   const id=current; const mine = jobs.filter(j=>j.agent===id).sort((a,b)=>b.createdAt-a.createdAt).slice(0,15);
   $("#pJob").innerHTML = `<p class="hint">${db ? "Việc vào hàng chờ trên claude.ai. Mac mini bật thì phiên của đội nhận làm; xong sẽ có kết quả ngay dưới việc đó (kèm link nếu có) và thông báo trên trang." : "Giao việc cần mở trang trong claude.ai (đã đăng nhập)."}</p>`
-   + (mine.length? mine.map(j=>`<div class="job"><div>${esc(j.text)}</div>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<div class="st">${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}${j.by_agent?" · "+esc(findAgent(j.by_agent)?.name||j.by_agent):""}</div>${j.reply?`<div style="margin-top:6px;white-space:pre-wrap">↳ ${linkify(j.reply)}</div>`:""}</div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
+   + (mine.length? mine.map(j=>`<div class="job"><div>${esc(j.text)}</div>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<div class="st">${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}${j.by_agent?" · "+esc(findAgent(j.by_agent)?.name||j.by_agent):""}</div>${j.reply?`<div style="margin-top:6px;white-space:pre-wrap">↳ ${linkify(j.reply)}</div>`:""}${j.status==="cho"?`<button class="chip" style="margin-top:6px" data-refire="${j.id}">↻ Gọi quầy lại</button>`:""}</div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
 }
+document.addEventListener("click", async e=>{ const b=e.target.closest("[data-refire]"); if(!b) return; const j=jobs.find(x=>x.id===b.dataset.refire); if(j){ b.disabled=true; if(await fireJob(j)) toast("Đã gọi quầy cho "+(findAgent(j.agent)?.name||j.agent)); b.disabled=false; } });
 function markJobsSeen(){ jobsSeen = Date.now(); try{ localStorage.setItem("tiem-jobs-seen", String(jobsSeen)); }catch{} renderRoster(); }
 async function sendJob(text){
   if(!db){ renderJobs(); return; }
   if(!pickProj.size){ toast("Chọn ít nhất 1 dự án để agent biết đọc tài liệu nào"); $("#input").value=text; return; }
-  try{ await db.collection("inbox").add({agent:current, text, projects:[...pickProj], status:"cho", createdAt:Date.now(), by:meId||""}); toast("Đã giao cho "+findAgent(current).name+" · chờ Mac nhận"); }
+  try{
+    const data = {agent:current, text, projects:[...pickProj], status:"cho", createdAt:Date.now(), by:meId||""};
+    const ref = await db.collection("inbox").add(data);
+    toast("Đã giao cho "+findAgent(current).name+" · đang gọi quầy…");
+    if(await fireJob({id:ref.id, ...data})) toast("✅ Quầy đã nhận lệnh · "+findAgent(data.agent).name+" sẽ bắt đầu khi Mac sẵn sàng");
+  }
   catch(e){ $("#pJob").insertAdjacentHTML("afterbegin", `<p class="hint">⚠️ Không lưu được (${esc(e?.code||"lỗi")}).</p>`); }
 }
 $("#sendBtn").onclick = ()=>{
@@ -699,7 +715,7 @@ setInterval(()=>{ if(current) renderDrawerStatus(); updateActors(false); }, 6000
 
 (async ()=>{
   if(!window.claude?.use) return;
-  [db, sample, user, assets] = await Promise.all(["db","sample","user","assets"].map(n=>claude.use(n).catch(()=>null)));
+  [db, sample, user, assets, mcp] = await Promise.all(["db","sample","user","assets","mcp"].map(n=>claude.use(n).catch(()=>null)));
   if(user){ try{ meId = await user.id(); }catch{} }
   if(assets && user){ try{ if(await user.canEdit()) $("#bgBtn").hidden = false; }catch{} }
   if(!db) return;
@@ -713,6 +729,7 @@ setInterval(()=>{ if(current) renderDrawerStatus(); updateActors(false); }, 6000
   }, ()=>clearTimeout(timer));
   db.doc("feed/log").onSnapshot(d=>{ feed = (d.exists && Array.isArray(d.data().items)) ? d.data().items : []; renderFeed(); }, ()=>{});
   db.doc("meta/mac").onSnapshot(d=>{ macSeen = d.exists ? Number(d.data().lastSeen)||0 : 0; renderMac(); }, ()=>{});
+  db.doc("meta/quay").onSnapshot(d=>{ quayMap = d.exists ? d.data() : {}; }, ()=>{});
   db.doc("meta/scene").onSnapshot(d=>{ if(d.exists && d.data().bgUrl) setBg(d.data().bgUrl); }, ()=>{});
   let firstJobs = true; const prevSt = {};
   db.collection("inbox").orderBy("createdAt","desc").limit(100).onSnapshot(snap=>{
@@ -721,8 +738,9 @@ setInterval(()=>{ if(current) renderDrawerStatus(); updateActors(false); }, 6000
       for(const j of jobs){
         if(prevSt[j.id] && prevSt[j.id]!==j.status){
           const nm = findAgent(j.agent)?.name || j.agent;
-          if(j.status==="xong"){ toast(`✅ ${nm} đã xong: ${j.text.slice(0,60)}`); chats[j.agent]=chats[j.agent]||[]; chats[j.agent].push({role:"assistant", sys:true, content:`✅ Việc "${j.text.slice(0,80)}" đã xong. Xem kết quả ở tab Giao việc.`}); if(current===j.agent && tab==="chat") renderChat(); }
+          if(j.status==="xong"||j.status==="can-xem"){ toast(`✅ ${nm} đã xong: ${j.text.slice(0,60)}`); chats[j.agent]=chats[j.agent]||[]; chats[j.agent].push({role:"assistant", sys:true, content:`✅ Việc "${j.text.slice(0,80)}" đã xong. Xem kết quả ở tab Giao việc.`}); if(current===j.agent && tab==="chat") renderChat(); }
           if(j.status==="dang-lam") toast(`✨ ${nm} đã nhận việc`);
+          if(j.status==="cho-hero") toast(`❗ ${nm} cần cậu trả lời · xem tab Giao việc`);
         }
       }
     }

@@ -38,3 +38,10 @@ Mỗi việc xong/huỷ → thêm 1 dòng vào `0. Báo cáo Agent/Sổ giao vi�
 
 ## Tab mặc định
 Giao việc là tab đầu. Riêng Phiên dịch mở tab Trò chuyện trước (dịch nhanh); file lớn/văn bản dài → Giao việc.
+
+## Gọi quầy ngay khi giao (không quét định kỳ)
+- Hero bấm "Giao" → trang ghi `inbox/<id>` rồi gọi `fire_trigger` (connector Claude Code Remote) tới quầy trong `meta/quay` (`{<agent hoặc dự án>: trig_…, default: trig_…}`), kèm `JOB_ID`.
+- Quầy chung: `trig_01CSHtfg69qFxPXsaWor1M2g` (cần Mac mini; chỉ chạy khi được gọi, không tốn gì khi không có việc).
+- Muốn lịch sử việc của Nội trợ nằm trong Project "[TSV] HRGA - Kế toán - Purchase etc": tạo quầy riêng cho Nội trợ, chuyển vào Project đó, rồi thêm `noi-tro: trig_…` vào `meta/quay`.
+- Việc gọi không được (Mac tắt…) vẫn ở trạng thái "cho"; trong tab Giao việc có nút "↻ Gọi quầy lại".
+- Trạng thái việc: cho · dang-lam · cho-hero · can-xem · xong · huy.

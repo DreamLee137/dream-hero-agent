@@ -45,3 +45,11 @@ Giao việc là tab đầu. Riêng Phiên dịch mở tab Trò chuyện trước
 - Muốn lịch sử việc của Nội trợ nằm trong Project "[TSV] HRGA - Kế toán - Purchase etc": tạo quầy riêng cho Nội trợ, chuyển vào Project đó, rồi thêm `noi-tro: trig_…` vào `meta/quay`.
 - Việc gọi không được (Mac tắt…) vẫn ở trạng thái "cho"; trong tab Giao việc có nút "↻ Gọi quầy lại".
 - Trạng thái việc: cho · dang-lam · cho-hero · can-xem · xong · huy.
+
+## Các quầy (02/11/2026)
+| Quầy | ID | Project claude.ai (Hero chuyển vào trong app) |
+|---|---|---|
+| Quầy chung | `trig_01CSHtfg69qFxPXsaWor1M2g` | — |
+| Quầy Nội trợ | `trig_01KYRrxRK4Cf3EEqE7dQi3Qs` | [TSV] HRGA - Kế toán - Purchase etc |
+| Quầy Phiên dịch | `trig_011ZWvnJijmWSaTEopxazbzE` | Thông ngôn quán |
+`meta/quay` = `{default, noi-tro, phien-dich}`. Báo cáo chiều 17:26 có bước "vét hàng chờ" (gọi lại tối đa 5 việc còn "cho").

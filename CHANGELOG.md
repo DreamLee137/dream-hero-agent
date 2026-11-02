@@ -24,3 +24,4 @@
 - Nháp cấu hình quyền Claude Code + runbook dream-agent-deploy.
 - 02/11: cài luật quyền Claude Code toàn máy; gh đăng nhập.
 - 02/11: dream-agent-deploy tren server Balheh + agent-ops.
+- 02/11: Server Balheh: agent dung khoa dreambalheh, moi lan SSH Hero duyet, chi chay agent-ops.

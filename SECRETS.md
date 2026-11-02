@@ -49,3 +49,13 @@ Mỗi sản phẩm có mục **"Bí mật"** trong `docs/product/links.md`:
 - App xác thực 6 số (TOTP) dùng bình thường, không cần đổi.
 - Cất **recovery codes** của GitHub vào trình quản lý mật khẩu.
 - GitHub Mobile là tuỳ chọn, tiện để duyệt PR / đăng nhập từ điện thoại.
+
+## 🖥️ Server Balheh — luật mới (Hero chốt 02/11/2026)
+- Agent **dùng khoá của Hero** (`~/SSH-Keys/dreambalheh.pem`, user `dreambalheh`). Tài khoản `dream-agent-deploy` tạm bỏ (đăng nhập bị chặn bởi cấu hình SSH server).
+- Vì user này có **full sudo**, giới hạn nằm ở **luật**, không ở kỹ thuật:
+  - **Mỗi lần SSH đều phải được Hero duyệt** (`Bash(ssh:*)` nằm trong danh sách `ask` của Claude Code).
+  - Chỉ được chạy `/usr/local/sbin/agent-ops <dự án> ps|logs|restart` (với sudo). Không chạy lệnh nào khác trên server nếu Hero chưa đồng ý rõ ràng cho đúng lệnh đó.
+  - Phạm vi: xem + restart balheh-dev, nhalo-dev, biztown-web, townsoftvina-web · chỉ xem nhalo-prod · cấm Balheh prod, nginx-gateway, moa-calendar, database.
+  - Không đọc / sửa file cấu hình, `.env`, database trên server.
+- Passphrase của khoá: Hero nhập, hoặc lưu vào Keychain macOS bằng `ssh-add --apple-use-keychain ~/SSH-Keys/dreambalheh.pem` (Hero tự quyết).
+- Server Lina: agent không được vào.

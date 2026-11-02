@@ -43,3 +43,9 @@ sudo deluser --remove-home dream-agent-deploy && sudo rm /etc/sudoers.d/dream-ag
 - Đổi quyền: sửa 2 dòng `RW` / `RO` trong `/usr/local/sbin/agent-ops`.
 - Kiểm tra: `bash tools/agent-ops-test.sh` (Hero chạy).
 - ⚠️ Môi trường agent hiện chặn agent tự SSH lên server → lệnh trên server do Hero chạy hoặc duyệt từng lần.
+
+## ⛔ Đã thu hồi 02/11/2026
+- Đăng nhập bị chặn bởi cấu hình SSH của server (AllowUsers/AllowGroups) → Hero quyết định bỏ.
+- Đã xoá user `dream-agent-deploy` + file sudoers trên server Balheh; đã xoá cặp khoá trên Mac mini.
+- Giữ `/usr/local/sbin/agent-ops`: agent dùng nó qua user `dreambalheh`, mỗi lần SSH Hero duyệt (xem SECRETS.md).
+- Muốn làm lại sau này: thêm user vào AllowUsers/AllowGroups trong cấu hình SSH rồi chạy lại các bước 1–3.

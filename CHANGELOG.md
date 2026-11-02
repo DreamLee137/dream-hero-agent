@@ -15,3 +15,4 @@
 - Thêm agent Nội trợ; dự án Lina ưu tiên số 1; Sidekick làm thư ký nhắc việc (lịch Outlook); cách nói chuyện trực tiếp với 1 agent.
 - Lina: repo chỉ đọc.
 - Lina: Project Lina là nguồn chính, Sidekick đọc file status hằng ngày trên OneDrive.
+- Quy tắc nơi lưu; Lina: hoãn quy trình nhắc tự động (trao đổi đã chuyển sang Balheh).

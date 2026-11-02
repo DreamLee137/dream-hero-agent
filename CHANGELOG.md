@@ -23,3 +23,4 @@
 - Luật docs: repo đã có docs thì dùng mục lục docs/README.md, không tạo docs/product/.
 - Nháp cấu hình quyền Claude Code + runbook dream-agent-deploy.
 - 02/11: cài luật quyền Claude Code toàn máy; gh đăng nhập.
+- 02/11: dream-agent-deploy tren server Balheh + agent-ops.

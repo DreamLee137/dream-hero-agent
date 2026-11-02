@@ -35,3 +35,11 @@ Phải thấy đúng các lệnh ở bước 2, **không** có `(ALL) ALL`.
 sudo deluser --remove-home dream-agent-deploy && sudo rm /etc/sudoers.d/dream-agent-deploy
 ```
 → ghi Nhật ký trong Sổ cấp quyền.
+
+## ✅ Đã làm 02/11/2026 (server Balheh 15.165.84.55)
+- User `dream-agent-deploy` + khoá ED25519 (fingerprint ở trên).
+- Không vào nhóm docker. Chỉ được chạy `/usr/local/sbin/agent-ops <dự án> ps|logs|restart` (qua sudoers), mỗi lần gọi ghi nhật ký `agent-ops` (xem: `journalctl -t agent-ops`).
+- Quyền: xem + restart: balheh-dev, nhalo-dev, biztown-web, townsoftvina-web · chỉ xem: nhalo-prod · cấm: Balheh prod (projects, storage), nginx-gateway, moa-calendar.
+- Đổi quyền: sửa 2 dòng `RW` / `RO` trong `/usr/local/sbin/agent-ops`.
+- Kiểm tra: `bash tools/agent-ops-test.sh` (Hero chạy).
+- ⚠️ Môi trường agent hiện chặn agent tự SSH lên server → lệnh trên server do Hero chạy hoặc duyệt từng lần.

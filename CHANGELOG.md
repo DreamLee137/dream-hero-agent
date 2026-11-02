@@ -22,3 +22,4 @@
 - 02/11: Discord Tiệm Heroes chạy thật (bot + 12 kênh + webhook); Sổ cấp quyền truy cập do Nội trợ giữ.
 - Luật docs: repo đã có docs thì dùng mục lục docs/README.md, không tạo docs/product/.
 - Nháp cấu hình quyền Claude Code + runbook dream-agent-deploy.
+- 02/11: cài luật quyền Claude Code toàn máy; gh đăng nhập.

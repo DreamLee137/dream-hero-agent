@@ -16,3 +16,4 @@
 - Lina: repo chỉ đọc.
 - Lina: Project Lina là nguồn chính, Sidekick đọc file status hằng ngày trên OneDrive.
 - Quy tắc nơi lưu; Lina: hoãn quy trình nhắc tự động (trao đổi đã chuyển sang Balheh).
+- Thêm Balheh (công ty, Hero không code, agent chỉ đọc repo) và Nhà Líu Lo (cá nhân).

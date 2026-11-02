@@ -1,0 +1,32 @@
+{
+  "model": "opus[1m]",
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": { "source": { "source": "github", "repo": "anthropics/claude-plugins-official" } }
+  },
+  "enabledPlugins": { "figma@claude-plugins-official": true },
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)", "Bash(git diff:*)", "Bash(git log:*)", "Bash(git fetch:*)", "Bash(git branch:*)",
+      "Bash(flutter analyze:*)", "Bash(flutter test:*)", "Bash(dart format:*)",
+      "Bash(./mvnw test:*)", "Bash(./mvnw package:*)",
+      "Bash(npm run lint:*)", "Bash(npm run test:*)", "Bash(npm run build:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)", "Bash(git merge:*)", "Bash(gh pr merge:*)",
+      "Bash(ssh:*)", "Bash(scp:*)", "Bash(rsync:*)",
+      "Bash(flutter build ipa:*)", "Bash(flutter build appbundle:*)"
+    ],
+    "deny": [
+      "Bash(git push --force:*)", "Bash(git push -f:*)", "Bash(git push origin main:*)", "Bash(git push origin --delete:*)",
+      "Bash(gh repo delete:*)", "Bash(gh repo rename:*)", "Bash(gh repo edit:*)", "Bash(gh repo archive:*)", "Bash(gh repo transfer:*)",
+      "Bash(gh api -X DELETE:*)", "Bash(gh api -X PATCH:*)", "Bash(gh api -X PUT:*)",
+      "Bash(gh api --method DELETE:*)", "Bash(gh api --method PATCH:*)", "Bash(gh api --method PUT:*)",
+      "Bash(gh secret:*)", "Bash(gh release delete:*)", "Bash(gh ruleset:*)",
+      "Bash(sudo:*)", "Bash(rm -rf /:*)", "Bash(rm -rf ~:*)",
+      "Read(~/.secrets/**)", "Read(~/SSH-Keys/**)", "Read(~/keystores/**)", "Read(~/.appstoreconnect/**)", "Read(~/.ssh/**)",
+      "Read(**/.env)", "Read(**/.env.*)", "Read(**/key.properties)",
+      "Edit(~/Projects/company/lina/**)", "Write(~/Projects/company/lina/**)",
+      "Edit(~/Projects/company/balheh/**/src/**)", "Write(~/Projects/company/balheh/**/src/**)"
+    ]
+  }
+}

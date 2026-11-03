@@ -144,6 +144,10 @@ header .sub{color:var(--muted);font-size:13px}
 .job.basket{border-style:dashed;border-color:var(--accent)}
 .job ol{margin:4px 0 0;padding-left:20px}
 .modesel{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:6px 8px;font:inherit;font-size:13px}
+.attachbar{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px 0}
+.attachbar .chip{font-size:12px}
+.attachbar a{font-size:12px;color:var(--accent)}
+#attachBtn{align-self:center;padding:8px 10px;font-size:16px}
 .close{margin-left:auto;background:none;border:none;font-size:22px;color:var(--muted)}
 
 @media (max-width: 860px){
@@ -220,7 +224,10 @@ header .sub{color:var(--muted);font-size:13px}
   <div class="pane" id="pChat"></div>
   <div class="projpick" id="projPick" hidden></div>
   <div class="projpick" id="modePick" hidden></div>
+  <div class="attachbar" id="attachBar" hidden></div>
   <div class="composer">
+    <button class="iconbtn" id="attachBtn" title="Đính kèm tệp (≤ 1 MB tải thẳng lên OneDrive; tệp lớn hơn: bỏ vào thư mục Tệp giao việc rồi dán link)" hidden>📎</button>
+    <input type="file" id="attachFile" multiple hidden>
     <textarea id="input" placeholder="Nhắn cho agent…"></textarea>
     <button class="send" id="sendBtn">Gửi</button>
   </div>
@@ -610,7 +617,7 @@ function setTab(t){
   $("#pChat").classList.toggle("on", t==="chat"); $("#pJob").classList.toggle("on", t==="job");
   $("#input").placeholder = t==="chat" ? "Hỏi nhanh (không cần Mac)…" : "Mô tả việc cần giao…";
   $("#sendBtn").textContent = t==="chat" ? "Gửi" : "Giao";
-  $("#projPick").hidden = t!=="job"; $("#modePick").hidden = t!=="job"; if(t==="job"){ renderProjPick(); renderModePick(); }
+  $("#projPick").hidden = t!=="job"; $("#modePick").hidden = t!=="job"; $("#attachBtn").hidden = t!=="job"; renderAttach(); if(t==="job"){ renderProjPick(); renderModePick(); }
   if(t==="chat") renderChat(); else { renderJobs(); markJobsSeen(); }
 }
 
@@ -692,7 +699,7 @@ let mcp = null;
 function quayFor(j){ for(const k of [j.agent, ...(j.projects||[])]) if(quayMap[k]) return quayMap[k]; return quayMap.default || QUAY_DEFAULT; }
 async function fireJob(j){
   if(!mcp){ toast("Trang chưa được phép gọi quầy · việc nằm chờ, báo cáo chiều sẽ vét"); return false; }
-  const text = `VIỆC ${jobCode(j)} — ${(findAgent(j.agent)?.name||j.agent)}: ${String(j.text).replace(/\s+/g," ").slice(0,70)}\nJOB_ID: ${j.id}\nMÃ VIỆC: ${jobCode(j)} (ghi mã này ở dòng đầu câu trả lời cuối, trong reply và trong Sổ giao việc)\nAgent: ${j.agent}\nDự án: ${(j.projects||[]).join(", ")}\nNội dung việc:\n${j.text}`;
+  const text = `VIỆC ${jobCode(j)} — ${(findAgent(j.agent)?.name||j.agent)}: ${String(j.text).replace(/\s+/g," ").slice(0,70)}\nJOB_ID: ${j.id}\nMÃ VIỆC: ${jobCode(j)} (ghi mã này ở dòng đầu câu trả lời cuối, trong reply và trong Sổ giao việc)\nAgent: ${j.agent}\nDự án: ${(j.projects||[]).join(", ")}\nNội dung việc:\n${j.text}${(j.files||[]).length?`\nTỆP ĐÍNH KÈM (OneDrive, đọc bằng connector Microsoft 365 read_resource):\n`+j.files.map(f=>`- ${f.name} · file:///${f.driveId}/${f.itemId} · ${f.url}`).join("\n"):""}`;
   try{ await mcp.callTool("Claude Code Remote","fire_trigger",{trigger_id:quayFor(j), text}, {cache:false}); return true; }
   catch(e){ toast("Chưa gọi được quầy ("+(e?.code||"lỗi")+") · việc vẫn nằm chờ"); return false; }
 }
@@ -700,7 +707,7 @@ function linkify(t){ return esc(t).replace(/https?:\/\/[^\s<]+/g, u=>`<a href="$
 function renderJobs(){
   const id=current; const mine = jobs.filter(j=>j.agent===id).sort((a,b)=>b.createdAt-a.createdAt).slice(0,15);
   $("#pJob").innerHTML = `<p class="hint">${db ? "Bấm Giao là quầy nhận ngay và chạy trên cloud (không cần Mac). Riêng việc đụng repo/file trên máy được chuyển sang Quầy Mac, cần Mac mini bật. Xong sẽ có kết quả ngay dưới việc đó và trong 📒 Sổ giao việc." : "Giao việc cần mở trang trong claude.ai (đã đăng nhập)."}</p>`
-   + (mine.length? mine.map(j=> j.status==="gio" ? `<div class="job basket"><span class="code">${esc(jobCode(j))}</span><b>🧺 Giỏ việc chưa gửi</b> · ${(j.items||[]).length} việc<ol>${(j.items||[]).map((it,i)=>`<li>${esc(it.text)} <button class="chip" style="padding:0 6px" data-rmitem="${j.id}:${i}" title="Bỏ việc này">×</button></li>`).join("")}</ol>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<button class="send" style="margin-top:8px;padding:6px 14px" data-sendbasket="${j.id}">Gửi cả giỏ</button></div>` : `<div class="job"><div style="white-space:pre-wrap"><span class="code" title="Mã việc — dùng để tìm lại">${esc(jobCode(j))}</span>${esc(j.text)}</div>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<div class="st">${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}${j.by_agent?" · "+esc(findAgent(j.by_agent)?.name||j.by_agent):""}</div>${j.reply?`<div style="margin-top:6px;white-space:pre-wrap">↳ ${linkify(j.reply)}</div>`:""}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${j.status==="cho"?`<button class="chip" data-refire="${j.id}">↻ Gọi quầy lại</button>`:""}${["cho","cho-hero","can-xem"].includes(j.status)?`<button class="chip" data-closejob="${j.id}" title="Đánh dấu xong / bỏ việc này">✓ Đóng việc</button>`:""}</div></div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
+   + (mine.length? mine.map(j=> j.status==="gio" ? `<div class="job basket"><span class="code">${esc(jobCode(j))}</span><b>🧺 Giỏ việc chưa gửi</b> · ${(j.items||[]).length} việc<ol>${(j.items||[]).map((it,i)=>`<li>${esc(it.text)} <button class="chip" style="padding:0 6px" data-rmitem="${j.id}:${i}" title="Bỏ việc này">×</button></li>`).join("")}</ol>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<button class="send" style="margin-top:8px;padding:6px 14px" data-sendbasket="${j.id}">Gửi cả giỏ</button></div>` : `<div class="job"><div style="white-space:pre-wrap"><span class="code" title="Mã việc — dùng để tìm lại">${esc(jobCode(j))}</span>${esc(j.text)}</div>${(j.files||[]).length?`<div class="pj">📎 ${j.files.map(f=>`<a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.name)}</a>`).join(" · ")}</div>`:""}${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<div class="st">${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}${j.by_agent?" · "+esc(findAgent(j.by_agent)?.name||j.by_agent):""}</div>${j.reply?`<div style="margin-top:6px;white-space:pre-wrap">↳ ${linkify(j.reply)}</div>`:""}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${j.status==="cho"?`<button class="chip" data-refire="${j.id}">↻ Gọi quầy lại</button>`:""}${["cho","cho-hero","can-xem"].includes(j.status)?`<button class="chip" data-closejob="${j.id}" title="Đánh dấu xong / bỏ việc này">✓ Đóng việc</button>`:""}</div></div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
 }
 document.addEventListener("click", async e=>{ const b=e.target.closest("[data-refire]"); if(!b) return; const j=jobs.find(x=>x.id===b.dataset.refire); if(j){ b.disabled=true; if(await fireJob(j)) toast("Đã gọi quầy cho "+(findAgent(j.agent)?.name||j.agent)); b.disabled=false; } });
 document.addEventListener("click", async e=>{ const b=e.target.closest("[data-closejob]"); if(!b||!db) return; const j=jobs.find(x=>x.id===b.dataset.closejob); if(!j) return;
@@ -769,12 +776,50 @@ document.addEventListener("click", async e=>{
   const r=e.target.closest("[data-rmitem]"); if(r){ const [id,ix]=r.dataset.rmitem.split(":"); const j=jobs.find(x=>x.id===id); if(!j||j.status!=="gio") return;
     const items=(j.items||[]).filter((_,i)=>i!==Number(ix)); try{ if(items.length) await db.collection("inbox").doc(id).update({items, text:basketText(items)}); else { await db.collection("inbox").doc(id).update({status:"huy", items:[]}); } }catch(err){ toast("Không xoá được ("+(err?.code||"lỗi")+")"); } }
 });
+/* ===== ĐÍNH KÈM: tệp ≤ 1 MB tải lên OneDrive "0. Báo cáo Agent/Tệp giao việc/" qua connector Microsoft 365 ===== */
+const OD = {drive:"b!Kcb-fGsOpEmb5iaiiucjLtnOthFAeFRNvGcH9_CoJPRly4i-9jz_RJ5-ur1lOgYI", folder:"01VSB3G5JUNWIZPLYB6RHLQNNKJLWFCRA6",
+  web:"https://townsoftvina-my.sharepoint.com/personal/dreamnguyen_townsoftvina_com/Documents/%5B0%5D%20TOWNSOFT%27S%20FILES/0.%20Project/0.%20B%C3%A1o%20c%C3%A1o%20Agent/T%E1%BB%87p%20giao%20vi%E1%BB%87c"};
+let pendingFiles = [];
+function renderAttach(){
+  const bar=$("#attachBar"); const show = tab==="job";
+  bar.hidden = !show;
+  if(!show) return;
+  bar.innerHTML = pendingFiles.map((f,i)=>`<span class="chip">📄 ${esc(f.name)} · ${(f.size/1024).toFixed(0)} KB <button class="chip" style="padding:0 6px" data-rmfile="${i}">×</button></span>`).join("")
+    + `<a href="${OD.web}" target="_blank" rel="noopener">📂 Tệp lớn (> 1 MB): mở thư mục Tệp giao việc, bỏ tệp vào rồi dán link vào nội dung việc</a>`;
+  bar.querySelectorAll("[data-rmfile]").forEach(b=>b.onclick=()=>{ pendingFiles.splice(Number(b.dataset.rmfile),1); renderAttach(); });
+}
+$("#attachBtn").onclick = ()=>$("#attachFile").click();
+$("#attachFile").onchange = e=>{
+  for(const f of e.target.files){ if(f.size > 1048576){ toast(`"${f.name}" lớn hơn 1 MB · bỏ vào thư mục Tệp giao việc trên OneDrive rồi dán link nhé`); continue; } pendingFiles.push(f); }
+  e.target.value=""; renderAttach();
+};
+function b64(buf){ let s=""; const a=new Uint8Array(buf); for(let i=0;i<a.length;i+=0x8000) s+=String.fromCharCode.apply(null, a.subarray(i,i+0x8000)); return btoa(s); }
+async function uploadFiles(code){
+  const out=[];
+  for(const f of pendingFiles){
+    const filename = `${code}_${f.name}`.replace(/[\\/:*?"<>|]/g,"_");
+    const r = await mcp.callTool("Microsoft 365","sharepoint_upload_file",{driveId:OD.drive, parentItemId:OD.folder, filename, contentBase64:b64(await f.arrayBuffer()), conflictBehavior:"rename"},{cache:false});
+    const txt = typeof r.payload==="string" ? r.payload : JSON.stringify(r.payload ?? r);
+    const itemId = (txt.match(/itemId:\s*(\S+)/)||txt.match(/"id"\s*:\s*"([^"]+)"/)||[])[1] || "";
+    const web = (txt.match(/webUrl:\s*(\S+)/)||txt.match(/"webUrl"\s*:\s*"([^"]+)"/)||[])[1] || OD.web;
+    out.push({name:filename, size:f.size, itemId, url:web, driveId:OD.drive});
+  }
+  return out;
+}
 async function sendJob(text){
   if(!db){ renderJobs(); return; }
   if(!pickProj.size){ toast("Chọn ít nhất 1 dự án để agent biết đọc tài liệu nào"); $("#input").value=text; return; }
   if(sendMode!=="now"){ try{ await addToBasket(text); }catch(e){ toast("Không lưu được ("+(e?.code||"lỗi")+")"); $("#input").value=text; } return; }
   try{
-    const data = {agent:current, code:makeCode(current), text, projects:[...pickProj], status:"cho", createdAt:Date.now(), by:meId||""};
+    const code = makeCode(current);
+    let files = [];
+    if(pendingFiles.length){
+      if(!mcp){ toast("Trang chưa được phép dùng Microsoft 365 để tải tệp"); $("#input").value=text; return; }
+      toast("Đang tải "+pendingFiles.length+" tệp lên OneDrive…");
+      try{ files = await uploadFiles(code); }catch(e){ toast("Không tải được tệp ("+(e?.code||"lỗi")+") · việc chưa giao"); $("#input").value=text; return; }
+      pendingFiles = []; renderAttach();
+    }
+    const data = {agent:current, code, text, files, projects:[...pickProj], status:"cho", createdAt:Date.now(), by:meId||""};
     const ref = await db.collection("inbox").add(data);
     toast("Đã giao cho "+findAgent(current).name+" · đang gọi quầy…");
     if(await fireJob({id:ref.id, ...data})) toast("✅ "+quayName(data)+" đã nhận lệnh · "+findAgent(data.agent).name+" bắt đầu ngay (chạy trên cloud). Việc cần Mac sẽ được chuyển sang Quầy Mac.");

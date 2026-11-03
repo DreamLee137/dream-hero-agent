@@ -163,7 +163,7 @@ header .sub{color:var(--muted);font-size:13px}
       <div class="sub">Quán cà phê vườn của đội Hero · <span id="clock">--:--</span> giờ Việt Nam</div>
     </div>
     <div class="spacer"></div>
-    <span class="pill" title="Mac mini báo danh lần cuối"><span class="dot" id="macDot"></span><span id="macText">Mac mini: chưa rõ</span></span>
+    <span class="pill" title="Lần cuối có việc chạy trên Mac mini (Quầy Mac / báo cáo). Trang không tự biết Mac đang bật hay tắt."><span class="dot" id="macDot"></span><span id="macText">Mac: chưa chạy việc nào</span></span>
     <button class="iconbtn" id="musicBtn" aria-pressed="false">♪ Nhạc</button>
     <button class="iconbtn" id="rainBtn" aria-pressed="false">☂ Mưa</button>
     <button class="iconbtn" id="lblBtn" aria-pressed="false">🏷 Tên</button>
@@ -504,7 +504,7 @@ function renderFeed(){
 function renderMac(){
   const on = macSeen && Date.now()-macSeen < 20*60e3;
   $("#macDot").classList.toggle("on", !!on);
-  $("#macText").textContent = on ? "Mac mini đang bật" : (macSeen ? "Mac mini nghỉ · "+ago(macSeen) : "Mac mini: chưa báo danh");
+  $("#macText").textContent = on ? "Mac vừa chạy việc · "+ago(macSeen) : (macSeen ? "Mac chạy việc lần cuối · "+ago(macSeen) : "Mac: chưa chạy việc nào");
 }
 function renderAll(){ updateActors(false); renderRoster(); renderFeed(); renderMac(); if(current) renderDrawerStatus(); }
 

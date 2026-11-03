@@ -101,7 +101,7 @@ header .sub{color:var(--muted);font-size:13px}
 /* drawer */
 .scrim{position:fixed;inset:0;background:rgba(30,20,10,.25);opacity:0;pointer-events:none;transition:.2s}
 .scrim.open{opacity:1;pointer-events:auto}
-.drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,100%);background:var(--panel);box-shadow:var(--shadow);transform:translateX(105%);transition:transform .25s ease;display:flex;flex-direction:column;z-index:5}
+.drawer{position:fixed;top:0;right:0;height:100%;width:max(420px,50vw);max-width:100%;background:var(--panel);box-shadow:var(--shadow);transform:translateX(105%);transition:transform .25s ease;display:flex;flex-direction:column;z-index:5}
 .drawer.open{transform:none}
 .dh{display:flex;gap:12px;align-items:center;padding:16px;border-bottom:1px solid var(--line)}
 .dh .av{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:24px}
@@ -679,9 +679,11 @@ function linkify(t){ return esc(t).replace(/https?:\/\/[^\s<]+/g, u=>`<a href="$
 function renderJobs(){
   const id=current; const mine = jobs.filter(j=>j.agent===id).sort((a,b)=>b.createdAt-a.createdAt).slice(0,15);
   $("#pJob").innerHTML = `<p class="hint">${db ? "Việc vào hàng chờ trên claude.ai. Mac mini bật thì phiên của đội nhận làm; xong sẽ có kết quả ngay dưới việc đó (kèm link nếu có) và thông báo trên trang." : "Giao việc cần mở trang trong claude.ai (đã đăng nhập)."}</p>`
-   + (mine.length? mine.map(j=> j.status==="gio" ? `<div class="job basket"><b>🧺 Giỏ việc chưa gửi</b> · ${(j.items||[]).length} việc<ol>${(j.items||[]).map((it,i)=>`<li>${esc(it.text)} <button class="chip" style="padding:0 6px" data-rmitem="${j.id}:${i}" title="Bỏ việc này">×</button></li>`).join("")}</ol>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<button class="send" style="margin-top:8px;padding:6px 14px" data-sendbasket="${j.id}">Gửi cả giỏ</button></div>` : `<div class="job"><div style="white-space:pre-wrap">${esc(j.text)}</div>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<div class="st">${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}${j.by_agent?" · "+esc(findAgent(j.by_agent)?.name||j.by_agent):""}</div>${j.reply?`<div style="margin-top:6px;white-space:pre-wrap">↳ ${linkify(j.reply)}</div>`:""}${j.status==="cho"?`<button class="chip" style="margin-top:6px" data-refire="${j.id}">↻ Gọi quầy lại</button>`:""}</div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
+   + (mine.length? mine.map(j=> j.status==="gio" ? `<div class="job basket"><b>🧺 Giỏ việc chưa gửi</b> · ${(j.items||[]).length} việc<ol>${(j.items||[]).map((it,i)=>`<li>${esc(it.text)} <button class="chip" style="padding:0 6px" data-rmitem="${j.id}:${i}" title="Bỏ việc này">×</button></li>`).join("")}</ol>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<button class="send" style="margin-top:8px;padding:6px 14px" data-sendbasket="${j.id}">Gửi cả giỏ</button></div>` : `<div class="job"><div style="white-space:pre-wrap">${esc(j.text)}</div>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<div class="st">${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}${j.by_agent?" · "+esc(findAgent(j.by_agent)?.name||j.by_agent):""}</div>${j.reply?`<div style="margin-top:6px;white-space:pre-wrap">↳ ${linkify(j.reply)}</div>`:""}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${j.status==="cho"?`<button class="chip" data-refire="${j.id}">↻ Gọi quầy lại</button>`:""}${["cho","cho-hero","can-xem"].includes(j.status)?`<button class="chip" data-closejob="${j.id}" title="Đánh dấu xong / bỏ việc này">✓ Đóng việc</button>`:""}</div></div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
 }
 document.addEventListener("click", async e=>{ const b=e.target.closest("[data-refire]"); if(!b) return; const j=jobs.find(x=>x.id===b.dataset.refire); if(j){ b.disabled=true; if(await fireJob(j)) toast("Đã gọi quầy cho "+(findAgent(j.agent)?.name||j.agent)); b.disabled=false; } });
+document.addEventListener("click", async e=>{ const b=e.target.closest("[data-closejob]"); if(!b||!db) return; const j=jobs.find(x=>x.id===b.dataset.closejob); if(!j) return;
+  const done = j.status==="can-xem"; try{ await db.collection("inbox").doc(j.id).update(done?{status:"xong", closedAt:Date.now()}:{status:"huy", closedAt:Date.now()}); toast(done?"Đã đánh dấu xong":"Đã đóng việc"); }catch(err){ toast("Không đóng được ("+(err?.code||"lỗi")+")"); } });
 function markJobsSeen(){ jobsSeen = Date.now(); try{ localStorage.setItem("tiem-jobs-seen", String(jobsSeen)); }catch{} renderRoster(); }
 /* Giỏ việc: inbox doc with status "gio" holds items until sent together (one quầy run = one session) */
 let sendMode = "now";   // "now" | "new" | <basket id>
@@ -738,11 +740,14 @@ async function sendJob(text){
   }
   catch(e){ $("#pJob").insertAdjacentHTML("afterbegin", `<p class="hint">⚠️ Không lưu được (${esc(e?.code||"lỗi")}).</p>`); }
 }
+let lastSend = 0;
 $("#sendBtn").onclick = ()=>{
   const v = $("#input").value.trim(); if(!v || busy || !current) return;
+  if(Date.now()-lastSend < 1500) return; lastSend = Date.now();
   $("#input").value=""; if(tab==="chat") sendChat(v); else sendJob(v);
 };
-$("#input").addEventListener("keydown", e=>{ if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); $("#sendBtn").click(); } });
+/* Enter gửi — nhưng bỏ qua khi bộ gõ tiếng Việt/Hàn đang ghép chữ (isComposing), nếu không một câu sẽ bị tách làm 2 việc */
+$("#input").addEventListener("keydown", e=>{ if(e.key==="Enter" && !e.shiftKey && !e.isComposing && e.keyCode!==229){ e.preventDefault(); $("#sendBtn").click(); } });
 
 /* ===== BACKGROUND IMAGE ===== */
 const BG_DEFAULT = "cafe-bg-v2.jpg";

@@ -131,6 +131,16 @@ header .sub{color:var(--muted);font-size:13px}
 .chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:4px 10px;font-size:13px}
 .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:transparent}
 .job .pj{font-size:12px;color:var(--muted)}
+.code{font:700 12px ui-monospace,Menlo,monospace;background:var(--chip);border:1px solid var(--line);border-radius:6px;padding:1px 6px;margin-right:6px;user-select:all}
+.hfilters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.hfilters input,.hfilters select{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:7px 10px;font:inherit;font-size:14px}
+.hfilters input{flex:1;min-width:200px}
+.hlist{max-height:520px;overflow:auto}
+.hrow{border-bottom:1px dashed var(--line);padding:10px 0;cursor:pointer}
+.hrow .t{font-weight:700}
+.hrow .m{font-size:12px;color:var(--muted)}
+.hrow .r{display:none;white-space:pre-wrap;font-size:13.5px;margin-top:6px;background:var(--bg);border-radius:10px;padding:8px 10px}
+.hrow.open .r{display:block}
 .job.basket{border-style:dashed;border-color:var(--accent)}
 .job ol{margin:4px 0 0;padding-left:20px}
 .modesel{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:6px 8px;font:inherit;font-size:13px}
@@ -182,6 +192,16 @@ header .sub{color:var(--muted);font-size:13px}
       <ul class="feed" id="feed"><li class="hint">Chưa có hoạt động.</li></ul>
     </section>
   </div>
+  <section class="card" id="histCard" style="margin-top:16px">
+    <h2>📒 Sổ giao việc</h2>
+    <div class="hfilters">
+      <input id="hQ" type="search" placeholder="Tìm theo mã việc, nội dung, kết quả…">
+      <select id="hAgent"><option value="">Mọi agent</option></select>
+      <select id="hProj"><option value="">Mọi dự án</option></select>
+      <select id="hSt"><option value="">Mọi trạng thái</option></select>
+    </div>
+    <div id="hList" class="hlist"><p class="hint">Chưa có việc nào.</p></div>
+  </section>
 </div>
 
 <div class="scrim" id="scrim"></div>
@@ -671,7 +691,7 @@ let mcp = null;
 function quayFor(j){ for(const k of [j.agent, ...(j.projects||[])]) if(quayMap[k]) return quayMap[k]; return quayMap.default || QUAY_DEFAULT; }
 async function fireJob(j){
   if(!mcp){ toast("Trang chưa được phép gọi quầy · việc nằm chờ, báo cáo chiều sẽ vét"); return false; }
-  const text = `JOB_ID: ${j.id}\nAgent: ${j.agent}\nDự án: ${(j.projects||[]).join(", ")}\nNội dung việc:\n${j.text}`;
+  const text = `VIỆC ${jobCode(j)} — ${(findAgent(j.agent)?.name||j.agent)}: ${String(j.text).replace(/\s+/g," ").slice(0,70)}\nJOB_ID: ${j.id}\nMÃ VIỆC: ${jobCode(j)} (ghi mã này ở dòng đầu câu trả lời cuối, trong reply và trong Sổ giao việc)\nAgent: ${j.agent}\nDự án: ${(j.projects||[]).join(", ")}\nNội dung việc:\n${j.text}`;
   try{ await mcp.callTool("Claude Code Remote","fire_trigger",{trigger_id:quayFor(j), text}, {cache:false}); return true; }
   catch(e){ toast("Chưa gọi được quầy ("+(e?.code||"lỗi")+") · việc vẫn nằm chờ"); return false; }
 }
@@ -679,11 +699,28 @@ function linkify(t){ return esc(t).replace(/https?:\/\/[^\s<]+/g, u=>`<a href="$
 function renderJobs(){
   const id=current; const mine = jobs.filter(j=>j.agent===id).sort((a,b)=>b.createdAt-a.createdAt).slice(0,15);
   $("#pJob").innerHTML = `<p class="hint">${db ? "Việc vào hàng chờ trên claude.ai. Mac mini bật thì phiên của đội nhận làm; xong sẽ có kết quả ngay dưới việc đó (kèm link nếu có) và thông báo trên trang." : "Giao việc cần mở trang trong claude.ai (đã đăng nhập)."}</p>`
-   + (mine.length? mine.map(j=> j.status==="gio" ? `<div class="job basket"><b>🧺 Giỏ việc chưa gửi</b> · ${(j.items||[]).length} việc<ol>${(j.items||[]).map((it,i)=>`<li>${esc(it.text)} <button class="chip" style="padding:0 6px" data-rmitem="${j.id}:${i}" title="Bỏ việc này">×</button></li>`).join("")}</ol>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<button class="send" style="margin-top:8px;padding:6px 14px" data-sendbasket="${j.id}">Gửi cả giỏ</button></div>` : `<div class="job"><div style="white-space:pre-wrap">${esc(j.text)}</div>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<div class="st">${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}${j.by_agent?" · "+esc(findAgent(j.by_agent)?.name||j.by_agent):""}</div>${j.reply?`<div style="margin-top:6px;white-space:pre-wrap">↳ ${linkify(j.reply)}</div>`:""}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${j.status==="cho"?`<button class="chip" data-refire="${j.id}">↻ Gọi quầy lại</button>`:""}${["cho","cho-hero","can-xem"].includes(j.status)?`<button class="chip" data-closejob="${j.id}" title="Đánh dấu xong / bỏ việc này">✓ Đóng việc</button>`:""}</div></div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
+   + (mine.length? mine.map(j=> j.status==="gio" ? `<div class="job basket"><span class="code">${esc(jobCode(j))}</span><b>🧺 Giỏ việc chưa gửi</b> · ${(j.items||[]).length} việc<ol>${(j.items||[]).map((it,i)=>`<li>${esc(it.text)} <button class="chip" style="padding:0 6px" data-rmitem="${j.id}:${i}" title="Bỏ việc này">×</button></li>`).join("")}</ol>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<button class="send" style="margin-top:8px;padding:6px 14px" data-sendbasket="${j.id}">Gửi cả giỏ</button></div>` : `<div class="job"><div style="white-space:pre-wrap"><span class="code" title="Mã việc — dùng để tìm lại">${esc(jobCode(j))}</span>${esc(j.text)}</div>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<div class="st">${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}${j.by_agent?" · "+esc(findAgent(j.by_agent)?.name||j.by_agent):""}</div>${j.reply?`<div style="margin-top:6px;white-space:pre-wrap">↳ ${linkify(j.reply)}</div>`:""}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${j.status==="cho"?`<button class="chip" data-refire="${j.id}">↻ Gọi quầy lại</button>`:""}${["cho","cho-hero","can-xem"].includes(j.status)?`<button class="chip" data-closejob="${j.id}" title="Đánh dấu xong / bỏ việc này">✓ Đóng việc</button>`:""}</div></div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
 }
 document.addEventListener("click", async e=>{ const b=e.target.closest("[data-refire]"); if(!b) return; const j=jobs.find(x=>x.id===b.dataset.refire); if(j){ b.disabled=true; if(await fireJob(j)) toast("Đã gọi quầy cho "+(findAgent(j.agent)?.name||j.agent)); b.disabled=false; } });
 document.addEventListener("click", async e=>{ const b=e.target.closest("[data-closejob]"); if(!b||!db) return; const j=jobs.find(x=>x.id===b.dataset.closejob); if(!j) return;
   const done = j.status==="can-xem"; try{ await db.collection("inbox").doc(j.id).update(done?{status:"xong", closedAt:Date.now()}:{status:"huy", closedAt:Date.now()}); toast(done?"Đã đánh dấu xong":"Đã đóng việc"); }catch(err){ toast("Không đóng được ("+(err?.code||"lỗi")+")"); } });
+/* ===== SỔ GIAO VIỆC (search all jobs) ===== */
+function fillHistFilters(){
+  const a=$("#hAgent"), p=$("#hProj"), st=$("#hSt");
+  if(a.options.length<2){ AGENTS.forEach(x=>a.add(new Option(x.emoji+" "+x.name, x.id))); PICKABLE.forEach(k=>p.add(new Option(PROJECTS[k], k))); Object.entries(JOB_ST).forEach(([k,v])=>st.add(new Option(v,k))); }
+}
+function renderHistory(){
+  fillHistFilters();
+  const q=$("#hQ").value.trim().toLowerCase(), fa=$("#hAgent").value, fp=$("#hProj").value, fs=$("#hSt").value;
+  const list = jobs.filter(j=>(!fa||j.agent===fa)&&(!fp||(j.projects||[]).includes(fp))&&(!fs||j.status===fs)&&
+    (!q || [jobCode(j), j.text, j.reply, j.id].some(x=>String(x||"").toLowerCase().includes(q)))).sort((a,b)=>b.createdAt-a.createdAt);
+  $("#hList").innerHTML = list.length ? list.map(j=>{ const a=findAgent(j.agent);
+    return `<div class="hrow" data-h="${j.id}"><div class="t"><span class="code">${esc(jobCode(j))}</span>${esc(String(j.text).slice(0,140))}</div>
+    <div class="m">${a?a.emoji+" "+esc(a.name):esc(j.agent)} · ${(j.projects||[]).map(k=>esc(PROJECTS[k]||k)).join(", ")} · ${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}</div>
+    <div class="r">${j.reply?linkify(j.reply):"<i>Chưa có kết quả.</i>"}</div></div>`; }).join("") : `<p class="hint">Không có việc nào khớp.</p>`;
+}
+["#hQ","#hAgent","#hProj","#hSt"].forEach(sel=>document.querySelector(sel).addEventListener("input", renderHistory));
+$("#hList").addEventListener("click", e=>{ const r=e.target.closest(".hrow"); if(r && !e.target.closest("a")) r.classList.toggle("open"); });
 function markJobsSeen(){ jobsSeen = Date.now(); try{ localStorage.setItem("tiem-jobs-seen", String(jobsSeen)); }catch{} renderRoster(); }
 /* Giỏ việc: inbox doc with status "gio" holds items until sent together (one quầy run = one session) */
 let sendMode = "now";   // "now" | "new" | <basket id>
@@ -699,11 +736,14 @@ function renderModePick(){
   $("#modeSel").onchange = e=>{ sendMode = e.target.value; $("#sendBtn").textContent = sendMode==="now"?"Giao":"Bỏ giỏ"; };
   $("#sendBtn").textContent = sendMode==="now"?"Giao":"Bỏ giỏ";
 }
+const CODE_PREFIX = {"noi-tro":"NT","phien-dich":"PD","sidekick":"SK","hoa-tieu":"HT","kien-truc-su":"KT","tho-may":"TM","tho-xay":"TX","tho-san":"TS","gac-cong":"GC","hat-rong":"HR"};
+function makeCode(agent){ const d=vnNow(); const p=n=>String(n).padStart(2,"0"); const r=Math.random().toString(36).slice(2,5).toUpperCase(); return `${CODE_PREFIX[agent]||"VC"}-${p(d.getDate())}${p(d.getMonth()+1)}-${r}`; }
+const jobCode = j => j.code || ("#"+j.id.slice(0,6));
 function basketText(items){ return items.map((it,i)=>`${i+1}. ${it.text}`).join("\n"); }
 async function addToBasket(text){
   const now = Date.now();
   if(sendMode==="new"){
-    const ref = await db.collection("inbox").add({agent:current, status:"gio", items:[{text, at:now}], text:basketText([{text}]), projects:[...pickProj], createdAt:now, by:meId||""});
+    const ref = await db.collection("inbox").add({agent:current, code:makeCode(current), status:"gio", items:[{text, at:now}], text:basketText([{text}]), projects:[...pickProj], createdAt:now, by:meId||""});
     sendMode = ref.id; toast("Đã tạo giỏ mới · thêm việc rồi bấm \"Gửi cả giỏ\"");
   } else {
     const ref = db.collection("inbox").doc(sendMode); const d = await ref.get();
@@ -733,7 +773,7 @@ async function sendJob(text){
   if(!pickProj.size){ toast("Chọn ít nhất 1 dự án để agent biết đọc tài liệu nào"); $("#input").value=text; return; }
   if(sendMode!=="now"){ try{ await addToBasket(text); }catch(e){ toast("Không lưu được ("+(e?.code||"lỗi")+")"); $("#input").value=text; } return; }
   try{
-    const data = {agent:current, text, projects:[...pickProj], status:"cho", createdAt:Date.now(), by:meId||""};
+    const data = {agent:current, code:makeCode(current), text, projects:[...pickProj], status:"cho", createdAt:Date.now(), by:meId||""};
     const ref = await db.collection("inbox").add(data);
     toast("Đã giao cho "+findAgent(current).name+" · đang gọi quầy…");
     if(await fireJob({id:ref.id, ...data})) toast("✅ Quầy đã nhận lệnh · "+findAgent(data.agent).name+" sẽ bắt đầu khi Mac sẵn sàng");
@@ -799,7 +839,7 @@ setInterval(()=>{ if(current) renderDrawerStatus(); updateActors(false); }, 6000
       }
     }
     jobs.forEach(j=>prevSt[j.id]=j.status); firstJobs=false;
-    renderRoster(); if(current && tab==="job"){ renderJobs(); renderModePick(); }
+    renderRoster(); renderHistory(); if(current && tab==="job"){ renderJobs(); renderModePick(); }
   }, ()=>{});
 })();
 </script>

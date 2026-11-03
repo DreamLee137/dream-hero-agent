@@ -52,4 +52,9 @@ Giao việc là tab đầu. Riêng Phiên dịch mở tab Trò chuyện trước
 | Quầy chung | `trig_016UfMUjLAfMQKFKZYVP4EhQ` | [Dream] AI Agent & API Claude Console (tạo trong Project) |
 | Quầy Nội trợ | `trig_01X2Q8xBFnEuDFBxQjmF31JY` | [TSV] HRGA - Kế toán - Purchase etc (tạo trong Project) |
 | Quầy Phiên dịch | `trig_01PHcvAZuptCgWM9GxQTXYKe` | Thông ngôn quán (tạo trong Project) |
+| Quầy Mac | `trig_01Mxa33cBihYHb9dnxxEtM8P` | — (gắn Mac mini; nhận việc cần máy do 3 quầy cloud chuyển sang) |
 `meta/quay` = `{default, noi-tro, phien-dich}`. Báo cáo chiều 17:26 có bước "vét hàng chờ" (gọi lại tối đa 5 việc còn "cho").
+
+## Luồng 03/11/2026
+- 3 quầy trong Project chạy trên **cloud**: OneDrive qua connector Microsoft 365, không Discord. Việc cần Mac → chuyển `fire_trigger` sang Quầy Mac (`meta/quay.mac`).
+- Mỗi việc có mã dễ đọc (`NT-0311-A7K`…), hiện trên trang và trong mục 📒 Sổ giao việc (tìm/lọc).

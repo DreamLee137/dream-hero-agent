@@ -608,7 +608,7 @@ function setTab(t){
   tab=t;
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected", b.dataset.tab===t));
   $("#pChat").classList.toggle("on", t==="chat"); $("#pJob").classList.toggle("on", t==="job");
-  $("#input").placeholder = t==="chat" ? "Hỏi nhanh (không cần Mac)…" : "Mô tả việc cần làm trên Mac…";
+  $("#input").placeholder = t==="chat" ? "Hỏi nhanh (không cần Mac)…" : "Mô tả việc cần giao…";
   $("#sendBtn").textContent = t==="chat" ? "Gửi" : "Giao";
   $("#projPick").hidden = t!=="job"; $("#modePick").hidden = t!=="job"; if(t==="job"){ renderProjPick(); renderModePick(); }
   if(t==="chat") renderChat(); else { renderJobs(); markJobsSeen(); }
@@ -630,7 +630,7 @@ Bạn đang nói chuyện với Hero (Dream, PM/BA/phiên dịch ở Townsoft Vi
 Xưng "tớ", gọi Hero là "cậu". ${id==="phien-dich" ? "Khi dịch: chỉ đưa bản dịch (có thể kèm 1–2 ghi chú ngắn về từ ngữ/kính ngữ), độ dài theo văn bản gốc. Khi Hero hỏi chuyện khác: trả lời tiếng Việt ngắn gọn." : "Trả lời tiếng Việt, ngắn gọn, thân thiện, tối đa ~120 chữ, có thể gạch đầu dòng."}
 Thứ tự ưu tiên: Lina > dự án công ty khác (NhàLo, Balheh...) > hành chính > dự án cá nhân.
 Bạn KHÔNG truy cập được máy Mac, repo, file hay email. Chỉ biết tình trạng đội và hàng chờ dưới đây. Không bịa số liệu hay tiến độ.
-Nếu Hero nhờ việc cần làm thật (sửa code, đọc repo, viết file, gửi mail, vẽ thiết kế, dịch file lớn), hãy nói Hero chuyển sang tab "Giao việc" để việc vào hàng chờ cho Mac mini.
+Nếu Hero nhờ việc cần làm thật (sửa code, đọc repo, viết file, gửi mail, vẽ thiết kế, dịch file lớn), hãy nói Hero chuyển sang tab "Giao việc" để giao cho quầy làm thật.
 Tình trạng đội lúc này (${vnNow().toLocaleString("vi-VN")}):
 ${teamSnapshot()}
 Hàng chờ gần đây:
@@ -684,7 +684,8 @@ function renderProjPick(){
     PICKABLE.map(k=>`<button class="chip" data-k="${k}" aria-pressed="${pickProj.has(k)}">${PROJECTS[k]}</button>`).join("");
   $("#projPick").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{ const k=b.dataset.k; pickProj.has(k)?pickProj.delete(k):pickProj.add(k); b.setAttribute("aria-pressed", pickProj.has(k)); });
 }
-const JOB_ST = {gio:"🧺 Trong giỏ", cho:"⏳ Chờ Mac nhận", "dang-lam":"✨ Đang làm", "cho-hero":"❗ Cần cậu trả lời", "can-xem":"👀 Xong, cần cậu xem", xong:"✅ Xong", huy:"✖ Huỷ"};
+function quayName(j){ return j.agent==="noi-tro" ? "Quầy Nội trợ" : j.agent==="phien-dich" ? "Quầy Phiên dịch" : "Quầy chung"; }
+const JOB_ST = {gio:"🧺 Trong giỏ", cho:"⏳ Chờ quầy nhận", "dang-lam":"✨ Đang làm", "cho-hero":"❗ Cần cậu trả lời", "can-xem":"👀 Xong, cần cậu xem", xong:"✅ Xong", huy:"✖ Huỷ"};
 const QUAY_DEFAULT = "trig_016UfMUjLAfMQKFKZYVP4EhQ";   // Quầy chung (Tiệm Heroes), trong Project AI Agent
 let quayMap = {};                                     // meta/quay: {<agent or project>: trig_...}
 let mcp = null;
@@ -698,7 +699,7 @@ async function fireJob(j){
 function linkify(t){ return esc(t).replace(/https?:\/\/[^\s<]+/g, u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`); }
 function renderJobs(){
   const id=current; const mine = jobs.filter(j=>j.agent===id).sort((a,b)=>b.createdAt-a.createdAt).slice(0,15);
-  $("#pJob").innerHTML = `<p class="hint">${db ? "Việc vào hàng chờ trên claude.ai. Mac mini bật thì phiên của đội nhận làm; xong sẽ có kết quả ngay dưới việc đó (kèm link nếu có) và thông báo trên trang." : "Giao việc cần mở trang trong claude.ai (đã đăng nhập)."}</p>`
+  $("#pJob").innerHTML = `<p class="hint">${db ? "Bấm Giao là quầy nhận ngay và chạy trên cloud (không cần Mac). Riêng việc đụng repo/file trên máy được chuyển sang Quầy Mac, cần Mac mini bật. Xong sẽ có kết quả ngay dưới việc đó và trong 📒 Sổ giao việc." : "Giao việc cần mở trang trong claude.ai (đã đăng nhập)."}</p>`
    + (mine.length? mine.map(j=> j.status==="gio" ? `<div class="job basket"><span class="code">${esc(jobCode(j))}</span><b>🧺 Giỏ việc chưa gửi</b> · ${(j.items||[]).length} việc<ol>${(j.items||[]).map((it,i)=>`<li>${esc(it.text)} <button class="chip" style="padding:0 6px" data-rmitem="${j.id}:${i}" title="Bỏ việc này">×</button></li>`).join("")}</ol>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<button class="send" style="margin-top:8px;padding:6px 14px" data-sendbasket="${j.id}">Gửi cả giỏ</button></div>` : `<div class="job"><div style="white-space:pre-wrap"><span class="code" title="Mã việc — dùng để tìm lại">${esc(jobCode(j))}</span>${esc(j.text)}</div>${(j.projects||[]).length?`<div class="pj">${j.projects.map(k=>esc(PROJECTS[k]||k)).join(" · ")}</div>`:""}<div class="st">${JOB_ST[j.status]||esc(j.status)} · giao ${fmtTime(j.createdAt)}${j.doneAt?" · xong "+fmtTime(j.doneAt):""}${j.by_agent?" · "+esc(findAgent(j.by_agent)?.name||j.by_agent):""}</div>${j.reply?`<div style="margin-top:6px;white-space:pre-wrap">↳ ${linkify(j.reply)}</div>`:""}<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${j.status==="cho"?`<button class="chip" data-refire="${j.id}">↻ Gọi quầy lại</button>`:""}${["cho","cho-hero","can-xem"].includes(j.status)?`<button class="chip" data-closejob="${j.id}" title="Đánh dấu xong / bỏ việc này">✓ Đóng việc</button>`:""}</div></div>`).join("") : `<p class="hint">Chưa có việc nào cho ${esc(findAgent(id).name)}.</p>`);
 }
 document.addEventListener("click", async e=>{ const b=e.target.closest("[data-refire]"); if(!b) return; const j=jobs.find(x=>x.id===b.dataset.refire); if(j){ b.disabled=true; if(await fireJob(j)) toast("Đã gọi quầy cho "+(findAgent(j.agent)?.name||j.agent)); b.disabled=false; } });
@@ -776,7 +777,7 @@ async function sendJob(text){
     const data = {agent:current, code:makeCode(current), text, projects:[...pickProj], status:"cho", createdAt:Date.now(), by:meId||""};
     const ref = await db.collection("inbox").add(data);
     toast("Đã giao cho "+findAgent(current).name+" · đang gọi quầy…");
-    if(await fireJob({id:ref.id, ...data})) toast("✅ Quầy đã nhận lệnh · "+findAgent(data.agent).name+" sẽ bắt đầu khi Mac sẵn sàng");
+    if(await fireJob({id:ref.id, ...data})) toast("✅ "+quayName(data)+" đã nhận lệnh · "+findAgent(data.agent).name+" bắt đầu ngay (chạy trên cloud). Việc cần Mac sẽ được chuyển sang Quầy Mac.");
   }
   catch(e){ $("#pJob").insertAdjacentHTML("afterbegin", `<p class="hint">⚠️ Không lưu được (${esc(e?.code||"lỗi")}).</p>`); }
 }

@@ -29,3 +29,4 @@
 - 02/11: BACKLOG.md; Noi tro them cham cong/luong/lich thanh toan (cho ban giao).
 - 2026-11-02: Tiệm Heroes bản Artifact trên claude.ai (tranh nền Gemini, trạng thái realtime qua db, chat trong trang, hàng chờ giao việc) — xem tiem/ARTIFACT.md
 - 2026-11-02: Thêm agent Phiên dịch (team/phien-dich). Tiệm Heroes: tab Giao việc lên đầu, chọn nhiều dự án khi giao việc; Sổ giao việc.xlsx trên OneDrive; báo cáo sáng chỉ nhắn Discord, không email.
+- 2026-11-03 · TM-0311-6MB · Yêu cầu: vẽ lại nhân vật Tiệm Heroes theo phong cách tranh nền · Đã đổi: tiem/tiem-heroes.html — bảng màu dịu, nét mực nâu ấm, đổ bóng mềm theo hướng nắng, điểm sáng tóc, filter nét vẽ tay + loang màu nước, bóng đổ dưới chân mờ · Nhánh tm-0311-6mb-nhan-vat-tranh-nen (chưa xuất bản trang, chờ Hero duyệt).

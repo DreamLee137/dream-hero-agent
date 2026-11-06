@@ -38,3 +38,7 @@ Thay mô hình "sổ chung OneDrive" (03/11). Lý do: mỗi dự án có 2 nhà 
 ## Mac mini luôn sẵn sàng
 - Không ngủ (đã bật) · tự bật lại sau mất điện: `sudo pmset -a autorestart 1` · tự đăng nhập + mở Claude, OneDrive khi đăng nhập.
 - Time Machine ra ổ ngoài (bắt buộc — đây là bản lưu duy nhất của code chưa push + toàn bộ files/).
+
+## Nhắc lịch qua Discord
+- `tools/mot-nha/nhac_lich.py` (launchd `com.hero.nhac-lich`, mỗi phút): nhắn kênh `can-hero` **15 phút trước** mỗi lịch trong `~/.hero/nhac-lich.json`. Lỡ giờ (máy tắt) thì bỏ, không nhắn muộn.
+- Thêm lịch: `python3 tools/mot-nha/nhac_lich.py them 2026-11-09T09:00 "Tiêu đề" "Địa điểm"`. Báo cáo sáng tự thêm các lịch Outlook trong ngày.

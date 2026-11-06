@@ -1,6 +1,7 @@
 # Changelog quy trình
 
 ## 2026-11-06
+- Nhắc lịch qua Discord 15 phút trước (nhac_lich.py + launchd); báo cáo sáng tự nạp lịch Outlook trong ngày.
 - Discord can-hero: chỉ báo khi Bảng việc thay đổi (mới / đổi trạng thái), chỉ liệt kê phần đổi; giờ yên lặng 20:00–7:00 gom vào báo cáo sáng.
 - Thêm trạng thái 🦹 Cần Anti-hero (việc cần sếp cho ý kiến / báo cáo / họp) + tab riêng trên trang Bảng việc.
 - Bỏ 9 agent đặt tên (chỉ còn Sidekick; việc dự án làm trong Project). Dọn Discord còn 3 kênh: bao-cao, can-hero, khan-cap. Thêm `docs/INTEGRATION-CHINCHU.md` ở BE NhàLo (nhánh riêng). Claude Code: `.claude/settings.json` ở nhalo/chinchu tự thêm thư mục bên kia (chỉ đọc).

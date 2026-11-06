@@ -26,7 +26,8 @@ Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9). Công cụ của t
 - **Thứ tự ưu tiên:** ① **Lina** (dự án outsourcing có khách hàng thật) → ② dự án công ty khác (NhàLo...) → ③ hành chính (Nội trợ) → ④ dự án cá nhân. Hero chỉ định khác thì theo Hero.
 - Không mang code, dữ liệu, tài liệu, chìa khoá của công ty sang dự án cá nhân và ngược lại.
 - Dự án cá nhân theo thêm `PERSONAL.md` (thiết kế để dễ chuyển sang server/domain riêng).
-- **Nơi lưu:** code → `~/Projects/` (`/Users/townsoft/Projects`, không đồng bộ OneDrive; vẫn commit/push GitHub bình thường). **Mọi thứ khác của công ty** (tài liệu, báo cáo, ảnh, video, file xuất) → OneDrive `[0] TOWNSOFT'S FILES/0. Project/0. Báo cáo Agent/<dự án>/`. Không để tài liệu công ty trong drive cá nhân. Chỉ dự án Hero gọi là cá nhân mới vào thư mục cá nhân OneDrive `[1] PERSONAL/Heroes/<dự án>/` + GitHub `DreamLee137`.
+- **Nơi lưu — "Một nhà = Mac mini" (06/11/2026, xem `runbooks/MOT-NHA.md`):** mỗi dự án = 1 thư mục `~/Projects/<company|personal>/<dự án>/` chứa TẤT CẢ: `CLAUDE.md` (phạm vi), `STATUS.md` (trạng thái + Bảng việc — nguồn sự thật), `files/inbox/` (Hero đưa), `files/output/` (Claude tạo), các repo. Chỉ `files/` được đồng bộ 2 chiều mỗi giờ (không xoá) lên OneDrive để chia sẻ: công ty `[0] TOWNSOFT'S FILES/0. Project/0. Dự án Agent/<dự án>/`, cá nhân `[1] PERSONAL/Heroes - Dự án/<dự án>/`. Không đọc/ghi trạng thái ở OneDrive hay Project claude.ai nữa. Thư mục cũ `0. Báo cáo Agent/` và `[1] PERSONAL/Heroes/` chỉ còn là bản lưu trữ.
+- **Bảng việc:** mọi việc Hero giao có 1 dòng trong `STATUS.md` → 🔵 Đang làm · 🔴 Cần Hero (ghi rõ cần gì) · 👀 Chờ Hero xem (link file/PR) · ⏸ Đang chờ · ✅ Xong. Tổng hợp tự động: `~/Projects/BANG-VIEC.md`; việc mới 🔴/👀 tự báo Discord `can-hero`.
 
 ## Cách nhận lệnh
 Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**
@@ -44,7 +45,7 @@ Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**
 7. **Bằng chứng, không chỉ lời nói:** "xong" phải kèm bằng chứng (ảnh chụp, kết quả test, link).
 8. **Repo cũ chỉ đọc**, chỉ ghi khi Hero yêu cầu rõ. Việc lớn làm trong bản clone riêng / nhánh riêng. **Repo Lina: tuyệt đối chỉ đọc** (pull để cập nhật, đọc code/log) — mọi đề xuất sửa viết thành tài liệu/ticket để dev của dự án làm.
 9. Viết tiếng Việt, ngắn gọn, gạch đầu dòng.
-10. **Nhóm chat "Tiệm Heroes" (Discord):** việc đặc biệt (cần duyệt, bị chặn, cột mốc, sự cố) → nhắn bằng `tools/discord-say.sh` theo luật trong `TIEM-HEROES.md`. Việc thường ngày không nhắn.
+10. **Nhóm chat "Tiệm Heroes" (Discord):** việc đặc biệt (cần duyệt, bị chặn, cột mốc, sự cố) → nhắn bằng `tools/discord-say.sh` theo luật trong `DISCORD.md`. Việc thường ngày không nhắn.
 
 ## Tự động vs. luôn hỏi Hero
 | Tự làm | Luôn hỏi Hero |

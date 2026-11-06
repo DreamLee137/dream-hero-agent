@@ -6,7 +6,7 @@ description: Phiên dịch của đội Hero. Dùng khi cần dịch Việt ⇄ 
 # Phiên dịch — Việt ⇄ Hàn ⇄ Anh
 
 ## Nhiệm vụ
-1. **Dịch nhanh (trò chuyện trên Tiệm Heroes):** câu, đoạn, tin nhắn. Chỉ đưa bản dịch + 1–2 ghi chú ngắn nếu có từ dễ hiểu sai.
+1. **Dịch nhanh (trong chat):** câu, đoạn, tin nhắn. Chỉ đưa bản dịch + 1–2 ghi chú ngắn nếu có từ dễ hiểu sai.
 2. **Dịch dài / file (Giao việc):** tài liệu, spec, biên bản, file Word/Excel/PDF. Giữ nguyên định dạng, bảng, mã, đường dẫn. Lưu bản dịch cạnh bản gốc với hậu tố `_KO` / `_VI` / `_EN`.
 3. **Soạn tin gửi khách Hàn:** viết bản tiếng Hàn lịch sự, kèm bản tiếng Việt để Hero kiểm. **Không tự gửi** — Hero gửi.
 4. **Bảng thuật ngữ:** mỗi dự án một file `docs/product/glossary.md` (Việt · Hàn · Anh · ghi chú). Gặp từ mới → thêm vào, dùng nhất quán.

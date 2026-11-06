@@ -16,8 +16,8 @@ description: Phụ tá của Hero (Dream). Dùng khi Hero giao việc chung, vi�
    - Người quyết: Hero
    ```
    Sau đó liệt kê việc phát sinh cho từng agent bị ảnh hưởng.
-3. **Báo cáo hằng ngày:** cập nhật file báo cáo trong thư mục OneDrive `[0] TOWNSOFT'S FILES/0. Project/0. Báo cáo Agent` (bảng Excel tổng hợp + báo cáo ngày), rồi **gửi email Outlook** cho Hero. Mỗi sản phẩm ≤ 6 dòng: việc đã làm · việc cần làm · đang chặn · câu hỏi chờ Hero · rủi ro. Kèm link file trên OneDrive.
-4. **Tiệm Heroes (Discord):** sáng thứ Hai chào tuần mới ở `#☕-quay-chung` (mục tiêu tuần); gom tin `#📢-can-hero` chưa được trả lời vào email 17:30. **17:30 gửi bản rút gọn báo cáo cuối ngày vào `#📑-bao-cao`** (kèm link file OneDrive); chiều thứ Sáu gửi tổng kết tuần.
+3. **Báo cáo hằng ngày:** đọc `STATUS.md` mọi dự án + `~/Projects/BANG-VIEC.md` + git trên Mac; ghi `~/Projects/company/team/files/output/bao-cao-ngay/YYYY-MM-DD-{sang,chieu}.md`. Mỗi sản phẩm ≤ 6 dòng: đã làm · cần làm · 🔴 cần Hero · 👀 chờ Hero xem · rủi ro (sổ > 3 ngày không cập nhật, code chưa push). Ghi commit trong ngày vào mục "Đã xong gần đây" của STATUS.md dự án đó.
+4. **Discord (chỉ là kênh tin nhắn, bỏ quán cafe 06/11):** bản rút gọn báo cáo vào `bao-cao`; việc 🔴/👀 do `tools/mot-nha/bang_viec.py` tự báo vào `can-hero`.
 5. **Chuẩn bị gặp sếp (theo yêu cầu, bất chợt):** Hero hỏi "chuẩn bị họp sếp về [sản phẩm]" → trong ≤ 5 phút đưa ra 1 trang: tình trạng hiện tại · con số chính · đã xong từ lần trước · rủi ro · việc cần sếp quyết (kèm đề xuất). Có thể xuất kèm bản tiếng Hàn nếu Hero yêu cầu.
 6. **Thư ký nhắc việc:** giữ danh sách nhắc trong `REMINDERS.md` (trên máy, ngoài git nếu có thông tin khách). Hero nói "nhắc tớ ..." → tạo **sự kiện lịch Outlook** có báo trước (hiện trên điện thoại) + ghi vào danh sách. Mỗi báo cáo 8:00 có mục **"Hôm nay cần nhớ"** (lịch deploy, hạn trả lời khách, hạn chứng từ, việc hứa với ai). Ưu tiên nhắc việc Lina (quy trình chi tiết: chờ Hero bàn riêng).
 7. **Kiểm đồng bộ hằng tuần:** so `status.md` / docs với git log; báo chỗ lệch (docs nói A, code làm B).

@@ -1,6 +1,6 @@
 # Danh bạ sản phẩm
 
-Code: `/Users/townsoft/Projects/` · Tài liệu công ty: OneDrive `[0] TOWNSOFT'S FILES/0. Project/0. Báo cáo Agent/<dự án>/`
+Mọi thứ của dự án: `/Users/townsoft/Projects/<khu>/<dự án>/` (CLAUDE.md · STATUS.md · files/inbox · files/output · repo) — xem `runbooks/MOT-NHA.md`. `files/` đồng bộ OneDrive `0. Dự án Agent/<dự án>/` (cá nhân: `[1] PERSONAL/Heroes - Dự án/`). Thêm: `company/noi-tro`, `company/phien-dich`, `company/team` (không có repo).
 **Ưu tiên:** ① Lina → ② dự án công ty khác → ③ Nội trợ → ④ cá nhân.
 
 Ký hiệu quyền của agent: 🔒 chỉ đọc · 📝 chỉ sửa tài liệu (docs, *.md), không sửa src · ✏️ được sửa code theo quy trình nhánh
@@ -11,7 +11,7 @@ Ký hiệu quyền của agent: 🔒 chỉ đọc · 📝 chỉ sửa tài liệ
 | **Lina** ⭐ | `lina/` | `Lina-Security-Backend` · `Lina-Security-Manager` (FE) | 🔒 | Outsourcing Hàn Quốc, bảo trì. Hero điều phối, thiết kế, cầu nối, test. Nguồn kiến thức: Claude Project Lina; trao đổi nay qua Balheh. Quy trình nhắc việc: bàn sau |
 | **Balheh** | `balheh/` | `Balheh_Storage` · `Balheh_PJT_Mobile` · `Balheh_PJT_BackEnd` · `Balheh_PJT_FrontEnd` | 📝 | Hero: BA, PM, thiết kế, test, marketing. Sửa tài liệu trong repo, không sửa src |
 | **NhàLo** | `nhalo/` | `biztown-rent` (app + Mini App) · `biztown-rent_Backend` | ✏️ | Cải tiến trên `feature/nhalo-lite` → test đủ → merge `main` (= bản store). Hồ sơ: `docs/product/` |
-| **ChinChu** | `chinchu/` | `biztown-Chinchu-FrontEnd` · BE dùng chung NhàLo `biztown-rent_Backend` (lối tắt `chinchu/biztown-rent_Backend` → `nhalo/`; repo ChinChu BE đã xoá 05/11) | ✏️ | Dự án sắp làm; repo mobile/storage tạo sau. Hero bàn sau |
+| **ChinChu** | `chinchu/` | `biztown-Chinchu-FrontEnd` · `biztown-Chinchu-BackEnd` (NestJS, tách khỏi NhàLo 05/11) · `biztown-Chinchu-Mobile` (chưa clone) | ✏️ | Web Next.js (quankd) + app Flutter. Lối tắt `chinchu/biztown-rent_Backend` → `nhalo/` còn để tham khảo. Docs gốc ở repo FE |
 | **Homepage BizTown** (BizTown, NhàLo, Balheh) | `homepages/` | `biztown-web` | 📝 → ✏️ | Hero thiết kế, test; sắp tự sửa nội dung → agent hỗ trợ trên nhánh riêng + PR, Hero duyệt |
 | **Homepage công ty** | `homepages/` | `townsoft-homepage` | 📝 → ✏️ | Như trên, Hero sắp sửa giao diện |
 

@@ -1,6 +1,7 @@
 # Changelog quy trình
 
 ## 2026-11-06
+- Discord can-hero: chỉ báo khi Bảng việc thay đổi (mới / đổi trạng thái), chỉ liệt kê phần đổi; giờ yên lặng 20:00–7:00 gom vào báo cáo sáng.
 - Thêm trạng thái 🦹 Cần Anti-hero (việc cần sếp cho ý kiến / báo cáo / họp) + tab riêng trên trang Bảng việc.
 - Bỏ 9 agent đặt tên (chỉ còn Sidekick; việc dự án làm trong Project). Dọn Discord còn 3 kênh: bao-cao, can-hero, khan-cap. Thêm `docs/INTEGRATION-CHINCHU.md` ở BE NhàLo (nhánh riêng). Claude Code: `.claude/settings.json` ở nhalo/chinchu tự thêm thư mục bên kia (chỉ đọc).
 - "Một nhà = Mac mini": mỗi dự án 1 thư mục (CLAUDE.md, STATUS.md, files/inbox, files/output, repo); chỉ files/ đồng bộ OneDrive `0. Dự án Agent/` 2 chiều mỗi giờ, không xoá. Bỏ sổ chung TRANG-THAI.md trên OneDrive. Bảng việc 🔴/👀 + BANG-VIEC.md + báo Discord can-hero. Agent tên khác thành vai tuỳ chọn; bỏ quán cafe Tiệm Heroes. Công cụ `tools/mot-nha/`, runbook `runbooks/MOT-NHA.md`.

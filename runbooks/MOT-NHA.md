@@ -13,7 +13,7 @@ Thay mô hình "sổ chung OneDrive" (03/11). Lý do: mỗi dự án có 2 nhà 
    └─ <repo>/        code (git)
    ```
 2. **Chỉ `files/` lên OneDrive** để chia sẻ: công ty → `[0] TOWNSOFT'S FILES/0. Project/0. Dự án Agent/<dự án>/`, cá nhân → `[1] PERSONAL/Heroes - Dự án/<dự án>/`. Đồng bộ 2 chiều mỗi giờ (launchd `com.hero.dong-bo`), file mới hơn thắng, **không bao giờ xoá** — muốn xoá thì xoá cả 2 nơi.
-3. **Bảng việc** trong STATUS.md: 🔵 Đang làm · 🔴 Cần Hero · 👀 Chờ Hero xem · ⏸ Đang chờ · 🦹 Cần Anti-hero (việc cần sếp) · ✅ Xong. Trang web có tab riêng "🦹 Anti-hero". `bang_viec.py` gộp mọi dự án vào `~/Projects/BANG-VIEC.md` mỗi giờ; việc mới chuyển 🔴/👀 → Discord kênh `can-hero` (push điện thoại).
+3. **Bảng việc** trong STATUS.md: 🔵 Đang làm · 🔴 Cần Hero · 👀 Chờ Hero xem · ⏸ Đang chờ · 🦹 Cần Anti-hero (việc cần sếp) · ✅ Xong. Trang web có tab riêng "🦹 Anti-hero". `bang_viec.py` gộp mọi dự án vào `~/Projects/BANG-VIEC.md` mỗi giờ; Discord `can-hero` chỉ nhắn khi Bảng việc **thay đổi** (việc mới / đổi trạng thái), liệt kê phần thay đổi; giờ yên lặng 20:00–7:00 không nhắn, gom vào báo cáo sáng 7:52.
 4. **Sidekick** báo cáo sáng/chiều đọc STATUS.md + git trên Mac, ghi vào `company/team/files/output/bao-cao-ngay/`. Agent khác chỉ là "vai" (skill) gọi khi cần.
 5. Repo Lina: push bị khoá ở git (`push URL = DISABLED`).
 

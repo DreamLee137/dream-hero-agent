@@ -1,5 +1,8 @@
 # Changelog quy trình
 
+## 2026-11-06
+- "Một nhà = Mac mini": mỗi dự án 1 thư mục (CLAUDE.md, STATUS.md, files/inbox, files/output, repo); chỉ files/ đồng bộ OneDrive `0. Dự án Agent/` 2 chiều mỗi giờ, không xoá. Bỏ sổ chung TRANG-THAI.md trên OneDrive. Bảng việc 🔴/👀 + BANG-VIEC.md + báo Discord can-hero. Agent tên khác thành vai tuỳ chọn; bỏ quán cafe Tiệm Heroes. Công cụ `tools/mot-nha/`, runbook `runbooks/MOT-NHA.md`.
+
 ## 2026-11-01
 - Khởi tạo đội v1: Sidekick, Hoa tiêu, Kiến trúc sư, Thợ may, Thợ xây, Thợ săn, Gác cổng, Hát rong.
 - Luật trong từng SKILL.md rút từ retro dự án NhàLo (08–10/2026).

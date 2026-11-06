@@ -48,7 +48,7 @@ details summary{cursor:pointer}
 <script>
 const ST=[["🔴","Cần cậu","r"],["👀","Chờ cậu xem","e"],["🔵","Đang làm","b"],["⏸","Đang chờ","w"],["✅","Xong gần đây","d"]];
 const DEMO=new URLSearchParams(location.search).has("demo");
-const BOSS=["🦹","Cần Anti-hero (sếp)","v"];
+const BOSS=["🦹","Cần Phản diện (sếp)","v"];
 let S={data:null,pending:[],filterP:"",filterS:"",pw:"",tab:"hero"};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -82,7 +82,7 @@ function render(){
   const vis=items.filter(i=>!S.filterP||(i.ten_du_an||i.du_an)===S.filterP);
   const cnt=k=>vis.filter(i=>i.icon===k).length;
   let h=`<div class="wrap"><header><h1>Bảng việc của Hero</h1><div class="sub">Cập nhật ${esc(S.data.generated||"—")}${DEMO?" · dữ liệu mẫu":""} · tự làm mới mỗi giờ</div></header>
-  <div class="tabs"><button data-tab="hero" class="${S.tab==="hero"?"on":""}">🦸 Việc của Hero</button><button data-tab="boss" class="${S.tab==="boss"?"on":""}">🦹 Anti-hero<span class="n">${vis.filter(i=>i.icon==="🦹").length}</span></button></div>
+  <div class="tabs"><button data-tab="hero" class="${S.tab==="hero"?"on":""}">🦸 Việc của Hero</button><button data-tab="boss" class="${S.tab==="boss"?"on":""}">🦹 Phản diện<span class="n">${vis.filter(i=>i.icon==="🦹").length}</span></button></div>
   ${S.tab==="boss"?bossTab(vis):`<div class="stats">${ST.slice(0,4).map(([k,t,c])=>`<div class="stat ${c} ${S.filterS===k?"on":""}" data-s="${k}"><b style="color:var(--c)">${cnt(k)}</b><span>${k} ${t}</span></div>`).join("")}</div>
   <div class="filters"><button class="chip ${!S.filterP?"on":""}" data-p="">Tất cả dự án</button>${projects.map(p=>`<button class="chip ${S.filterP===p?"on":""}" data-p="${esc(p)}">${esc(p)}</button>`).join("")}</div>
   ${S.tab==="hero"?mainTab(vis):""}`}`;
@@ -104,7 +104,7 @@ function bossTab(vis){
   const list=vis.filter(i=>i.icon==="🦹");
   return `<div class="filters"><button class="chip ${!S.filterP?"on":""}" data-p="">Tất cả dự án</button>${[...new Set((S.data.items||[]).map(i=>i.ten_du_an||i.du_an))].map(p=>`<button class="chip ${S.filterP===p?"on":""}" data-p="${esc(p)}">${esc(p)}</button>`).join("")}</div>
   <div class="hint">Việc cậu không tự quyết được, hoặc cần làm báo cáo để gửi / họp với sếp. Trao đổi xong thì tick “Xong” và ghi kết quả.</div>
-  <section><h2>🦹 Cần Anti-hero <span class="count">(${list.length})</span></h2>${list.length?list.map(i=>card(i,"v")).join(""):`<div class="empty">Không có</div>`}</section>`;
+  <section><h2>🦹 Cần Phản diện <span class="count">(${list.length})</span></h2>${list.length?list.map(i=>card(i,"v")).join(""):`<div class="empty">Không có</div>`}</section>`;
 }
 function bind(){
   document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;S.filterS="";render()});
@@ -128,7 +128,7 @@ function demoData(){return{generated:"06/11/2026 10:00",items:[
  {du_an:"nhalo",ten_du_an:"NhàLo",id:"NL-0511-1",viec:"Video quảng cáo 19,4 s 9:16 (nháp)",icon:"👀",trang_thai:"👀 Chờ Hero xem",ghi_chu:"Nghe, chốt giọng — `files/output/claude-outputs/nhalo-video.mp4`",cap_nhat:"05/11"},
  {du_an:"lina",ten_du_an:"Lina",id:"LN-0511-1",viec:"Theo dõi kết quả deploy 05/11",icon:"⏸",trang_thai:"⏸ Đang chờ",ghi_chu:"Bên Hàn đóng gói",cap_nhat:"05/11"},
  {du_an:"chinchu",ten_du_an:"ChinChu",id:"CC-0511-4",viec:"Yêu cầu nâng cấp NhàLo v0.1.1",icon:"🔵",trang_thai:"🔵 Đang làm",ghi_chu:"Sửa tin rồi chuyển NhàLo",cap_nhat:"01/11"},
- {du_an:"nhalo",ten_du_an:"NhàLo",id:"NL-0611-4",viec:"Ngân sách + ngày bắt đầu thử nghiệm 3 hướng",icon:"🦹",trang_thai:"🦹 Cần Anti-hero",ghi_chu:"Trình bằng bản dự toán NL-0511-4",cap_nhat:"06/11"},
+ {du_an:"nhalo",ten_du_an:"NhàLo",id:"NL-0611-4",viec:"Ngân sách + ngày bắt đầu thử nghiệm 3 hướng",icon:"🦹",trang_thai:"🦹 Cần Phản diện",ghi_chu:"Trình bằng bản dự toán NL-0511-4",cap_nhat:"06/11"},
  {du_an:"noi-tro",ten_du_an:"Nội trợ",id:"NT-0311-1",viec:"Đóng gói skill phiếu lương",icon:"✅",trang_thai:"✅ Xong",ghi_chu:"Skill đã có",cap_nhat:"06/11"}]}}
 S.pw=ls("bv-pw")||"";
 if(DEMO||S.pw)load();else login();

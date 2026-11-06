@@ -67,6 +67,24 @@ if cfg:
         print("⚠️ lấy phản hồi web lỗi:", e)
 
 # 2) gộp
+def ra_ngay(dd, mm, yyyy=None):
+    d, m = int(dd), int(mm)
+    y = int(yyyy) if yyyy else (now.year - 1 if m > now.month + 1 else now.year)
+    try: return datetime.date(y, m, d).isoformat()
+    except ValueError: return None
+
+def doc_da_lam(path, k, ten):
+    """Các dòng '- DD/MM · …' trong mọi mục 'Đã xong gần đây' (kể cả sổ cũ đã gộp)."""
+    out, trong = [], False
+    for line in open(path, encoding="utf-8"):
+        if line.startswith("#"):
+            trong = "đã xong" in line.lower(); continue
+        m = re.match(r"^- (\d{1,2})/(\d{1,2})(?:/(\d{4}))?\s*(?:·|—|-)?\s*(.+)$", line.strip()) if trong else None
+        if m and ra_ngay(m[1], m[2], m[3]):
+            out.append(dict(du_an=k, ten_du_an=ten, ngay=ra_ngay(m[1], m[2], m[3]), viec=m[4].strip(), nguon="sổ"))
+    return out
+
+da_lam = []
 tat_ca, moi, hien = [], [], {}
 try: cu = json.load(open(STATE))
 except Exception: cu = {}
@@ -75,12 +93,12 @@ for k, (khu, _, ten, _) in DU_AN.items():
     if not os.path.exists(p): continue
     tuoi = (now - datetime.datetime.fromtimestamp(os.path.getmtime(p))).days
     xong = 0
+    da_lam.extend(doc_da_lam(p, k, ten))
     for _, (id_, viec, tt, ghichu, cn) in [(n, c[:5]) for n, c in doc_bang(open(p, encoding="utf-8").read().split("\n"))]:
         icon = next((i for i, _ in NHOM if tt.startswith(i)), None)
         if not icon: continue
         if icon == "✅":
             xong += 1
-            if xong > 10: continue
         tat_ca.append(dict(icon=icon, du_an=k, ten_du_an=ten, khu=khu, id=id_, viec=viec, trang_thai=tt, ghi_chu=ghichu, cap_nhat=cn, tuoi_so=tuoi))
         key = f"{k}/{id_}"; hien[key] = icon
         if icon in ("🔴", "👀", "🦹") and cu.get(key) != icon:
@@ -103,7 +121,10 @@ json.dump(hien, open(STATE, "w"), ensure_ascii=False)
 # 3) đẩy lên web + báo Discord
 if cfg:
     try:
-        http(cfg, "PUT", "data", {"generated": f"{now:%d/%m/%Y %H:%M}", "items": tat_ca}); print("Đã đẩy lên trang web")
+        xong_bang = [dict(du_an=r["du_an"], ten_du_an=r["ten_du_an"], ngay=ra_ngay(*r["cap_nhat"].split("/")[:2]) if re.match(r"^\d{1,2}/\d{1,2}", r["cap_nhat"]) else None,
+                          viec=f'{r["id"]} · {r["viec"]}', ghi_chu=r["ghi_chu"], nguon="bảng") for r in tat_ca if r["icon"] == "✅"]
+        dl = sorted([d for d in da_lam + xong_bang if d.get("ngay")], key=lambda d: d["ngay"], reverse=True)[:1500]
+        http(cfg, "PUT", "data", {"generated": f"{now:%d/%m/%Y %H:%M}", "items": [r for r in tat_ca if r["icon"] != "✅"], "da_lam": dl}); print("Đã đẩy lên trang web")
     except Exception as e:
         print("⚠️ đẩy web lỗi:", e)
 if moi and "--im-lang" not in sys.argv and os.path.exists(DISCORD):

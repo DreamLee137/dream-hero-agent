@@ -23,7 +23,7 @@ def log(s):
     with open(LOG, "a") as f: f.write(line + "\n")
 
 def onedrive_chay():
-    return subprocess.run(["pgrep", "-x", "OneDrive"], capture_output=True).returncode == 0
+    return subprocess.run(["pgrep", "-f", "OneDrive.app/Contents/MacOS/OneDrive"], capture_output=True).returncode == 0
 
 if not onedrive_chay():
     log("OneDrive chưa chạy -> mở lại")

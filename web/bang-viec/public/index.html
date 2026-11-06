@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Bảng việc của Hero</title>
+<style>
+:root{--bg:#f6f5f2;--card:#fff;--ink:#1d1d1f;--mute:#6b6b70;--line:#e4e2dc;--red:#c8372d;--redbg:#fbeceb;--amber:#b26b00;--amberbg:#fdf3e1;--blue:#2459c4;--bluebg:#e9effb;--gray:#6b6b70;--graybg:#efeee9;--green:#2e7d4f;--greenbg:#e7f4ec;--accent:#1d1d1f}
+@media (prefers-color-scheme:dark){:root{--bg:#141416;--card:#1d1d20;--ink:#ececee;--mute:#9a9aa2;--line:#2c2c31;--redbg:#3a1d1b;--red:#ff7a6e;--amberbg:#3a2c12;--amber:#f2b552;--bluebg:#1a2640;--blue:#86a8ff;--graybg:#26262b;--gray:#a3a3aa;--greenbg:#16301f;--green:#6fd39a;--accent:#ececee}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:14px}
+h1{font-size:22px;margin:0}.sub{color:var(--mute);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:12px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
+.stat b{font-size:24px;display:block}.stat span{font-size:12px;color:var(--mute)}
+.stat.on{outline:2px solid var(--accent)}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 16px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 11px;font-size:13px;cursor:pointer}
+.chip.on{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+section{margin:18px 0}section h2{font-size:15px;margin:0 0 8px;display:flex;gap:8px;align-items:center}
+.count{color:var(--mute);font-weight:400}
+.item{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px}
+.item .body{flex:1;min-width:0}
+.top{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--mute)}
+.tag{background:var(--cb);color:var(--c);border-radius:6px;padding:1px 7px;font-weight:600}
+.proj{background:var(--graybg);color:var(--ink);border-radius:6px;padding:1px 7px}
+.title{font-weight:600;margin:3px 0 2px;overflow-wrap:anywhere}
+.note{color:var(--mute);font-size:13.5px;overflow-wrap:anywhere}.note a{color:var(--blue)}
+.old{color:var(--amber)}
+.tick{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--mute);min-width:52px}
+.tick input{width:22px;height:22px;accent-color:var(--green);cursor:pointer}
+.pend{font-size:12.5px;color:var(--green);margin-top:4px}
+.noteform{display:flex;gap:6px;margin-top:6px}.noteform input{flex:1;min-width:0;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.noteform button,.login button{padding:6px 12px;border-radius:8px;border:0;background:var(--accent);color:var(--bg);cursor:pointer}
+.r{--c:var(--red);--cb:var(--redbg)}.e{--c:var(--amber);--cb:var(--amberbg)}.b{--c:var(--blue);--cb:var(--bluebg)}.w{--c:var(--gray);--cb:var(--graybg)}.d{--c:var(--green);--cb:var(--greenbg)}
+.login{max-width:340px;margin:18vh auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.login input{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;margin:10px 0;background:var(--bg);color:var(--ink);font-size:15px}
+.err{color:var(--red);font-size:13px}.empty{color:var(--mute);font-size:13px;padding:4px 2px}
+details summary{cursor:pointer}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const ST=[["🔴","Cần cậu","r"],["👀","Chờ cậu xem","e"],["🔵","Đang làm","b"],["⏸","Đang chờ","w"],["✅","Xong gần đây","d"]];
+const DEMO=new URLSearchParams(location.search).has("demo");
+let S={data:null,pending:[],filterP:"",filterS:"",pw:""};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const linkify=s=>esc(s).replace(/(https?:\/\/[^\s)]+)/g,'<a href="$1" target="_blank" rel="noopener">mở link</a>').replace(/`([^`]+)`/g,"<code>$1</code>");
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
+async function api(path,opt={}){
+  const r=await fetch("/api/"+path,{...opt,headers:{"content-type":"application/json","x-bv-password":S.pw,...(opt.headers||{})}});
+  if(r.status===401)throw new Error("auth");
+  return r.json();
+}
+function login(msg){
+  $("#app").innerHTML=`<form class="login"><h1>Bảng việc của Hero</h1><div class="sub">Nhập mật khẩu để xem</div>
+  <input type="password" id="pw" autocomplete="current-password" placeholder="Mật khẩu"><button>Mở</button>
+  <div class="err">${msg||""}</div></form>`;
+  $("form").onsubmit=e=>{e.preventDefault();S.pw=$("#pw").value;ls("bv-pw",S.pw);load()};
+}
+async function load(){
+  if(DEMO){S.data=demoData();S.pending=[];return render()}
+  try{const d=await api("data");S.data=d;S.pending=d.pending||[];render()}
+  catch(e){ls("bv-pw",null);login(e.message==="auth"&&S.pw?"Sai mật khẩu":"")}
+}
+async function tick(du_an,id,on,ghi_chu=""){
+  if(DEMO){S.pending=on?[...S.pending.filter(t=>!(t.du_an===du_an&&t.id===id)),{du_an,id,ghi_chu}]:S.pending.filter(t=>!(t.du_an===du_an&&t.id===id));return render()}
+  const r=await api("tick",{method:"POST",body:JSON.stringify({du_an,id,hanh_dong:on?"xong":"bo-tick",ghi_chu})});
+  S.pending=r.pending||[];render();
+}
+function age(d){if(!d)return"";const m=d.match(/(\d{1,2})\/(\d{1,2})/);if(!m)return"";const now=new Date();const t=new Date(now.getFullYear(),m[2]-1,m[1]);let days=Math.round((now-t)/864e5);if(days<0)days+=365;return days}
+function render(){
+  const items=S.data.items||[];
+  const projects=[...new Set(items.map(i=>i.ten_du_an||i.du_an))];
+  const vis=items.filter(i=>!S.filterP||(i.ten_du_an||i.du_an)===S.filterP);
+  const cnt=k=>vis.filter(i=>i.icon===k).length;
+  let h=`<div class="wrap"><header><h1>Bảng việc của Hero</h1><div class="sub">Cập nhật ${esc(S.data.generated||"—")}${DEMO?" · dữ liệu mẫu":""} · tự làm mới mỗi giờ</div></header>
+  <div class="stats">${ST.slice(0,4).map(([k,t,c])=>`<div class="stat ${c} ${S.filterS===k?"on":""}" data-s="${k}"><b style="color:var(--c)">${cnt(k)}</b><span>${k} ${t}</span></div>`).join("")}</div>
+  <div class="filters"><button class="chip ${!S.filterP?"on":""}" data-p="">Tất cả dự án</button>${projects.map(p=>`<button class="chip ${S.filterP===p?"on":""}" data-p="${esc(p)}">${esc(p)}</button>`).join("")}</div>`;
+  for(const [k,t,c] of ST){
+    if(S.filterS&&S.filterS!==k)continue;
+    const list=vis.filter(i=>i.icon===k);
+    const inner=list.length?list.map(i=>card(i,c)).join(""):`<div class="empty">Không có</div>`;
+    h+=k==="✅"?`<section><details><summary><h2 style="display:inline-flex">${k} ${t} <span class="count">(${list.length})</span></h2></summary>${inner}</details></section>`
+              :`<section><h2>${k} ${t} <span class="count">(${list.length})</span></h2>${inner}</section>`;
+  }
+  $("#app").innerHTML=h+`</div>`;
+  document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{S.filterP=b.dataset.p;render()});
+  document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{S.filterS=S.filterS===b.dataset.s?"":b.dataset.s;render()});
+  document.querySelectorAll("input[data-tick]").forEach(cb=>cb.onchange=()=>{const [p,id]=cb.dataset.tick.split("|");tick(p,id,cb.checked)});
+  document.querySelectorAll("form[data-note]").forEach(f=>f.onsubmit=e=>{e.preventDefault();const [p,id]=f.dataset.note.split("|");tick(p,id,true,f.querySelector("input").value)});
+}
+function card(i,c){
+  const pend=S.pending.find(t=>t.du_an===i.du_an&&t.id===i.id);
+  const a=age(i.cap_nhat);const stale=i.icon==="🔵"&&a>=3;
+  const canTick=i.icon!=="✅";
+  return `<div class="item ${c}"><div class="body"><div class="top"><span class="proj">${esc(i.ten_du_an||i.du_an)}</span><span class="tag">${esc(i.trang_thai)}</span><span>${esc(i.id)}</span><span class="${stale?"old":""}">cập nhật ${esc(i.cap_nhat)}${stale?" · đứng yên "+a+" ngày":""}</span></div>
+  <div class="title">${esc(i.viec)}</div><div class="note">${linkify(i.ghi_chu)}</div>
+  ${pend?`<div class="pend">✓ Cậu đã tick xong${pend.ghi_chu?" · “"+esc(pend.ghi_chu)+"”":""} — Mac sẽ ghi vào STATUS.md trong ≤ 1 giờ</div>
+  <form class="noteform" data-note="${esc(i.du_an)}|${esc(i.id)}"><input placeholder="Thêm ghi chú (tuỳ chọn)" value="${esc(pend.ghi_chu||"")}"><button>Lưu</button></form>`:""}
+  </div>${canTick?`<label class="tick"><input type="checkbox" data-tick="${esc(i.du_an)}|${esc(i.id)}" ${pend?"checked":""}>Xong</label>`:""}</div>`;
+}
+function demoData(){return{generated:"06/11/2026 10:00",items:[
+ {du_an:"nhalo",ten_du_an:"NhàLo",id:"NL-0611-2",viec:"Đo lường bài nhóm FB",icon:"🔴",trang_thai:"🔴 Cần Hero",ghi_chu:"Chọn tự host hay Bitly; ai lấy Provider ID App Store",cap_nhat:"06/11"},
+ {du_an:"nhalo",ten_du_an:"NhàLo",id:"NL-0511-1",viec:"Video quảng cáo 19,4 s 9:16 (nháp)",icon:"👀",trang_thai:"👀 Chờ Hero xem",ghi_chu:"Nghe, chốt giọng — `files/output/claude-outputs/nhalo-video.mp4`",cap_nhat:"05/11"},
+ {du_an:"lina",ten_du_an:"Lina",id:"LN-0511-1",viec:"Theo dõi kết quả deploy 05/11",icon:"⏸",trang_thai:"⏸ Đang chờ",ghi_chu:"Bên Hàn đóng gói",cap_nhat:"05/11"},
+ {du_an:"chinchu",ten_du_an:"ChinChu",id:"CC-0511-4",viec:"Yêu cầu nâng cấp NhàLo v0.1.1",icon:"🔵",trang_thai:"🔵 Đang làm",ghi_chu:"Sửa tin rồi chuyển NhàLo",cap_nhat:"01/11"},
+ {du_an:"noi-tro",ten_du_an:"Nội trợ",id:"NT-0311-1",viec:"Đóng gói skill phiếu lương",icon:"✅",trang_thai:"✅ Xong",ghi_chu:"Skill đã có",cap_nhat:"06/11"}]}}
+S.pw=ls("bv-pw")||"";
+if(DEMO||S.pw)load();else login();
+if(!DEMO)setInterval(()=>{if(S.data)load()},5*60*1000);
+</script>
+</body>
+</html>

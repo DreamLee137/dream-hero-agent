@@ -45,7 +45,7 @@ Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**
 7. **Bằng chứng, không chỉ lời nói:** "xong" phải kèm bằng chứng (ảnh chụp, kết quả test, link).
 8. **Repo cũ chỉ đọc**, chỉ ghi khi Hero yêu cầu rõ. Việc lớn làm trong bản clone riêng / nhánh riêng. **Repo Lina: tuyệt đối chỉ đọc** (pull để cập nhật, đọc code/log) — mọi đề xuất sửa viết thành tài liệu/ticket để dev của dự án làm.
 9. Viết tiếng Việt, ngắn gọn, gạch đầu dòng.
-10. **Nhóm chat "Tiệm Heroes" (Discord):** việc đặc biệt (cần duyệt, bị chặn, cột mốc, sự cố) → nhắn bằng `tools/discord-say.sh` theo luật trong `TIEM-HEROES.md`. Việc thường ngày không nhắn.
+10. **Nhóm chat "Tiệm Heroes" (Discord):** việc đặc biệt (cần duyệt, bị chặn, cột mốc, sự cố) → nhắn bằng `tools/discord-say.sh` theo luật trong `DISCORD.md`. Việc thường ngày không nhắn.
 
 ## Tự động vs. luôn hỏi Hero
 | Tự làm | Luôn hỏi Hero |

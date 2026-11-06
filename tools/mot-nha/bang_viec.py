@@ -1,65 +1,111 @@
 #!/usr/bin/env python3
-"""Gộp "## Bảng việc" trong STATUS.md của mọi dự án -> ~/Projects/BANG-VIEC.md.
-Việc MỚI chuyển sang 🔴 (cần Hero) hoặc 👀 (chờ Hero xem) -> nhắn Discord kênh can-hero
-(điện thoại có app Discord sẽ nhận push).
+"""Gộp "## Bảng việc" trong STATUS.md của mọi dự án -> ~/Projects/BANG-VIEC.md (+ trang web Netlify nếu đã cấu hình).
 
-Cách dùng: python3 bang_viec.py [--im-lang]   (--im-lang: không nhắn, chỉ ghi)
+1. Nếu có ~/.secrets/netlify/bang-viec.json ({"url": "https://<site>.netlify.app", "token": "<BV_TOKEN>"}):
+   lấy các dòng Hero tick "Xong" trên trang -> ghi vào STATUS.md (trạng thái ✅ Xong) -> báo trang đã nhận.
+2. Gộp bảng -> BANG-VIEC.md; đẩy dữ liệu lên trang web.
+3. Việc MỚI chuyển sang 🔴/👀 -> nhắn Discord kênh can-hero.
+
+Cách dùng: python3 bang_viec.py [--im-lang]   (--im-lang: không nhắn Discord)
 """
-import os, re, json, sys, glob, datetime, subprocess
+import os, re, json, sys, datetime, subprocess, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cau_hinh import DU_AN, mac_dir, PROJECTS
 
-NHOM = [("🔴", "Cần Hero"), ("👀", "Chờ Hero xem kết quả"), ("🔵", "Đang làm"), ("⏸", "Đang chờ")]
+NHOM = [("🔴", "Cần Hero"), ("👀", "Chờ Hero xem kết quả"), ("🔵", "Đang làm"), ("⏸", "Đang chờ"), ("✅", "Xong")]
 STATE = os.path.expanduser("~/.hero/bang-viec-state.json")
+WEB_CFG = os.path.expanduser("~/.secrets/netlify/bang-viec.json")
 OUT = os.path.join(PROJECTS, "BANG-VIEC.md")
 DISCORD = os.path.expanduser("~/Projects/dream-hero-agent/tools/discord-say.sh")
+now = datetime.datetime.now()
 
-def doc_bang(path):
+def http(cfg, method, path, body=None):
+    req = urllib.request.Request(cfg["url"].rstrip("/") + "/api/" + path, method=method,
+                                 data=json.dumps(body, ensure_ascii=False).encode() if body is not None else None,
+                                 headers={"authorization": "Bearer " + cfg["token"], "content-type": "application/json"})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        return json.loads(r.read().decode() or "null")
+
+def doc_bang(lines):
+    """Trả về [(chỉ số dòng, [ô...])] của bảng trong mục ## Bảng việc."""
     rows, trong = [], False
-    for line in open(path, encoding="utf-8"):
+    for n, line in enumerate(lines):
         if line.startswith("## "):
-            trong = line.strip().lower().startswith("## bảng việc")
-            continue
+            trong = line.strip().lower().startswith("## bảng việc"); continue
         if trong and line.startswith("|") and not re.match(r"^\|\s*-", line):
             c = [x.strip() for x in line.strip().strip("|").split("|")]
             if len(c) >= 3 and c[0].lower() != "id":
-                rows.append(c + [""] * (5 - len(c)))
+                rows.append((n, c + [""] * (5 - len(c))))
     return rows
 
-tat_ca, moi = [], []
-cu = {}
-try: cu = json.load(open(STATE))
-except Exception: pass
-hien = {}
+# 1) phản hồi từ trang web
+cfg = None
+if os.path.exists(WEB_CFG):
+    try: cfg = json.load(open(WEB_CFG))
+    except Exception as e: print("⚠️ đọc cấu hình web lỗi:", e)
+if cfg:
+    try:
+        ticks = http(cfg, "GET", "phan-hoi") or []
+        done = []
+        for t in ticks:
+            if t.get("du_an") not in DU_AN: continue
+            p = os.path.join(mac_dir(t["du_an"]), "STATUS.md")
+            if not os.path.exists(p): continue
+            lines = open(p, encoding="utf-8").read().split("\n")
+            for n, c in doc_bang(lines):
+                if c[0] == t["id"]:
+                    ghi = c[3] + f" · Hero tick xong trên web {now:%d/%m %H:%M}" + (f": {t['ghi_chu']}" if t.get("ghi_chu") else "")
+                    lines[n] = f"| {c[0]} | {c[1]} | ✅ Xong | {ghi} | {now:%d/%m} |"
+                    lines = [re.sub(r"^Cập nhật lần cuối:.*", f"Cập nhật lần cuối: {now:%d/%m/%Y} — Hero (tick trên Bảng việc web)", l) for l in lines]
+                    open(p, "w", encoding="utf-8").write("\n".join(lines))
+                    done.append(t); break
+            else:
+                done.append(t)  # không tìm thấy dòng -> bỏ khỏi hàng chờ
+        if done:
+            http(cfg, "POST", "phan-hoi", {"done": done}); print(f"Ghi {len(done)} tick từ web vào STATUS.md")
+    except Exception as e:
+        print("⚠️ lấy phản hồi web lỗi:", e)
 
-for k in DU_AN:
+# 2) gộp
+tat_ca, moi, hien = [], [], {}
+try: cu = json.load(open(STATE))
+except Exception: cu = {}
+for k, (khu, _, ten, _) in DU_AN.items():
     p = os.path.join(mac_dir(k), "STATUS.md")
     if not os.path.exists(p): continue
-    tuoi = (datetime.datetime.now() - datetime.datetime.fromtimestamp(os.path.getmtime(p))).days
-    for id_, viec, tt, ghichu, cn in [r[:5] for r in doc_bang(p)]:
+    tuoi = (now - datetime.datetime.fromtimestamp(os.path.getmtime(p))).days
+    xong = 0
+    for _, (id_, viec, tt, ghichu, cn) in [(n, c[:5]) for n, c in doc_bang(open(p, encoding="utf-8").read().split("\n"))]:
         icon = next((i for i, _ in NHOM if tt.startswith(i)), None)
         if not icon: continue
-        tat_ca.append((icon, k, id_, viec, ghichu, cn, tuoi))
+        if icon == "✅":
+            xong += 1
+            if xong > 10: continue
+        tat_ca.append(dict(icon=icon, du_an=k, ten_du_an=ten, khu=khu, id=id_, viec=viec, trang_thai=tt, ghi_chu=ghichu, cap_nhat=cn, tuoi_so=tuoi))
         key = f"{k}/{id_}"; hien[key] = icon
         if icon in ("🔴", "👀") and cu.get(key) != icon:
-            moi.append(f"{icon} {k} · {id_} · {viec} — {ghichu}")
+            moi.append(f"{icon} {ten} · {id_} · {viec} — {ghichu}")
 
-now = datetime.datetime.now()
 out = [f"# Bảng việc tổng — tự sinh {now:%d/%m/%Y %H:%M}", "",
        "_Không sửa file này. Sửa `STATUS.md` trong thư mục dự án; file này tự gộp mỗi giờ._", ""]
-for icon, ten in NHOM:
-    ds = [r for r in tat_ca if r[0] == icon]
+for icon, ten in NHOM[:4]:
+    ds = [r for r in tat_ca if r["icon"] == icon]
     out.append(f"## {icon} {ten} ({len(ds)})")
     if not ds: out.append("- (không có)")
-    for _, k, id_, viec, ghichu, cn, tuoi in ds:
-        cu_ = f" ⚠️ sổ {tuoi} ngày chưa cập nhật" if icon == "🔵" and tuoi >= 3 else ""
-        out.append(f"- **{k}** · {id_} · {viec} — {ghichu} _(cập nhật {cn})_{cu_}")
+    for r in ds:
+        cu_ = f" ⚠️ sổ {r['tuoi_so']} ngày chưa cập nhật" if icon == "🔵" and r["tuoi_so"] >= 3 else ""
+        out.append(f"- **{r['ten_du_an']}** · {r['id']} · {r['viec']} — {r['ghi_chu']} _(cập nhật {r['cap_nhat']})_{cu_}")
     out.append("")
 open(OUT, "w", encoding="utf-8").write("\n".join(out))
 os.makedirs(os.path.dirname(STATE), exist_ok=True)
 json.dump(hien, open(STATE, "w"), ensure_ascii=False)
 
+# 3) đẩy lên web + báo Discord
+if cfg:
+    try:
+        http(cfg, "PUT", "data", {"generated": f"{now:%d/%m/%Y %H:%M}", "items": tat_ca}); print("Đã đẩy lên trang web")
+    except Exception as e:
+        print("⚠️ đẩy web lỗi:", e)
 if moi and "--im-lang" not in sys.argv and os.path.exists(DISCORD):
-    msg = "📋 Việc mới cần cậu:\n" + "\n".join(moi[:15])
-    subprocess.run([DISCORD, "sidekick", "can-hero", msg])
+    subprocess.run([DISCORD, "sidekick", "can-hero", "📋 Việc mới cần cậu:\n" + "\n".join(moi[:15])])
 print(f"Đã gộp {len(tat_ca)} việc -> {OUT}; báo mới: {len(moi)}")

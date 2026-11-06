@@ -3,6 +3,7 @@
 
 - Đẩy:  Mac files/  -> OneDrive "0. Dự án Agent/<dự án>/"   (file mới hơn mới chép)
 - Kéo:  OneDrive    -> Mac files/                             (file mới hơn mới chép)
+- STATUS.md + CLAUDE.md: sao lưu 1 chiều lên OneDrive "<dự án>/_so-mac/" (chỉ để phòng hỏng máy, không sửa ở đó).
 - KHÔNG BAO GIỜ xoá ở bất kỳ bên nào. Muốn xoá: xoá cả 2 nơi (hoặc nhắn Sidekick).
 - Bỏ qua node_modules, .git, build... (xem LOAI_TRU).
 Sau đó chạy bang_viec.py để gộp bảng việc.
@@ -44,8 +45,13 @@ for k in keys:
     if "--chi-keo" not in sys.argv:
         r = subprocess.run(["rsync", "-a", "--update", *ex, src, dst], capture_output=True, text=True)
         log(f"{k}: đẩy {'ok' if r.returncode == 0 else 'LỖI ' + r.stderr[:200]}")
+    # sao lưu sổ (1 chiều Mac -> OneDrive, thư mục _so-mac/, không kéo về)
+    so = [os.path.join(mac_dir(k), f) for f in ("STATUS.md", "CLAUDE.md") if os.path.exists(os.path.join(mac_dir(k), f))]
+    if so and "--chi-keo" not in sys.argv:
+        os.makedirs(dst + "_so-mac", exist_ok=True)
+        subprocess.run(["rsync", "-a", *so, dst + "_so-mac/"], capture_output=True)
     if "--chi-day" not in sys.argv:
-        r = subprocess.run(["rsync", "-a", "--update", *ex, dst, src], capture_output=True, text=True)
+        r = subprocess.run(["rsync", "-a", "--update", *ex, "--exclude", "_so-mac", dst, src], capture_output=True, text=True)
         log(f"{k}: kéo {'ok' if r.returncode == 0 else 'LỖI ' + r.stderr[:200]}")
 
 subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "bang_viec.py")])

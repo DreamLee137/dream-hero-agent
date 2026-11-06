@@ -18,7 +18,8 @@ RIENG = {
  "balheh": ("Balheh — sản phẩm công ty thay Discord + Trello.",
    "- `Balheh-Project/` (docs), `Balheh_PJT_BackEnd/`, `Balheh_PJT_FrontEnd/`, `Balheh_PJT_Mobile/`, `Balheh_Storage/` — 📝 Hero làm BA/PM/thiết kế/test/marketing: **chỉ sửa docs, không sửa src**."),
  "chinchu": ("ChinChu — dự án sắp làm.",
-   "- `biztown-Chinchu-FrontEnd/` ✏️; BE dùng chung NhàLo: `biztown-rent_Backend` (lối tắt → `../nhalo/`). Sửa BE = sửa NhàLo → theo quy tắc nhánh của NhàLo."),
+   "- `biztown-Chinchu-FrontEnd/` (web, quankd làm chính), `biztown-Chinchu-BackEnd/` (NestJS) — ✏️ Hero thỉnh thoảng sửa: luôn nhánh riêng + PR cho quankd.\n"
+   "- Cặp với NhàLo: xem mục \"Dự án liên quan\"."),
  "homepages": ("Homepages — biztown-web (BizTown, NhàLo, Balheh, privacy/support/delete-account) và trang Townsoft.",
    "- `biztown-web/`, `townsoft-homepage/` — 📝→✏️ làm trên nhánh riêng + PR, Hero duyệt trước khi merge/deploy."),
  "noi-tro": ("Hành chính, nhân sự, chấm công, lương, hoá đơn, mua hàng.",

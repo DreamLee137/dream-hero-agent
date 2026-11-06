@@ -9,13 +9,13 @@ PLAYBOOK.md          quy trình dự án từ 0 đến hoàn thành
 SECRETS.md           quy tắc chìa khoá: cất ở đâu, đăng ký thế nào
 TOOLS.md             công cụ của từng agent + nguyên tắc tiết kiệm
 PERSONAL.md          quy tắc dự án cá nhân (demo miễn phí, dễ chuyển server)
-TIEM-HEROES.md         nhóm chat Discord + concept văn phòng pixel quán cà phê
-tools/               script dùng chung (discord-say.sh)
+DISCORD.md           kênh tin nhắn Discord (webhook, luật nhắn)
+runbooks/MOT-NHA.md  "Một nhà = Mac mini": thư mục dự án, đồng bộ OneDrive, bảng việc
+web/bang-viec/       trang Bảng việc trên Netlify
+tools/               script dùng chung (discord-say.sh, mot-nha/)
 products.md          danh bạ sản phẩm (tên + repo)
 team/<agent>/SKILL.md   định nghĩa từng agent
 templates/product/   mẫu hồ sơ sản phẩm (copy vào docs/product/ của repo sản phẩm)
-inbox/               hộp thư tham khảo: skill, prompt, repo chờ Sidekick rà soát
-prompts/             prompt đã duyệt
 CHANGELOG.md         lịch sử cải tiến quy trình
 ```
 

@@ -64,6 +64,7 @@ Phạm vi: chỉ làm trong thư mục này. Cần dự án khác → hỏi Hero
 | 🔴 Cần Hero | vướng, cần quyết, cần quyền/chìa khoá — ghi rõ **cần gì** |
 | 👀 Chờ Hero xem | làm xong — ghi **link file trong files/output/** hoặc PR |
 | ⏸ Đang chờ | chờ người khác/bên ngoài |
+| 🦹 Cần Phản diện | cần **sếp** cho ý kiến/duyệt, hoặc Hero phải làm báo cáo để gửi/họp với sếp — ghi rõ cần chuẩn bị gì, hạn họp |
 | ✅ Xong | Hero đã duyệt (giữ tối đa 10 dòng, cũ hơn chuyển xuống "Đã xong gần đây") |
 
 - ID: `<MÃ>-<ddmm>-<số>` (vd. `{ma}-0611-1`). Đổi trạng thái → sửa đúng dòng + ngày cập nhật + dòng "Cập nhật lần cuối".

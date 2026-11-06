@@ -21,7 +21,7 @@ Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9). Công cụ theo lo
 - Không mang code, dữ liệu, tài liệu, chìa khoá của công ty sang dự án cá nhân và ngược lại.
 - Dự án cá nhân theo thêm `PERSONAL.md` (thiết kế để dễ chuyển sang server/domain riêng).
 - **Nơi lưu — "Một nhà = Mac mini" (06/11/2026, xem `runbooks/MOT-NHA.md`):** mỗi dự án = 1 thư mục `~/Projects/<company|personal>/<dự án>/` chứa TẤT CẢ: `CLAUDE.md` (phạm vi), `STATUS.md` (trạng thái + Bảng việc — nguồn sự thật), `files/inbox/` (Hero đưa), `files/output/` (Claude tạo), các repo. Chỉ `files/` được đồng bộ 2 chiều mỗi giờ (không xoá) lên OneDrive để chia sẻ: công ty `[0] TOWNSOFT'S FILES/0. Project/0. Dự án Agent/<dự án>/`, cá nhân `[1] PERSONAL/Heroes - Dự án/<dự án>/`. Không đọc/ghi trạng thái ở OneDrive hay Project claude.ai nữa. Thư mục cũ `0. Báo cáo Agent/` và `[1] PERSONAL/Heroes/` chỉ còn là bản lưu trữ.
-- **Bảng việc:** mọi việc Hero giao có 1 dòng trong `STATUS.md` → 🔵 Đang làm · 🔴 Cần Hero (ghi rõ cần gì) · 👀 Chờ Hero xem (link file/PR) · ⏸ Đang chờ · ✅ Xong. Tổng hợp tự động: `~/Projects/BANG-VIEC.md`; việc mới 🔴/👀 tự báo Discord `can-hero`.
+- **Bảng việc:** mọi việc Hero giao có 1 dòng trong `STATUS.md` → 🔵 Đang làm · 🔴 Cần Hero (ghi rõ cần gì) · 👀 Chờ Hero xem (link file/PR) · ⏸ Đang chờ · 🦹 Cần Phản diện (sếp cho ý kiến/duyệt, hoặc cần báo cáo/họp với sếp) · ✅ Xong. Tổng hợp tự động: `~/Projects/BANG-VIEC.md`; việc mới 🔴/👀 tự báo Discord `can-hero`.
 
 ## Cách nhận lệnh
 Mẫu: **[dự án]: [việc]. Xong khi: [tiêu chí].** — gõ trong Project của dự án đó (đã Add folder dự án).

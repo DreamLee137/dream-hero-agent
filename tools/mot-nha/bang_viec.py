@@ -4,7 +4,7 @@
 1. Nếu có ~/.secrets/netlify/bang-viec.json ({"url": "https://<site>.netlify.app", "token": "<BV_TOKEN>"}):
    lấy các dòng Hero tick "Xong" trên trang -> ghi vào STATUS.md (trạng thái ✅ Xong) -> báo trang đã nhận.
 2. Gộp bảng -> BANG-VIEC.md; đẩy dữ liệu lên trang web.
-3. Việc MỚI chuyển sang 🔴/👀 -> nhắn Discord kênh can-hero.
+3. Việc MỚI chuyển sang 🔴/👀/🦹 -> nhắn Discord kênh can-hero.
 
 Cách dùng: python3 bang_viec.py [--im-lang]   (--im-lang: không nhắn Discord)
 """
@@ -12,7 +12,7 @@ import os, re, json, sys, datetime, subprocess, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cau_hinh import DU_AN, mac_dir, PROJECTS
 
-NHOM = [("🔴", "Cần Hero"), ("👀", "Chờ Hero xem kết quả"), ("🔵", "Đang làm"), ("⏸", "Đang chờ"), ("✅", "Xong")]
+NHOM = [("🔴", "Cần Hero"), ("👀", "Chờ Hero xem kết quả"), ("🔵", "Đang làm"), ("⏸", "Đang chờ"), ("🦹", "Cần Phản diện (sếp)"), ("✅", "Xong")]
 STATE = os.path.expanduser("~/.hero/bang-viec-state.json")
 WEB_CFG = os.path.expanduser("~/.secrets/netlify/bang-viec.json")
 OUT = os.path.join(PROJECTS, "BANG-VIEC.md")
@@ -83,12 +83,12 @@ for k, (khu, _, ten, _) in DU_AN.items():
             if xong > 10: continue
         tat_ca.append(dict(icon=icon, du_an=k, ten_du_an=ten, khu=khu, id=id_, viec=viec, trang_thai=tt, ghi_chu=ghichu, cap_nhat=cn, tuoi_so=tuoi))
         key = f"{k}/{id_}"; hien[key] = icon
-        if icon in ("🔴", "👀") and cu.get(key) != icon:
+        if icon in ("🔴", "👀", "🦹") and cu.get(key) != icon:
             moi.append(f"{icon} {ten} · {id_} · {viec} — {ghichu}")
 
 out = [f"# Bảng việc tổng — tự sinh {now:%d/%m/%Y %H:%M}", "",
        "_Không sửa file này. Sửa `STATUS.md` trong thư mục dự án; file này tự gộp mỗi giờ._", ""]
-for icon, ten in NHOM[:4]:
+for icon, ten in NHOM[:5]:
     ds = [r for r in tat_ca if r["icon"] == icon]
     out.append(f"## {icon} {ten} ({len(ds)})")
     if not ds: out.append("- (không có)")

@@ -6,8 +6,8 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Bảng việc của Hero</title>
 <style>
-:root{--bg:#f6f5f2;--card:#fff;--ink:#1d1d1f;--mute:#6b6b70;--line:#e4e2dc;--red:#c8372d;--redbg:#fbeceb;--amber:#b26b00;--amberbg:#fdf3e1;--blue:#2459c4;--bluebg:#e9effb;--gray:#6b6b70;--graybg:#efeee9;--green:#2e7d4f;--greenbg:#e7f4ec;--accent:#1d1d1f}
-@media (prefers-color-scheme:dark){:root{--bg:#141416;--card:#1d1d20;--ink:#ececee;--mute:#9a9aa2;--line:#2c2c31;--redbg:#3a1d1b;--red:#ff7a6e;--amberbg:#3a2c12;--amber:#f2b552;--bluebg:#1a2640;--blue:#86a8ff;--graybg:#26262b;--gray:#a3a3aa;--greenbg:#16301f;--green:#6fd39a;--accent:#ececee}}
+:root{--bg:#f6f5f2;--card:#fff;--ink:#1d1d1f;--mute:#6b6b70;--line:#e4e2dc;--red:#c8372d;--redbg:#fbeceb;--amber:#b26b00;--amberbg:#fdf3e1;--blue:#2459c4;--bluebg:#e9effb;--gray:#6b6b70;--graybg:#efeee9;--green:#2e7d4f;--greenbg:#e7f4ec;--purple:#7a3fb8;--purplebg:#f2eafb;--accent:#1d1d1f}
+@media (prefers-color-scheme:dark){:root{--bg:#141416;--card:#1d1d20;--ink:#ececee;--mute:#9a9aa2;--line:#2c2c31;--redbg:#3a1d1b;--red:#ff7a6e;--amberbg:#3a2c12;--amber:#f2b552;--bluebg:#1a2640;--blue:#86a8ff;--graybg:#26262b;--gray:#a3a3aa;--greenbg:#16301f;--green:#6fd39a;--purplebg:#2b1d3d;--purple:#c49bff;--accent:#ececee}}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:980px;margin:0 auto;padding:20px 16px 60px}
 header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:14px}
@@ -34,7 +34,9 @@ section{margin:18px 0}section h2{font-size:15px;margin:0 0 8px;display:flex;gap:
 .pend{font-size:12.5px;color:var(--green);margin-top:4px}
 .noteform{display:flex;gap:6px;margin-top:6px}.noteform input{flex:1;min-width:0;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 .noteform button,.login button{padding:6px 12px;border-radius:8px;border:0;background:var(--accent);color:var(--bg);cursor:pointer}
-.r{--c:var(--red);--cb:var(--redbg)}.e{--c:var(--amber);--cb:var(--amberbg)}.b{--c:var(--blue);--cb:var(--bluebg)}.w{--c:var(--gray);--cb:var(--graybg)}.d{--c:var(--green);--cb:var(--greenbg)}
+.r{--c:var(--red);--cb:var(--redbg)}.e{--c:var(--amber);--cb:var(--amberbg)}.b{--c:var(--blue);--cb:var(--bluebg)}.w{--c:var(--gray);--cb:var(--graybg)}.d{--c:var(--green);--cb:var(--greenbg)}.v{--c:var(--purple);--cb:var(--purplebg)}
+.tabs{display:flex;gap:6px;margin:4px 0 6px;border-bottom:1px solid var(--line)}.tabs button{border:0;background:none;color:var(--mute);font-size:15px;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}.tabs button.on{color:var(--ink);font-weight:600;border-color:var(--accent)}.tabs .n{background:var(--purplebg);color:var(--purple);border-radius:999px;padding:0 7px;font-size:12px;margin-left:4px}
+.hint{color:var(--mute);font-size:13px;margin:6px 0 10px}
 .login{max-width:340px;margin:18vh auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
 .login input{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;margin:10px 0;background:var(--bg);color:var(--ink);font-size:15px}
 .err{color:var(--red);font-size:13px}.empty{color:var(--mute);font-size:13px;padding:4px 2px}
@@ -46,7 +48,8 @@ details summary{cursor:pointer}
 <script>
 const ST=[["🔴","Cần cậu","r"],["👀","Chờ cậu xem","e"],["🔵","Đang làm","b"],["⏸","Đang chờ","w"],["✅","Xong gần đây","d"]];
 const DEMO=new URLSearchParams(location.search).has("demo");
-let S={data:null,pending:[],filterP:"",filterS:"",pw:""};
+const BOSS=["🦹","Cần Phản diện (sếp)","v"];
+let S={data:null,pending:[],filterP:"",filterS:"",pw:"",tab:"hero"};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const linkify=s=>esc(s).replace(/(https?:\/\/[^\s)]+)/g,'<a href="$1" target="_blank" rel="noopener">mở link</a>').replace(/`([^`]+)`/g,"<code>$1</code>");
@@ -79,8 +82,15 @@ function render(){
   const vis=items.filter(i=>!S.filterP||(i.ten_du_an||i.du_an)===S.filterP);
   const cnt=k=>vis.filter(i=>i.icon===k).length;
   let h=`<div class="wrap"><header><h1>Bảng việc của Hero</h1><div class="sub">Cập nhật ${esc(S.data.generated||"—")}${DEMO?" · dữ liệu mẫu":""} · tự làm mới mỗi giờ</div></header>
-  <div class="stats">${ST.slice(0,4).map(([k,t,c])=>`<div class="stat ${c} ${S.filterS===k?"on":""}" data-s="${k}"><b style="color:var(--c)">${cnt(k)}</b><span>${k} ${t}</span></div>`).join("")}</div>
-  <div class="filters"><button class="chip ${!S.filterP?"on":""}" data-p="">Tất cả dự án</button>${projects.map(p=>`<button class="chip ${S.filterP===p?"on":""}" data-p="${esc(p)}">${esc(p)}</button>`).join("")}</div>`;
+  <div class="tabs"><button data-tab="hero" class="${S.tab==="hero"?"on":""}">🦸 Việc của Hero</button><button data-tab="boss" class="${S.tab==="boss"?"on":""}">🦹 Phản diện<span class="n">${vis.filter(i=>i.icon==="🦹").length}</span></button></div>
+  ${S.tab==="boss"?bossTab(vis):`<div class="stats">${ST.slice(0,4).map(([k,t,c])=>`<div class="stat ${c} ${S.filterS===k?"on":""}" data-s="${k}"><b style="color:var(--c)">${cnt(k)}</b><span>${k} ${t}</span></div>`).join("")}</div>
+  <div class="filters"><button class="chip ${!S.filterP?"on":""}" data-p="">Tất cả dự án</button>${projects.map(p=>`<button class="chip ${S.filterP===p?"on":""}" data-p="${esc(p)}">${esc(p)}</button>`).join("")}</div>
+  ${S.tab==="hero"?mainTab(vis):""}`}`;
+  $("#app").innerHTML=h+`</div>`;
+  bind();
+}
+function mainTab(vis){
+  let h="";
   for(const [k,t,c] of ST){
     if(S.filterS&&S.filterS!==k)continue;
     const list=vis.filter(i=>i.icon===k);
@@ -88,7 +98,16 @@ function render(){
     h+=k==="✅"?`<section><details><summary><h2 style="display:inline-flex">${k} ${t} <span class="count">(${list.length})</span></h2></summary>${inner}</details></section>`
               :`<section><h2>${k} ${t} <span class="count">(${list.length})</span></h2>${inner}</section>`;
   }
-  $("#app").innerHTML=h+`</div>`;
+  return h;
+}
+function bossTab(vis){
+  const list=vis.filter(i=>i.icon==="🦹");
+  return `<div class="filters"><button class="chip ${!S.filterP?"on":""}" data-p="">Tất cả dự án</button>${[...new Set((S.data.items||[]).map(i=>i.ten_du_an||i.du_an))].map(p=>`<button class="chip ${S.filterP===p?"on":""}" data-p="${esc(p)}">${esc(p)}</button>`).join("")}</div>
+  <div class="hint">Việc cậu không tự quyết được, hoặc cần làm báo cáo để gửi / họp với sếp. Trao đổi xong thì tick “Xong” và ghi kết quả.</div>
+  <section><h2>🦹 Cần Phản diện <span class="count">(${list.length})</span></h2>${list.length?list.map(i=>card(i,"v")).join(""):`<div class="empty">Không có</div>`}</section>`;
+}
+function bind(){
+  document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;S.filterS="";render()});
   document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{S.filterP=b.dataset.p;render()});
   document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{S.filterS=S.filterS===b.dataset.s?"":b.dataset.s;render()});
   document.querySelectorAll("input[data-tick]").forEach(cb=>cb.onchange=()=>{const [p,id]=cb.dataset.tick.split("|");tick(p,id,cb.checked)});
@@ -109,6 +128,7 @@ function demoData(){return{generated:"06/11/2026 10:00",items:[
  {du_an:"nhalo",ten_du_an:"NhàLo",id:"NL-0511-1",viec:"Video quảng cáo 19,4 s 9:16 (nháp)",icon:"👀",trang_thai:"👀 Chờ Hero xem",ghi_chu:"Nghe, chốt giọng — `files/output/claude-outputs/nhalo-video.mp4`",cap_nhat:"05/11"},
  {du_an:"lina",ten_du_an:"Lina",id:"LN-0511-1",viec:"Theo dõi kết quả deploy 05/11",icon:"⏸",trang_thai:"⏸ Đang chờ",ghi_chu:"Bên Hàn đóng gói",cap_nhat:"05/11"},
  {du_an:"chinchu",ten_du_an:"ChinChu",id:"CC-0511-4",viec:"Yêu cầu nâng cấp NhàLo v0.1.1",icon:"🔵",trang_thai:"🔵 Đang làm",ghi_chu:"Sửa tin rồi chuyển NhàLo",cap_nhat:"01/11"},
+ {du_an:"nhalo",ten_du_an:"NhàLo",id:"NL-0611-4",viec:"Ngân sách + ngày bắt đầu thử nghiệm 3 hướng",icon:"🦹",trang_thai:"🦹 Cần Phản diện",ghi_chu:"Trình bằng bản dự toán NL-0511-4",cap_nhat:"06/11"},
  {du_an:"noi-tro",ten_du_an:"Nội trợ",id:"NT-0311-1",viec:"Đóng gói skill phiếu lương",icon:"✅",trang_thai:"✅ Xong",ghi_chu:"Skill đã có",cap_nhat:"06/11"}]}}
 S.pw=ls("bv-pw")||"";
 if(DEMO||S.pw)load();else login();

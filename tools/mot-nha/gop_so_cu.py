@@ -24,6 +24,8 @@ for k in DU_AN:
         else:
             print(f"{k}: chưa có sổ cũ, để chờ")
         continue
+    if os.path.getsize(cu[-1]) == 0:
+        print(f"{k}: sổ cũ rỗng (OneDrive chưa tải), để chờ"); continue
     t = open(cu[-1], encoding="utf-8").read().splitlines()
     t = [l for l in t if not l.startswith("# TRANG-THAI") and not l.startswith("_Sổ chung")]
     t = ["#" + l if l.startswith("## ") else l for l in t]

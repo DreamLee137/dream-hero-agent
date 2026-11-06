@@ -1,5 +1,7 @@
 # Quy trình dự án: từ con số 0 đến hoàn thành
 
+> 06/11/2026: không còn agent đặt tên. Tên vai trong file này (Thợ xây, Gác cổng…) chỉ là **loại việc** — Claude trong Project của dự án làm, Sidekick tổng hợp.
+
 Áp dụng cho mọi sản phẩm. Mỗi giai đoạn ghi rõ: **Hero cung cấp gì · Agent làm gì · Kết quả lưu ở đâu · Cổng duyệt**.
 Quy tắc về chìa khoá/mật khẩu: xem `SECRETS.md`.
 

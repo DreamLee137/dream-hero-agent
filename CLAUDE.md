@@ -3,23 +3,17 @@
 Repo này là "bộ não" của đội agent của Dream: định nghĩa agent, mẫu hồ sơ, prompt đã duyệt.
 **KHÔNG chứa thông tin của sản phẩm.** Thông tin sản phẩm nằm trong repo của từng sản phẩm (`docs/product/`). Khi cần ví dụ, dùng dữ liệu giả.
 
-## Đội hình
+## Đội hình (từ 06/11/2026)
 | Tên | Vai trò | Skill |
 |---|---|---|
 | **Hero** (Dream) | Chốt hướng đi, duyệt ở các cổng | — |
-| **Sidekick** (Claude) | Nhận lệnh, điều phối, ghi quyết định, báo cáo | `team/sidekick` |
-| **Hoa tiêu** | Ý tưởng, nghiên cứu thị trường, khả thi bên thứ 3 | `team/hoa-tieu` |
-| **Kiến trúc sư** | Sản phẩm/BA: PRD, rule, user story | `team/kien-truc-su` |
-| **Thợ may** | Thiết kế UI/UX trên Figma | `team/tho-may` |
-| **Thợ xây** | Phát triển FE, BE, DevOps | `team/tho-xay` |
-| **Thợ săn** | Kiểm thử, QA | `team/tho-san` |
-| **Gác cổng** | Phát hành, store | `team/gac-cong` |
-| **Hát rong** | Marketing, nội dung | `team/hat-rong` |
-| **Nội trợ** | Hành chính, nhân sự, hoá đơn, tài liệu cho kế toán | `team/noi-tro` |
-| **Phiên dịch** | Dịch Việt ⇄ Hàn ⇄ Anh, soạn tin gửi khách Hàn, bảng thuật ngữ | `team/phien-dich` |
+| **Sidekick** (Claude) | Báo cáo sáng/chiều, bảng việc tổng, điều phối giữa các dự án | `team/sidekick` |
+| **Claude trong Project của từng dự án** | Mọi việc của dự án đó (BA, thiết kế, code, test, marketing, dịch, hành chính) theo `CLAUDE.md` + `STATUS.md` của thư mục dự án | — |
+
+Các agent đặt tên cũ (Hoa tiêu, Kiến trúc sư, Thợ may, Thợ xây, Thợ săn, Gác cổng, Hát rong, Nội trợ, Phiên dịch) đã bỏ 06/11; SKILL.md cũ còn trong lịch sử git. Tên vai còn sót trong PLAYBOOK/TOOLS = loại việc, không phải agent.
 
 ## Quy trình dự án
-Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9). Công cụ của từng agent: `TOOLS.md`.
+Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9). Công cụ theo loại việc: `TOOLS.md`.
 
 ## Hai khu vực & thứ tự ưu tiên
 - **🏢 Công ty** (`~/Projects/company/`, GitHub `townsoft-dev`) và **🏡 Cá nhân** (`~/Projects/personal/`, GitHub `DreamLee137`) — tách hẳn repo, thư mục, tài khoản, chìa khoá, kênh Discord.
@@ -30,18 +24,18 @@ Mọi dự án đi theo `PLAYBOOK.md` (giai đoạn 0 → 9). Công cụ của t
 - **Bảng việc:** mọi việc Hero giao có 1 dòng trong `STATUS.md` → 🔵 Đang làm · 🔴 Cần Hero (ghi rõ cần gì) · 👀 Chờ Hero xem (link file/PR) · ⏸ Đang chờ · ✅ Xong. Tổng hợp tự động: `~/Projects/BANG-VIEC.md`; việc mới 🔴/👀 tự báo Discord `can-hero`.
 
 ## Cách nhận lệnh
-Mẫu: **[Tên agent], [sản phẩm]: [việc]. Xong khi: [tiêu chí].**
-- **Nói chuyện trực tiếp với 1 agent:** mở một phiên riêng (task Cowork mới hoặc `claude` trên Mac mini) và bắt đầu bằng tên agent, vd. "Hát rong, ..." hoặc gõ `/hat-rong`. Agent đó giữ vai suốt phiên. Không gọi tên → Sidekick nhận và điều phối.
-- Tên sản phẩm → tra `products.md` để biết repo → đọc `docs/README.md` (mục lục) hoặc `docs/product/` của repo đó TRƯỚC khi làm.
+Mẫu: **[dự án]: [việc]. Xong khi: [tiêu chí].** — gõ trong Project của dự án đó (đã Add folder dự án).
+- Không còn gọi agent theo tên. Mở Project của dự án (hoặc `cd` vào thư mục dự án rồi chạy `claude`) và giao việc. Cần tổng hợp nhiều dự án → gọi Sidekick (`/sidekick`).
+- Đọc `CLAUDE.md` + `STATUS.md` của thư mục dự án TRƯỚC khi làm; cần repo nào thì tra `products.md`.
 - Thiếu "Xong khi" → tự đề xuất tiêu chí, ghi rõ ở đầu kết quả.
 
-## Luật chung cho mọi agent
-1. **Đọc trước khi làm:** `brief.md`, `status.md`, `decisions.md` (hoặc `docs/DECISIONS.md`) của sản phẩm.
-2. **Không đoán.** Thiếu rule, field, câu chữ, quyết định → ghi vào `docs/product/open-questions.md` và hỏi Hero. Không tự suy luận rồi code/thiết kế theo.
+## Luật chung cho mọi phiên Claude
+1. **Đọc trước khi làm:** `CLAUDE.md` + `STATUS.md` của thư mục dự án, rồi `docs/` trong repo (DECISIONS, OPEN-QUESTIONS…).
+2. **Không đoán.** Thiếu rule, field, câu chữ, quyết định → ghi vào "Câu hỏi mở" + dòng 🔴 trong `STATUS.md` và hỏi Hero. Không tự suy luận rồi code/thiết kế theo.
 3. **Chìa khoá theo `SECRETS.md`:** không lưu bí mật vào file/git, không nhận mật khẩu qua chat, chỉ dùng chìa khoá đã đăng ký trong mục "Bí mật" của `links.md`. Thiếu chìa khoá → báo Hero, không tự tìm cách khác.
 4. **Một nguồn sự thật.** Sửa ở nguồn (repo), các nơi khác (Project, SharePoint, wiki, PDF) là bản xuất ra.
 5. **Đọc bản live trước khi sửa** bất cứ thứ gì người khác cũng có thể sửa (Figma, SharePoint, wiki, store).
-6. **Ghi lại sau mỗi việc:** changelog của repo + cập nhật `status.md` nếu trạng thái đổi.
+6. **Ghi lại sau mỗi việc:** changelog của repo + cập nhật Bảng việc trong `STATUS.md`.
 7. **Bằng chứng, không chỉ lời nói:** "xong" phải kèm bằng chứng (ảnh chụp, kết quả test, link).
 8. **Repo cũ chỉ đọc**, chỉ ghi khi Hero yêu cầu rõ. Việc lớn làm trong bản clone riêng / nhánh riêng. **Repo Lina: tuyệt đối chỉ đọc** (pull để cập nhật, đọc code/log) — mọi đề xuất sửa viết thành tài liệu/ticket để dev của dự án làm.
 9. Viết tiếng Việt, ngắn gọn, gạch đầu dòng.

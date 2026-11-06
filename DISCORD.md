@@ -2,16 +2,12 @@
 
 _06/11/2026: bỏ văn phòng pixel/quán cafe; Discord chỉ còn là kênh tin nhắn + thông báo đẩy về điện thoại. Việc 🔴/👀 do `tools/mot-nha/bang_viec.py` tự báo vào `can-hero`._
 
-### Kênh
+### Kênh (dọn 06/11/2026 — chỉ còn 3)
 | Kênh | Dùng cho | Ai nhắn |
 |---|---|---|
-| `#☕-quay-chung` | Tin đặc biệt của cả đội: cột mốc, phát hành xong, chào tuần mới, khen nhau | Mọi agent |
-| `#📑-bao-cao` | Báo cáo cuối ngày 17:30 (cùng nội dung email, bản rút gọn) + tổng kết tuần chiều thứ Sáu | Sidekick |
-| `#📢-can-hero` | Cần Hero duyệt/quyết, có việc bị chặn | Mọi agent |
-| `#🚨-khan-cap` | Sự cố: production lỗi, build hỏng, nghi lộ chìa khoá | Mọi agent (kèm @Hero) |
-| `#🌿-<san-pham> (NhàLo: #🏠-nha-lo, Lina: #⭐-lina)` | Tin của riêng từng sản phẩm (vd. `#🏠-nha-lo`) | Agent làm sản phẩm đó |
-| `#🏡-<du-an-ca-nhan>` | Kênh riêng cho từng dự án cá nhân (nhóm kênh "🏡 Góc vườn riêng") | Agent làm dự án đó |
-| `#📮-hero-giao-viec` | Hero ghi chú việc nhanh từ điện thoại; Sidekick đọc khi bắt đầu phiên (giai đoạn 2) | Hero |
+| `#📑-bao-cao` | Báo cáo sáng + cuối ngày, tổng kết tuần | Sidekick |
+| `#📢-can-hero` | Việc mới chuyển 🔴 cần Hero / 👀 chờ Hero xem (tự động từ `bang_viec.py`) | Sidekick, Claude |
+| `#🚨-khan-cap` | Sự cố: production lỗi, build hỏng, nghi lộ chìa khoá | Claude (kèm @Hero) |
 
 ### Khi nào nhắn (luật)
 **Nhắn** khi: cần Hero duyệt · bị chặn > 30 phút · xong một cột mốc (spec chốt, bản build mới, phát hành) · test/CI hỏng trên `main` · sự cố production · phát hiện rủi ro (pháp lý, bảo mật, chi phí).
@@ -19,7 +15,7 @@ _06/11/2026: bỏ văn phòng pixel/quán cafe; Discord chỉ còn là kênh tin
 Mỗi tin ≤ 5 dòng: **[sản phẩm] chuyện gì · ảnh hưởng · cần Hero làm gì (nếu có) · link**.
 
 ### Cách hoạt động
-- **Giai đoạn 1 (tuần 2):** agent gửi tin qua **webhook** bằng `tools/discord-say.sh`. Một webhook mỗi kênh, tên và biểu tượng thay đổi theo từng agent, nên trong nhóm trông như 8 thành viên riêng. Hero trả lời/giao việc trong Cowork hoặc Claude Code.
+- **Giai đoạn 1 (tuần 2):** agent gửi tin qua **webhook** bằng `tools/discord-say.sh`. Một webhook mỗi kênh. Hero trả lời/giao việc trong Cowork hoặc Claude Code.
 - **Giai đoạn 2 (sau này):** thêm **bot Discord** chạy trên Mac mini để agent đọc được tin Hero nhắn trong nhóm (giao việc từ điện thoại ngay trong Discord).
 - Webhook URL là bí mật → cất ở `~/.secrets/discord/<kenh>.url`, đăng ký trong `SECRETS.md`.
 

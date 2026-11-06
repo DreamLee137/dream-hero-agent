@@ -1,5 +1,7 @@
 # Bộ công cụ của đội
 
+> 06/11/2026: không còn agent đặt tên. Tên vai trong file này (Thợ xây, Gác cổng…) chỉ là **loại việc** — Claude trong Project của dự án làm, Sidekick tổng hợp.
+
 Ký hiệu: 🔌 đã kết nối với Claude (MCP) · 🌐 làm qua Chrome · 🖐️ Hero tự làm (agent chuẩn bị) · 🆓 miễn phí · 💳 trả phí
 Công cụ mới → thêm vào đây + ghi `CHANGELOG.md`.
 

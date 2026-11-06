@@ -29,11 +29,11 @@ def log(s):
 def nfc(s): return unicodedata.normalize("NFC", s)
 
 def rsync(src, dst):
-    """Chép src vào dst. Không ghi đè file đã có, không xoá gì."""
+    """Chép src vào dst: thêm file thiếu, cập nhật file mà nguồn mới hơn. Không xoá gì."""
     if THU:
         log(f"  [thử] rsync {src} -> {dst}"); return
     os.makedirs(os.path.dirname(dst.rstrip("/")) or dst, exist_ok=True)
-    r = subprocess.run(["rsync", "-a", "--ignore-existing", src, dst], capture_output=True, text=True)
+    r = subprocess.run(["rsync", "-a", "--update", src, dst], capture_output=True, text=True)
     if r.returncode != 0:
         log(f"  ⚠️ rsync lỗi {src}: {r.stderr.strip()[:300]}")
 
@@ -97,8 +97,9 @@ for key, (khu, _, ten, nguon) in DU_AN.items():
 
     for src, dst, kieu in viec:
         if kieu == "file":
-            if not os.path.exists(dst) and not THU:
-                subprocess.run(["cp", "-p", src, dst])
+            if not THU:
+                if os.path.exists(dst) and os.path.getsize(dst) == 0: os.remove(dst)  # bản rỗng do OneDrive chưa tải
+                rsync(src, dst)
             continue
         rsync(src, dst)
     if THU: continue

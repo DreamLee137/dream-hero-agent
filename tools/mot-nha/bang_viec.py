@@ -12,7 +12,7 @@ import os, re, json, sys, datetime, subprocess, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cau_hinh import DU_AN, mac_dir, PROJECTS
 
-NHOM = [("🔴", "Cần Hero"), ("👀", "Chờ Hero xem kết quả"), ("🔵", "Đang làm"), ("⏸", "Đang chờ"), ("🦹", "Cần Phản diện (sếp)"), ("✅", "Xong")]
+NHOM = [("🔴", "Cần Hero"), ("👀", "Chờ Hero xem kết quả"), ("🔵", "Đang làm"), ("⏸", "Đang chờ"), ("🦹", "Cần Anti-hero (sếp)"), ("✅", "Xong")]
 STATE = os.path.expanduser("~/.hero/bang-viec-state.json")
 WEB_CFG = os.path.expanduser("~/.secrets/netlify/bang-viec.json")
 OUT = os.path.join(PROJECTS, "BANG-VIEC.md")

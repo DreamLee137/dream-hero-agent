@@ -24,6 +24,23 @@
 - `~/.appstoreconnect/private_keys/` — khoá App Store Connect.
 - ⚠️ Việc Hero cần xử lý: chuyển nội dung 2 file `passphrase*.rtf` vào trình quản lý mật khẩu rồi xoá file; khoá riêng (private key) của người khác (dev/khách) nên để chính họ giữ — xác nhận rồi gỡ khỏi máy.
 
+## Kiểm kê khoá trên Mac mini (06/11/2026 — chỉ tên file, Claude không mở nội dung)
+| Nơi | File | Dùng cho | Ghi chú |
+|---|---|---|---|
+| `~/.secrets/nhalo/` | `esms-key.md` | Key eSMS (gửi SMS) | chuyển từ bản lưu Documents 06/11 |
+| | `appstoreconnect.md` | Thông tin App Store Connect API (Issuer/Key ID) | đi kèm `~/.appstoreconnect/private_keys/AuthKey_832AJAYH9X.p8` |
+| | `esms.env.save` | bản .env eSMS cũ | Hero xem còn dùng không |
+| | `archive-2026-11-02/` | `.local-test-account.md` (tài khoản test), `miniapp.env`, `miniapp-v2.env`, `biztown-rentmanager.env` | tài khoản test: Hero chép vào Passwords |
+| `~/.appstoreconnect/private_keys/` | `AuthKey_832AJAYH9X.p8` | Upload TestFlight / App Store | |
+| `~/keystores/nhalo/` | `nhalo-upload.jks`, `key.properties.backup` | **Ký app Android NhàLo — mất là không cập nhật được trên Google Play** | cần Time Machine + bản dự phòng ngoài máy |
+| `~/.secrets/discord/` | `bao-cao.url`, `can-hero.url`, `khan-cap.url`, `bot-token` | Discord | webhook kênh đã xoá: `_kenh-da-xoa/` |
+| `~/.secrets/netlify/` | `bang-viec.json` | Trang Bảng việc (url + BV_TOKEN) | bản cũ `.bak-2026-11-06` |
+| `~/.secrets/anthropic/` | `api-key` | API Console — chỉ khi Hero duyệt | |
+| `~/SSH-Keys/` | `dreambalheh.pem`, `dreamlina.pem`, `balheh-deploy`, `lina-deploy`, `ubuntu-balheh.pem`, `ubuntu-lina.pem` (+ `.pub`) | SSH server Balheh / Lina | |
+| | `quankd.pem`, `tinhvd.pem`, `gyuminlee.pem`, `wooyeoncho.pem` | ⚠️ khoá riêng của **người khác** | nên để chính họ giữ → xác nhận rồi gỡ |
+| | `passphrase_cho.rtf`, `passphrase.lee.rtf` | ⚠️ passphrase để dạng file | chép vào Passwords rồi xoá |
+| | `LightsailDefaultKey-ap-northeast-2_.pem` | khoá cũ đã gỡ khỏi Lightsail | xoá |
+
 ## Sổ đăng ký chìa khoá (chỉ ghi TÊN, không ghi giá trị)
 Mỗi sản phẩm có mục **"Bí mật"** trong `docs/product/links.md`:
 

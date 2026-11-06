@@ -4,9 +4,11 @@
 1. Nếu có ~/.secrets/netlify/bang-viec.json ({"url": "https://<site>.netlify.app", "token": "<BV_TOKEN>"}):
    lấy các dòng Hero tick "Xong" trên trang -> ghi vào STATUS.md (trạng thái ✅ Xong) -> báo trang đã nhận.
 2. Gộp bảng -> BANG-VIEC.md; đẩy dữ liệu lên trang web.
-3. Việc MỚI chuyển sang 🔴/👀/🦹 -> nhắn Discord kênh can-hero.
+3. Chỉ khi Bảng việc THAY ĐỔI so với lần chạy trước (việc mới, hoặc đổi trạng thái 🔵/🔴/🦹/👀/⏸/✅)
+   -> nhắn Discord kênh can-hero, chỉ liệt kê phần thay đổi. Không đổi -> không gửi.
+   Giờ yên lặng 20:00–7:00: không gửi; gom vào ~/.hero/bang-viec-gio-yen-lang.json để báo cáo sáng 7:52 đưa vào.
 
-Cách dùng: python3 bang_viec.py [--im-lang]   (--im-lang: không nhắn Discord)
+Cách dùng: python3 bang_viec.py [--im-lang]   (--im-lang: chỉ ghi file + web, không nhắn, không chốt trạng thái)
 """
 import os, re, json, sys, datetime, subprocess, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -14,6 +16,7 @@ from cau_hinh import DU_AN, mac_dir, PROJECTS
 
 NHOM = [("🔴", "Cần Hero"), ("👀", "Chờ Hero xem kết quả"), ("🔵", "Đang làm"), ("⏸", "Đang chờ"), ("🦹", "Cần Anti-hero (sếp)"), ("✅", "Xong")]
 STATE = os.path.expanduser("~/.hero/bang-viec-state.json")
+YEN_LANG = os.path.expanduser("~/.hero/bang-viec-gio-yen-lang.json")
 WEB_CFG = os.path.expanduser("~/.secrets/netlify/bang-viec.json")
 OUT = os.path.join(PROJECTS, "BANG-VIEC.md")
 DISCORD = os.path.expanduser("~/Projects/dream-hero-agent/tools/discord-say.sh")
@@ -100,9 +103,15 @@ for k, (khu, _, ten, _) in DU_AN.items():
         if icon == "✅":
             xong += 1
         tat_ca.append(dict(icon=icon, du_an=k, ten_du_an=ten, khu=khu, id=id_, viec=viec, trang_thai=tt, ghi_chu=ghichu, cap_nhat=cn, tuoi_so=tuoi))
-        key = f"{k}/{id_}"; hien[key] = icon
-        if icon in ("🔴", "👀", "🦹") and cu.get(key) != icon:
-            moi.append(f"{icon} {ten} · {id_} · {viec} — {ghichu}")
+        key = f"{k}/{id_}"
+        if key in hien: key += f"#{sum(1 for x in hien if x.split('#')[0] == key)+1}"  # ID trùng trong sổ
+        hien[key] = {"icon": icon, "viec": viec, "du_an": ten}
+        truoc = cu.get(key)
+        truoc_icon = truoc.get("icon") if isinstance(truoc, dict) else truoc
+        if truoc is None:
+            moi.append(dict(du_an=ten, id=id_, viec=viec, cu=None, moi=icon))
+        elif truoc_icon != icon:
+            moi.append(dict(du_an=ten, id=id_, viec=viec, cu=truoc_icon, moi=icon))
 
 out = [f"# Bảng việc tổng — tự sinh {now:%d/%m/%Y %H:%M}", "",
        "_Không sửa file này. Sửa `STATUS.md` trong thư mục dự án; file này tự gộp mỗi giờ._", ""]
@@ -116,7 +125,8 @@ for icon, ten in NHOM[:5]:
     out.append("")
 open(OUT, "w", encoding="utf-8").write("\n".join(out))
 os.makedirs(os.path.dirname(STATE), exist_ok=True)
-json.dump(hien, open(STATE, "w"), ensure_ascii=False)
+if "--im-lang" not in sys.argv:  # chạy im lặng thì không chốt trạng thái, để lần chạy thường sau vẫn báo đủ
+    json.dump(hien, open(STATE, "w"), ensure_ascii=False)
 
 # 3) đẩy lên web + báo Discord
 if cfg:
@@ -127,6 +137,22 @@ if cfg:
         http(cfg, "PUT", "data", {"generated": f"{now:%d/%m/%Y %H:%M}", "items": [r for r in tat_ca if r["icon"] != "✅"], "da_lam": dl}); print("Đã đẩy lên trang web")
     except Exception as e:
         print("⚠️ đẩy web lỗi:", e)
-if moi and "--im-lang" not in sys.argv and os.path.exists(DISCORD):
-    subprocess.run([DISCORD, "sidekick", "can-hero", "📋 Việc mới cần cậu:\n" + "\n".join(moi[:15])])
-print(f"Đã gộp {len(tat_ca)} việc -> {OUT}; báo mới: {len(moi)}")
+def dong(t):
+    v = t["viec"] if len(t["viec"]) <= 70 else t["viec"][:67] + "…"
+    doi = f"mới {t['moi']}" if t["cu"] is None else f"{t['cu']} → {t['moi']}"
+    return f"• {t['du_an']} · {t['id']} · {v}: {doi}"
+
+if cu and moi:  # lần chạy đầu (chưa có trạng thái cũ) thì không báo
+    yen_lang = now.hour >= 20 or now.hour < 7
+    if yen_lang or "--im-lang" in sys.argv:
+        if yen_lang:
+            try: gom = json.load(open(YEN_LANG))
+            except Exception: gom = []
+            gom += [dict(t, luc=f"{now:%d/%m %H:%M}") for t in moi]
+            json.dump(gom, open(YEN_LANG, "w"), ensure_ascii=False, indent=1)
+            print(f"Giờ yên lặng: gom {len(moi)} thay đổi cho báo cáo sáng")
+    elif os.path.exists(DISCORD):
+        ds = [dong(t) for t in moi]
+        msg = f"📋 Bảng việc thay đổi ({now:%H:%M}):\n" + "\n".join(ds[:15]) + (f"\n…và {len(ds)-15} thay đổi khác" if len(ds) > 15 else "")
+        subprocess.run([DISCORD, "sidekick", "can-hero", msg])
+print(f"Đã gộp {len(tat_ca)} việc -> {OUT}; thay đổi: {len(moi)}")

@@ -35,7 +35,8 @@ section{margin:18px 0}section h2{font-size:15px;margin:0 0 8px;display:flex;gap:
 .noteform{display:flex;gap:6px;margin-top:6px}.noteform input{flex:1;min-width:0;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 .noteform button,.login button{padding:6px 12px;border-radius:8px;border:0;background:var(--accent);color:var(--bg);cursor:pointer}
 .r{--c:var(--red);--cb:var(--redbg)}.e{--c:var(--amber);--cb:var(--amberbg)}.b{--c:var(--blue);--cb:var(--bluebg)}.w{--c:var(--gray);--cb:var(--graybg)}.d{--c:var(--green);--cb:var(--greenbg)}.v{--c:var(--purple);--cb:var(--purplebg)}
-.tabs{display:flex;gap:6px;margin:4px 0 6px;border-bottom:1px solid var(--line)}.tabs button{border:0;background:none;color:var(--mute);font-size:15px;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}.tabs button.on{color:var(--ink);font-weight:600;border-color:var(--accent)}.tabs .n{background:var(--purplebg);color:var(--purple);border-radius:999px;padding:0 7px;font-size:12px;margin-left:4px}
+.tabs{display:flex;gap:2px;overflow-x:auto;margin:4px 0 6px;border-bottom:1px solid var(--line)}.tabs button{white-space:nowrap;border:0;background:none;color:var(--mute);font-size:15px;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}.tabs button.on{color:var(--ink);font-weight:600;border-color:var(--accent)}.tabs .n{background:var(--purplebg);color:var(--purple);border-radius:999px;padding:0 7px;font-size:12px;margin-left:4px}
+.dr{font-size:13px;color:var(--mute);display:inline-flex;align-items:center;gap:4px}.dr input{padding:3px 6px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit}
 .hint{color:var(--mute);font-size:13px;margin:6px 0 10px}
 .login{max-width:340px;margin:18vh auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
 .login input{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;margin:10px 0;background:var(--bg);color:var(--ink);font-size:15px}
@@ -46,9 +47,9 @@ details summary{cursor:pointer}
 <body>
 <div id="app"></div>
 <script>
-const ST=[["🔴","Cần cậu","r"],["👀","Chờ cậu xem","e"],["🔵","Đang làm","b"],["⏸","Đang chờ","w"],["✅","Xong gần đây","d"]];
+const ST=[["🔴","Cần cậu","r"],["👀","Chờ cậu xem","e"],["🔵","Đang làm","b"],["⏸","Đang chờ","w"]];
 const DEMO=new URLSearchParams(location.search).has("demo");
-const BOSS=["🦹","Cần Phản diện (sếp)","v"];
+const BOSS=["🦹","Cần Anti-hero (sếp)","v"];
 let S={data:null,pending:[],filterP:"",filterS:"",pw:"",tab:"hero"};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -82,8 +83,8 @@ function render(){
   const vis=items.filter(i=>!S.filterP||(i.ten_du_an||i.du_an)===S.filterP);
   const cnt=k=>vis.filter(i=>i.icon===k).length;
   let h=`<div class="wrap"><header><h1>Bảng việc của Hero</h1><div class="sub">Cập nhật ${esc(S.data.generated||"—")}${DEMO?" · dữ liệu mẫu":""} · tự làm mới mỗi giờ</div></header>
-  <div class="tabs"><button data-tab="hero" class="${S.tab==="hero"?"on":""}">🦸 Việc của Hero</button><button data-tab="boss" class="${S.tab==="boss"?"on":""}">🦹 Phản diện<span class="n">${vis.filter(i=>i.icon==="🦹").length}</span></button></div>
-  ${S.tab==="boss"?bossTab(vis):`<div class="stats">${ST.slice(0,4).map(([k,t,c])=>`<div class="stat ${c} ${S.filterS===k?"on":""}" data-s="${k}"><b style="color:var(--c)">${cnt(k)}</b><span>${k} ${t}</span></div>`).join("")}</div>
+  <div class="tabs"><button data-tab="hero" class="${S.tab==="hero"?"on":""}">🦸 Của Hero</button><button data-tab="boss" class="${S.tab==="boss"?"on":""}">🦹 Anti-hero<span class="n">${vis.filter(i=>i.icon==="🦹").length}</span></button><button data-tab="done" class="${S.tab==="done"?"on":""}">✅ Đã làm</button></div>
+  ${S.tab==="done"?doneTab():S.tab==="boss"?bossTab(vis):`<div class="stats">${ST.slice(0,4).map(([k,t,c])=>`<div class="stat ${c} ${S.filterS===k?"on":""}" data-s="${k}"><b style="color:var(--c)">${cnt(k)}</b><span>${k} ${t}</span></div>`).join("")}</div>
   <div class="filters"><button class="chip ${!S.filterP?"on":""}" data-p="">Tất cả dự án</button>${projects.map(p=>`<button class="chip ${S.filterP===p?"on":""}" data-p="${esc(p)}">${esc(p)}</button>`).join("")}</div>
   ${S.tab==="hero"?mainTab(vis):""}`}`;
   $("#app").innerHTML=h+`</div>`;
@@ -104,9 +105,29 @@ function bossTab(vis){
   const list=vis.filter(i=>i.icon==="🦹");
   return `<div class="filters"><button class="chip ${!S.filterP?"on":""}" data-p="">Tất cả dự án</button>${[...new Set((S.data.items||[]).map(i=>i.ten_du_an||i.du_an))].map(p=>`<button class="chip ${S.filterP===p?"on":""}" data-p="${esc(p)}">${esc(p)}</button>`).join("")}</div>
   <div class="hint">Việc cậu không tự quyết được, hoặc cần làm báo cáo để gửi / họp với sếp. Trao đổi xong thì tick “Xong” và ghi kết quả.</div>
-  <section><h2>🦹 Cần Phản diện <span class="count">(${list.length})</span></h2>${list.length?list.map(i=>card(i,"v")).join(""):`<div class="empty">Không có</div>`}</section>`;
+  <section><h2>🦹 Cần Anti-hero <span class="count">(${list.length})</span></h2>${list.length?list.map(i=>card(i,"v")).join(""):`<div class="empty">Không có</div>`}</section>`;
+}
+function iso(d){return d.toISOString().slice(0,10)}
+function doneTab(){
+  const all=(S.data.da_lam||[]).filter(d=>!S.filterP||(d.ten_du_an||d.du_an)===S.filterP);
+  const today=new Date();const back=n=>{const d=new Date(today);d.setDate(d.getDate()-n);return iso(d)};
+  const R={today:[iso(today),iso(today)],"7":[back(6),iso(today)],"30":[back(29),iso(today)],all:["",""]};
+  if(!S.dFrom&&!S.dTo&&S.dQuick===undefined)S.dQuick="7";
+  if(S.dQuick&&R[S.dQuick])[S.dFrom,S.dTo]=R[S.dQuick];
+  const list=all.filter(d=>(!S.dFrom||d.ngay>=S.dFrom)&&(!S.dTo||d.ngay<=S.dTo));
+  const projects=[...new Set((S.data.da_lam||[]).map(d=>d.ten_du_an||d.du_an))];
+  const byDay={};list.forEach(d=>(byDay[d.ngay]=byDay[d.ngay]||[]).push(d));
+  const fmt=x=>{const [y,m,d]=x.split("-");const w=["CN","T2","T3","T4","T5","T6","T7"][new Date(x).getDay()];return `${w} ${d}/${m}/${y}`};
+  const q=(k,t)=>`<button class="chip ${S.dQuick===k?"on":""}" data-q="${k}">${t}</button>`;
+  return `<div class="filters">${q("today","Hôm nay")}${q("7","7 ngày")}${q("30","30 ngày")}${q("all","Tất cả")}
+   <label class="dr">Từ <input type="date" id="dFrom" value="${S.dFrom||""}"></label><label class="dr">đến <input type="date" id="dTo" value="${S.dTo||""}"></label></div>
+  <div class="filters"><button class="chip ${!S.filterP?"on":""}" data-p="">Tất cả dự án</button>${projects.map(p=>`<button class="chip ${S.filterP===p?"on":""}" data-p="${esc(p)}">${esc(p)}</button>`).join("")}</div>
+  <div class="hint">${list.length} việc đã làm${S.dFrom||S.dTo?` · ${S.dFrom?fmt(S.dFrom):"…"} → ${S.dTo?fmt(S.dTo):"…"}`:""}</div>
+  ${Object.keys(byDay).sort().reverse().map(day=>`<section><h2>${fmt(day)} <span class="count">(${byDay[day].length})</span></h2>${byDay[day].map(d=>`<div class="item d"><div class="body"><div class="top"><span class="proj">${esc(d.ten_du_an||d.du_an)}</span>${d.nguon==="bảng"?'<span class="tag">✅ Bảng việc</span>':""}</div><div class="title" style="font-weight:500">${linkify(d.viec)}</div>${d.ghi_chu?`<div class="note">${linkify(d.ghi_chu)}</div>`:""}</div></div>`).join("")}</section>`).join("")||`<div class="empty">Không có việc nào trong khoảng này</div>`}`;
 }
 function bind(){
+  document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{S.dQuick=b.dataset.q;render()});
+  ["dFrom","dTo"].forEach(id=>{const el=document.getElementById(id);if(el)el.onchange=()=>{S[id]=el.value;S.dQuick="";render()}});
   document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;S.filterS="";render()});
   document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{S.filterP=b.dataset.p;render()});
   document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{S.filterS=S.filterS===b.dataset.s?"":b.dataset.s;render()});
@@ -123,12 +144,16 @@ function card(i,c){
   <form class="noteform" data-note="${esc(i.du_an)}|${esc(i.id)}"><input placeholder="Thêm ghi chú (tuỳ chọn)" value="${esc(pend.ghi_chu||"")}"><button>Lưu</button></form>`:""}
   </div>${canTick?`<label class="tick"><input type="checkbox" data-tick="${esc(i.du_an)}|${esc(i.id)}" ${pend?"checked":""}>Xong</label>`:""}</div>`;
 }
-function demoData(){return{generated:"06/11/2026 10:00",items:[
+function demoData(){const t=new Date(),d=n=>{const x=new Date(t);x.setDate(x.getDate()-n);return x.toISOString().slice(0,10)};return{generated:"06/11/2026 10:00",da_lam:[
+ {du_an:"nhalo",ten_du_an:"NhàLo",ngay:d(0),viec:"biztown-rent_Backend@feature/nhalo-lite · e791ace · update han_thanh_toan",nguon:"sổ"},
+ {du_an:"team",ten_du_an:"team",ngay:d(0),viec:"SK-0611-5 · Trang Bảng việc",ghi_chu:"Hero tick xong trên web",nguon:"bảng"},
+ {du_an:"chinchu",ten_du_an:"ChinChu",ngay:d(1),viec:"Footer web đổi sang nền sáng",nguon:"sổ"},
+ {du_an:"lina",ten_du_an:"Lina",ngay:d(12),viec:"Đánh giá demo mới + ERD",nguon:"sổ"}],items:[
  {du_an:"nhalo",ten_du_an:"NhàLo",id:"NL-0611-2",viec:"Đo lường bài nhóm FB",icon:"🔴",trang_thai:"🔴 Cần Hero",ghi_chu:"Chọn tự host hay Bitly; ai lấy Provider ID App Store",cap_nhat:"06/11"},
  {du_an:"nhalo",ten_du_an:"NhàLo",id:"NL-0511-1",viec:"Video quảng cáo 19,4 s 9:16 (nháp)",icon:"👀",trang_thai:"👀 Chờ Hero xem",ghi_chu:"Nghe, chốt giọng — `files/output/claude-outputs/nhalo-video.mp4`",cap_nhat:"05/11"},
  {du_an:"lina",ten_du_an:"Lina",id:"LN-0511-1",viec:"Theo dõi kết quả deploy 05/11",icon:"⏸",trang_thai:"⏸ Đang chờ",ghi_chu:"Bên Hàn đóng gói",cap_nhat:"05/11"},
  {du_an:"chinchu",ten_du_an:"ChinChu",id:"CC-0511-4",viec:"Yêu cầu nâng cấp NhàLo v0.1.1",icon:"🔵",trang_thai:"🔵 Đang làm",ghi_chu:"Sửa tin rồi chuyển NhàLo",cap_nhat:"01/11"},
- {du_an:"nhalo",ten_du_an:"NhàLo",id:"NL-0611-4",viec:"Ngân sách + ngày bắt đầu thử nghiệm 3 hướng",icon:"🦹",trang_thai:"🦹 Cần Phản diện",ghi_chu:"Trình bằng bản dự toán NL-0511-4",cap_nhat:"06/11"},
+ {du_an:"nhalo",ten_du_an:"NhàLo",id:"NL-0611-4",viec:"Ngân sách + ngày bắt đầu thử nghiệm 3 hướng",icon:"🦹",trang_thai:"🦹 Cần Anti-hero",ghi_chu:"Trình bằng bản dự toán NL-0511-4",cap_nhat:"06/11"},
  {du_an:"noi-tro",ten_du_an:"Nội trợ",id:"NT-0311-1",viec:"Đóng gói skill phiếu lương",icon:"✅",trang_thai:"✅ Xong",ghi_chu:"Skill đã có",cap_nhat:"06/11"}]}}
 S.pw=ls("bv-pw")||"";
 if(DEMO||S.pw)load();else login();

@@ -144,8 +144,10 @@ def dong(t):
 
 if cu and moi:  # lần chạy đầu (chưa có trạng thái cũ) thì không báo
     yen_lang = now.hour >= 20 or now.hour < 7
-    if yen_lang or "--im-lang" in sys.argv:
-        if yen_lang:
+    if "--im-lang" in sys.argv:
+        pass  # không gửi, không gom: trạng thái chưa chốt nên lần chạy thường sau sẽ xử lý
+    elif yen_lang:
+        if True:
             try: gom = json.load(open(YEN_LANG))
             except Exception: gom = []
             gom += [dict(t, luc=f"{now:%d/%m %H:%M}") for t in moi]

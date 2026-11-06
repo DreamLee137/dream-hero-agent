@@ -26,7 +26,7 @@ def log(s):
     print(line)
     with open(LOG, "a") as f: f.write(line + "\n")
 
-GIOI_HAN = 380   # OneDrive cho tối đa 400 ký tự; chừa lề
+GIOI_HAN = 340   # OneDrive tối đa 400 ký tự TÍNH CẢ "/personal/<tài khoản>/Documents/" (~50) -> còn ~350; chừa lề
 
 def bao(msg):
     subprocess.run([os.path.expanduser("~/Projects/dream-hero-agent/tools/discord-say.sh"),
